@@ -1,2 +1,2 @@
-# treeppl-r
+# treepplr
 R Interface to TreePPL
