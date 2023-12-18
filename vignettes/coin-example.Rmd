@@ -1,0 +1,38 @@
+---
+title: "Coin flipping example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{coin-example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE
+)
+```
+
+```{r setup}
+library(treepplr)
+library(ggplot2)
+```
+
+Run the `coin.tppl` TreePPL program using the input file `coin.json`. 
+
+```{r}
+output <- run_treeppl(dir = system.file("extdata", package = "treepplr"), 
+                      source = "coin.tppl", data = "coin.json", samples = 100)
+
+```
+
+Plot the posterior distribution (normalized weights).
+
+```{r}
+ggplot(output) +
+  geom_col(aes(samples, nweights), width = 0.005) +
+  theme_bw()
+```
+
