@@ -31,8 +31,10 @@ output <- run_treeppl(dir = system.file("extdata", package = "treepplr"),
 Plot the posterior distribution (normalized weights).
 
 ```{r}
-ggplot(output) +
+if(rlang::is_installed("ggplot2")) {
+  ggplot(output) +
   geom_col(aes(samples, nweights), width = 0.005) +
   theme_bw()
+}
 ```
 
