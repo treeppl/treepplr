@@ -12,6 +12,7 @@ This package in an interface for using TreePPL programs.
 Useful links:
 \itemize{
   \item \url{https://github.com/treeppl/treepplr}
+  \item \url{http://treeppl.org/treepplr/}
   \item Report bugs at \url{https://github.com/treeppl/treepplr/issues}
 }
 
