@@ -31,4 +31,9 @@ Compile and run a TreePPL program
 }
 \examples{
 output <- run_treeppl(dir = system.file("extdata", package = "treepplr"), source = "coin.tppl", data = "coin.json", samples = 10)
+if(rlang::is_installed("ggplot2")) {
+ ggplot2::ggplot(output) +
+ ggplot2::geom_col(ggplot2::aes(.data$samples, .data$nweights), width = 0.005) +
+ ggplot2::theme_bw()
+}
 }
