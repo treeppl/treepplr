@@ -3,21 +3,27 @@
 #' @param dir The directory that contains the TreePPL code and input file. The executable and the output files will be written here.
 #' @param source Name of file with TreePPL program.
 #' @param method Inference method to be used.
-#' @param data Name of JSON file with input data.
+#' @param data Name of object with input data.
 #' @param samples The number of samples during inference.
 #'
 #' @return A data frame with sampled values, log weights, normalized weights, and the normalizing constant for all samples.
 #' @export
 #'
 #' @examples
-#' output <- run_treeppl(dir = system.file("extdata", package = "treepplr"), source = "coin.tppl", data = "coin.json", samples = 10)
-#' if(rlang::is_installed("ggplot2")) {
-#'  ggplot2::ggplot(output) +
-#'  ggplot2::geom_col(ggplot2::aes(.data$samples, .data$nweights), width = 0.005) +
-#'  ggplot2::theme_bw()
+#' \dontrun{
+#'   coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
+#'   output <- run_treeppl(dir = system.file("extdata", package = "treepplr"),
+#'                         source = "coin.tppl", data = coinflips, samples = 10)
+#'   if(rlang::is_installed("ggplot2")) {
+#'     ggplot2::ggplot(output) +
+#'     ggplot2::geom_col(ggplot2::aes(.data$samples, .data$nweights), width = 0.005) +
+#'     ggplot2::theme_bw()
+#'   }
 #' }
 
 run_treeppl <- function(dir = NULL, source = NULL, method = "smc-bpf", data = NULL, samples = 1000) { # smc-apf
+
+  # check inputs
 
   # Compile program
   system2(command = "tpplc", args = c(paste0(dir,"/", source),
@@ -25,9 +31,15 @@ run_treeppl <- function(dir = NULL, source = NULL, method = "smc-bpf", data = NU
   # which arguments are necessary other than method?
   # should the executable go to a temporary folder and be delete afterwards?
 
+  # write json with input data
+  input_json <- jsonlite::toJSON(data, dataframe = "columns")
+  write(input_json, paste0(dir,"/input.json"))
+
   # run
-  system2(command = "./out", args = c(paste0(dir,"/", data),
-                                      paste0(samples, " 1")), stdout = "stdout.json")
+  system2(command = "./out",
+          args = c(paste0(dir,"/input.json"),
+                   paste0(samples, " 1")),
+          stdout = "stdout.json")
 
   # read output
   output <- jsonlite::fromJSON("stdout.json") %>%
