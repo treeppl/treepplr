@@ -20,14 +20,14 @@
 #'     ggplot2::theme_bw()
 #'   }
 #' }
-
 run_treeppl <- function(dir = NULL, source = NULL, method = "smc-bpf", data = NULL, samples = 1000) { # smc-apf
 
   # check inputs
 
   # Compile program
   system2(command = "tpplc", args = c(paste0(dir,"/", source),
-                                      paste0("-m ", method)))
+                                      paste0("-m ", method),
+                                      paste0("--output ", dir,"/out")))
   # which arguments are necessary other than method?
   # should the executable go to a temporary folder and be delete afterwards?
 
@@ -36,13 +36,14 @@ run_treeppl <- function(dir = NULL, source = NULL, method = "smc-bpf", data = NU
   write(input_json, paste0(dir,"/input.json"))
 
   # run
-  system2(command = "./out",
+  system2(command = paste0(dir,"/out"),
           args = c(paste0(dir,"/input.json"),
                    paste0(samples, " 1")),
-          stdout = "stdout.json")
+          stdout = paste0(dir,"/stdout.json")
+  )
 
   # read output
-  output <- jsonlite::fromJSON("stdout.json") %>%
+  output <- jsonlite::fromJSON(paste0(dir,"/stdout.json")) %>%
     as.data.frame() %>%
     dplyr::mutate(nweights = norm_weights(.data$weights))
 

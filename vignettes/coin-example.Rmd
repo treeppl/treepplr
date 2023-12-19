@@ -3,8 +3,10 @@ title: "Coin flipping example"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{coin-example}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
