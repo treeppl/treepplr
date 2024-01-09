@@ -27,8 +27,10 @@ Run the `coin.tppl` TreePPL program using the created input data.
 ```{r, eval=FALSE}
 coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
 
+input <- treeppl_input(coinflips)
+
 output <- run_treeppl(dir = system.file("extdata", package = "treepplr"), 
-                      source = "coin.tppl", data = coinflips, samples = 100)
+                      source = "coin.tppl", data = input, samples = 100)
 
 ```
 
