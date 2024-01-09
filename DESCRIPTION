@@ -16,7 +16,9 @@ Imports:
     dplyr,
     jsonlite,
     magrittr,
-    rlang
+    rlang,
+    strex,
+    tidyr
 Suggests: 
     ggplot2,
     knitr,
