@@ -8,7 +8,7 @@ run_treeppl(
   dir = NULL,
   source = NULL,
   method = "smc-bpf",
-  data = NULL,
+  data_path = NULL,
   samples = 1000
 )
 }
@@ -19,7 +19,7 @@ run_treeppl(
 
 \item{method}{Inference method to be used.}
 
-\item{data}{Name of object with input data.}
+\item{data_path}{Path to JSON file with input data.}
 
 \item{samples}{The number of samples during inference.}
 }

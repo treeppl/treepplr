@@ -18,12 +18,12 @@ read_treeppl_output <- function(filename = NULL){
     system2(system.file("json_amend.zsh", package = "treepplr"), filename)
 
     # read file and then create a list of outputs
-    out <- separate_outs(filename)  %>%
-      lapply(tidy_samples)
+    out <- .separate_outs(filename)  %>%
+      lapply(.tidy_samples)
 
   } else{
     # read json file and make it a data frame
-    out <- tidy_samples(filename)
+    out <- .tidy_samples(filename)
   }
 
   return(out)
@@ -31,7 +31,7 @@ read_treeppl_output <- function(filename = NULL){
 }
 
 
-separate_outs <- function(json_file = NULL){
+.separate_outs <- function(json_file = NULL){
 
   if(class(json_file) == "character"){
     out_json <- jsonlite::fromJSON(json_file)
@@ -52,7 +52,7 @@ separate_outs <- function(json_file = NULL){
 }
 
 
-tidy_samples <- function(json_file = NULL) {
+.tidy_samples <- function(json_file = NULL) {
 
   if(class(json_file) == "character"){
     out_list <- jsonlite::fromJSON(json_file)

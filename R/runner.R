@@ -26,22 +26,23 @@ run_treeppl <- function(dir = NULL, source = NULL, method = "smc-bpf", data_path
 
   if(method == "smc-apf") samples <- samples + 1
 
+  tmp_dir <- treeppl_tempdir(NULL)
+  sep <- .sep()
+
   # Compile program
-  system2(command = "tpplc", args = c(paste0(dir,"/", source),
+  system2(command = "tpplc", args = c(paste0(dir, sep, source),
                                       paste0("-m ", method),
-                                      paste0("--output ", dir,"/out")))
-  # which arguments are necessary other than method?
-  # should the executable go to a temporary folder and be delete afterwards?
+                                      paste0("--output ", tmp_dir, sep, "out")))
 
   # run
-  system2(command = paste0(dir,"/out"),
+  system2(command = paste0(tmp_dir, sep, "out"),
           args = c(data_path,
                    paste0(samples, " 1")),
-          stdout = paste0(dir,"/stdout.json")
+          stdout = paste0(tmp_dir, sep, "stdout.json")
   )
 
   # read output
-  output <- read_treeppl_output(paste0(dir,"/stdout.json"))
+  output <- read_treeppl_output(paste0(tmp_dir, sep, "stdout.json"))
 
   return(output)
 }

@@ -11,13 +11,13 @@
 #' @examples
 treeppl_input <- function(object_list, file_path){
 
+  sep <- .sep()
+
   # process one element at a time?
 
   # figure out the class and if anything special is necessary
 
   # write json with input data
   input_json <- jsonlite::toJSON(data, dataframe = "columns")
-  write(input_json, paste0(dir,"/input.json"))
-
-
+  write(input_json, paste0(dir, sep ,"input.json"))
 }
