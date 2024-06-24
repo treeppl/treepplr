@@ -4,7 +4,7 @@
 \alias{treeppl_tempdir}
 \title{Provide normalized names and make sure the dir exists}
 \usage{
-treeppl_tempdir(temp_dir, sep = NULL, sub = NULL)
+treeppl_tempdir(temp_dir = NULL, sep = NULL, sub = NULL)
 }
 \arguments{
 \item{temp_dir}{NULL, or a path to be used; if NULL, R's \code{tempdir()} is used.}

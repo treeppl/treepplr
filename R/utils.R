@@ -11,7 +11,7 @@
 #' @examples
 #' treeppl_tempdir(NULL)
 
-treeppl_tempdir <- function(temp_dir, sep = NULL, sub = NULL) {
+treeppl_tempdir <- function(temp_dir = NULL, sep = NULL, sub = NULL) {
   if (is.null(sep)) {
     sep <- .sep()
   if (is.null(temp_dir))

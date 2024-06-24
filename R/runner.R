@@ -12,7 +12,7 @@
 #' @examples
 #' \dontrun{
 #'   coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
-#'   output <- run_treeppl(dir = system.file("extdata", package = "treepplr"),
+#'   output <- treeppl_run(dir = system.file("extdata", package = "treepplr"),
 #'                         source = "coin.tppl", data = coinflips, samples = 10)
 #'   if(rlang::is_installed("ggplot2")) {
 #'     ggplot2::ggplot(output) +
@@ -20,7 +20,7 @@
 #'     ggplot2::theme_bw()
 #'   }
 #' }
-run_treeppl <- function(dir = NULL, source = NULL, method = "smc-bpf", data_path = NULL, samples = 1000) { # smc-apf
+treeppl_run <- function(dir = NULL, source = NULL, method = "smc-bpf", data_path = NULL, samples = 1000) { # smc-apf
 
   # check inputs
 
