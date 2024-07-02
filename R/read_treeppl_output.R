@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-read_treeppl_output <- function(filename = NULL){
+tp_read_JSON <- function(filename = NULL){
 
   # check if file has multiple lines
   nlines <- system2("wc", c("-l", filename), stdout = TRUE) %>%

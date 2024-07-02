@@ -12,7 +12,7 @@
 #' @examples
 #' \dontrun{
 #'   coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
-#'   output <- treeppl_run(dir = system.file("extdata", package = "treepplr"),
+#'   output <- tp_run(dir = system.file("extdata", package = "treepplr"),
 #'                         source = "coin.tppl", data = coinflips, samples = 10)
 #'   if(rlang::is_installed("ggplot2")) {
 #'     ggplot2::ggplot(output) +
@@ -20,13 +20,13 @@
 #'     ggplot2::theme_bw()
 #'   }
 #' }
-treeppl_run <- function(dir = NULL, source = NULL, method = "smc-bpf", data_path = NULL, samples = 1000) { # smc-apf
+tp_run <- function(dir = NULL, source = NULL, method = "smc-bpf", data_path = NULL, samples = 1000) { # smc-apf
 
   # check inputs
 
   if(method == "smc-apf") samples <- samples + 1
 
-  tmp_dir <- treeppl_tempdir(NULL)
+  tmp_dir <- tp_tempdir(NULL)
   sep <- .sep()
 
   # Compile program
@@ -42,7 +42,7 @@ treeppl_run <- function(dir = NULL, source = NULL, method = "smc-bpf", data_path
   )
 
   # read output
-  output <- read_treeppl_output(paste0(tmp_dir, sep, "stdout.json"))
+  output <- tp_read_JSON(paste0(tmp_dir, sep, "stdout.json"))
 
   return(output)
 }

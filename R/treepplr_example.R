@@ -7,9 +7,9 @@
 #' @export
 #'
 #' @examples
-#' treepplr_example()
-#' treepplr_example("coin.json")
-treepplr_example <- function(path = NULL) {
+#' tp_example()
+#' tp_example("coin.json")
+tp_example <- function(path = NULL) {
   if (is.null(path)) {
     dir(system.file("extdata", package = "treepplr"))
   } else {

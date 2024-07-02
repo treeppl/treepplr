@@ -9,9 +9,9 @@
 #' @export
 #'
 #' @examples
-#' treeppl_tempdir(NULL)
+#' tp_tempdir(NULL)
 
-treeppl_tempdir <- function(temp_dir = NULL, sep = NULL, sub = NULL) {
+tp_tempdir <- function(temp_dir = NULL, sep = NULL, sub = NULL) {
   if (is.null(sep)) {
     sep <- .sep()
   if (is.null(temp_dir))
@@ -25,12 +25,22 @@ treeppl_tempdir <- function(temp_dir = NULL, sep = NULL, sub = NULL) {
   if (!dir.exists(temp_dir))
     dir.create(temp_dir)
   temp_dir
+  }
 }
 
+#' Provide a separator character platform dependent
 .sep <- function() {
   if (.Platform$OS.type == "windows")
     "\\"
   else
     "/"
 }
+
+#' Provide a enumeration for each model cover by the checker
+.model_name <- function() {
+  list(
+    Basic = "basic",
+    Coin = "coin"
+  )
 }
+

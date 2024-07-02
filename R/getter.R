@@ -1,6 +1,6 @@
 #' Import input for inference with TreePPL
 #'
-#' This function takes a directory path and out an model/data to be check by `treeppl_check()`.
+#' This function takes a directory path and out an model/data to be check by `tp_check()`.
 #'
 #' @param file_path The complete path to the directory where the TreePPL model and TreePPL JSON datafile where.
 #'
@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-treeppl_import <- function(file_path){
+tp_import <- function(file_path){
 
 
 }
