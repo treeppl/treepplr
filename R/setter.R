@@ -9,16 +9,14 @@
 #' @export
 #'
 #' @examples
-tp_input <- function(model_string, data_treeppl_input){
+tp_write <- function(model_data_strlist){
 
-  sep <- .sep()
   dir <- tp_tempdir()
 
-  # process one element at a time?
-
-  # figure out the class and if anything special is necessary
+  cat(model_data_strlist[[1]], file = paste0(dir, "input.tppl"))
 
   # write json with input data
-  input_json <- jsonlite::toJSON(data, dataframe = "columns")
-  write(input_json, paste0(dir, sep ,"input.json"))
+  input_json <- jsonlite::toJSON(model_data_strlist[[2]], dataframe = "columns")
+
+  write(input_json, paste0(dir, "input.json"))
 }

@@ -16,11 +16,14 @@ Imports:
     dplyr,
     jsonlite,
     magrittr,
+    readr,
     rlang,
+    RJSONIO,
     strex,
     tidyr
-Suggests: 
+Suggests:
     ggplot2,
     knitr,
+    testthta,
     rmarkdown
 VignetteBuilder: knitr

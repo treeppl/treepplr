@@ -44,3 +44,19 @@ tp_tempdir <- function(temp_dir = NULL, sep = NULL, sub = NULL) {
   )
 }
 
+#' Write input for treeppl
+.input <- function(model, data, temp_dir = NULL, project_name = NULL) {
+  if (is.null(temp_dir)) {
+    temp_dir <- tp_tempdir()
+  }
+  if (is.null(project_name)) {
+    project_name <- "default"
+  }
+
+  sep <- .sep()
+
+  temp_file <- paste0(temp_dir, sep, project_name)
+  readr::write_file(model, paste0(temp_file, ".tppl"))
+  write_json(data, paste0(temp_file, ".json"))
+}
+

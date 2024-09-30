@@ -4,7 +4,7 @@
 \alias{tp_import}
 \title{Import input for inference with TreePPL}
 \usage{
-tp_import(file_path)
+tp_import(file_path, project_name)
 }
 \arguments{
 \item{file_path}{The complete path to the directory where the TreePPL model and TreePPL JSON datafile where.}
