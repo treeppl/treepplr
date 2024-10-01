@@ -1,15 +1,12 @@
 #' Provide normalized names and make sure the dir exists
 #'
 #' @description This provides a temporary directory where the executables can read and write temporaty files. Its path is returned in normalized format \bold{with} system-dependent terminal separator.
-#' @param temp_dir NULL, or a path to be used; if NULL, R's \code{tempdir()} is used.
-#' @param sep Better ignored; non-default values are passed to \code{normalizePath()}.
-#' @param sub Extension for defining a sub-directory within the directory defined by \code{temp_dir}
+#' @param temp_dir NULL, or a path to be used; if NULL, R's [base::tempdir()] is used.
+#' @param sep Better ignored; non-default values are passed to [base::normalizePath()].
+#' @param sub Extension for defining a sub-directory within the directory defined by [base::tempdir].
 #'
 #' @return Normalized path with system-dependent terminal separator.
 #' @export
-#'
-#' @examples
-#' tp_tempdir(NULL)
 
 tp_tempdir <- function(temp_dir = NULL, sep = NULL, sub = NULL) {
   if (is.null(sep)) {

@@ -7,9 +7,7 @@
 #' @param data_treeppl_input A list of R objects contain the TreePPL data.
 #'
 #' @return tuple : TreePPL model (string) and TreePPL data (r_object)
-#' @export
 #'
-#' @examples
 .tp_check <- function(model_name, model_string, data_treeppl_input){
 
 

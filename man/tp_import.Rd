@@ -2,16 +2,25 @@
 % Please edit documentation in R/getter.R
 \name{tp_import}
 \alias{tp_import}
-\title{Import input for inference with TreePPL}
+\title{Import input for TreePPL program}
 \usage{
-tp_import(file_path, project_name)
+tp_import(dir_path, project_name)
 }
 \arguments{
-\item{file_path}{The complete path to the directory where the TreePPL model and TreePPL JSON datafile where.}
+\item{dir_path}{a character vector giving the directory name.}
+
+\item{project_name}{a character vector giving the project name.}
 }
 \value{
-tuple : TreePPL model (string) and TreePPL data (r_object)
+Structured list : TreePPL model (string) and TreePPL data (Structured list)
 }
 \description{
-This function takes a directory path and out an model/data to be check by \code{tp_check()}.
+\code{tp_import} takes a directory path and out an model/data to be check by \code{tp_check()}.
+}
+\details{
+This function takes TreePPL code (.tppl) and data (.json) files and import them.
+
+\code{dir_path} : The directory that contains the TreePPL code and data file. If NULL, use \code{\link[=tp_tempdir]{tp_tempdir()}} output.
+
+\code{project_name} : Name of the TreePPL code and data file in dir_path (without extension).
 }

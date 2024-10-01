@@ -6,38 +6,43 @@
 \usage{
 tp_go(
   dir_path = NULL,
-  project_name = NULL,
-  src_name = NULL,
+  project_name = "input",
+  src_name = "out",
   method = "smc-bpf",
   samples = 1000
 )
 }
 \arguments{
-\item{dir_path}{The directory that contains the TreePPL code and input file. The executable and the output files will be written here.}
+\item{dir_path}{a character vector giving the directory name.}
 
-\item{src_name}{Name of file with TreePPL program.}
+\item{project_name}{a character vector giving the project name.}
 
-\item{method}{Inference method to be used.}
+\item{src_name}{a character vector giving the output name.}
 
-\item{samples}{The number of samples during inference.}
+\item{method}{a character vector giving the inference method name.}
 
-\item{data_path}{Path to JSON file with input data.}
+\item{samples}{a \link[base:integer]{base::integer} giving the number of samples.}
 }
 \value{
-A data frame with sampled values, log weights, normalized weights, and the normalizing constant for all samples.
+Path to the tmp R directory where output file was written.
 }
 \description{
-Compile and run a TreePPL program
+\code{tp_go} take paths, execute TreePPL and return current \link[base:tempfile]{base::tempdir} path.
 }
-\examples{
-\dontrun{
-  coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
-  output <- tp_run(dir_path = system.file("extdata", package = "treepplr"),
-                        src_name = "coin.tppl", data = coinflips, samples = 10)
-  if(rlang::is_installed("ggplot2")) {
-    ggplot2::ggplot(output) +
-    ggplot2::geom_col(ggplot2::aes(.data$samples, .data$nweights), width = 0.005) +
-    ggplot2::theme_bw()
-  }
-}
+\details{
+This function takes TreePPL code (.tppl) and data (.json) files, compile TreePPL code using \code{\link[=tp_compile]{tp_compile()}}
+and writing TreePPL output using \code{\link[=tp_run]{tp_run()}}.
+
+TreePPL need to be install on your computer and the PATH set for R/RSTUDIO (see \href{https://www.google.com}{install} manual).
+The executable and the output files will be written in R's \code{\link[base:tempfile]{base::tempdir()}}.
+
+\code{dir_path} : The directory that contains the TreePPL code and data file. If NULL, use \code{\link[=tp_tempdir]{tp_tempdir()}} output.
+
+\code{project_name} : Name of the TreePPL code and data file in dir_path (without extension).
+
+\code{src_name} : File name for TreePPL program and TreePPL output.
+
+\code{method} : Inference method to be used.
+
+\code{samples} : The number of samples during inference.
 }

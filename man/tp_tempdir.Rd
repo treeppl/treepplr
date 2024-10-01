@@ -7,18 +7,15 @@
 tp_tempdir(temp_dir = NULL, sep = NULL, sub = NULL)
 }
 \arguments{
-\item{temp_dir}{NULL, or a path to be used; if NULL, R's \code{tempdir()} is used.}
+\item{temp_dir}{NULL, or a path to be used; if NULL, R's \code{\link[base:tempfile]{base::tempdir()}} is used.}
 
-\item{sep}{Better ignored; non-default values are passed to \code{normalizePath()}.}
+\item{sep}{Better ignored; non-default values are passed to \code{\link[base:normalizePath]{base::normalizePath()}}.}
 
-\item{sub}{Extension for defining a sub-directory within the directory defined by \code{temp_dir}}
+\item{sub}{Extension for defining a sub-directory within the directory defined by \link[base:tempfile]{base::tempdir}.}
 }
 \value{
 Normalized path with system-dependent terminal separator.
 }
 \description{
 This provides a temporary directory where the executables can read and write temporaty files. Its path is returned in normalized format \bold{with} system-dependent terminal separator.
-}
-\examples{
-tp_tempdir(NULL)
 }

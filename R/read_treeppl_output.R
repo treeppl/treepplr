@@ -6,7 +6,6 @@
 #' If the file contains the output from multiple runs, returns a list of data frames.
 #' @export
 #'
-#' @examples
 tp_read_JSON <- function(filename = NULL){
 
   # check if file has multiple lines

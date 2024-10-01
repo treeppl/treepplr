@@ -1,31 +1,35 @@
 #' Compile and run a TreePPL program
 #'
-#' @param dir_path The directory that contains the TreePPL code and input file. The executable and the output files will be written here.
-#' @param src_name Name of file with TreePPL program.
-#' @param method Inference method to be used.
-#' @param data_path Path to JSON file with input data.
-#' @param samples The number of samples during inference.
+#' @description
+#' `tp_go` take paths, execute TreePPL and return current [base::tempdir] path.
 #'
-#' @return A data frame with sampled values, log weights, normalized weights, and the normalizing constant for all samples.
+#' @param dir_path a character vector giving the directory name.
+#' @param project_name a character vector giving the project name.
+#' @param src_name a character vector giving the output name.
+#' @param method a character vector giving the inference method name.
+#' @param samples a [base::integer] giving the number of samples.
+#'
+#' @details
+#' This function takes TreePPL code (.tppl) and data (.json) files, compile TreePPL code using [tp_compile()]
+#' and writing TreePPL output using [tp_run()].
+#'
+#' TreePPL need to be install on your computer and the PATH set for R/RSTUDIO (see [install](https://www.google.com) manual).
+#' The executable and the output files will be written in R's [base::tempdir()].
+#'
+#' `dir_path` : The directory that contains the TreePPL code and data file. If NULL, use [tp_tempdir()] output.
+#'
+#' `project_name` : Name of the TreePPL code and data file in dir_path (without extension).
+#'
+#' `src_name` : File name for TreePPL program and TreePPL output.
+#'
+#' `method` : Inference method to be used.
+#'
+#' `samples` : The number of samples during inference.
+#'
+#' @return Path to the tmp R directory where output file was written.
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#'   coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
-#'   output <- tp_run(dir_path = system.file("extdata", package = "treepplr"),
-#'                         src_name = "coin.tppl", data = coinflips, samples = 10)
-#'   if(rlang::is_installed("ggplot2")) {
-#'     ggplot2::ggplot(output) +
-#'     ggplot2::geom_col(ggplot2::aes(.data$samples, .data$nweights), width = 0.005) +
-#'     ggplot2::theme_bw()
-#'   }
-#' }
 
-tp_go <- function(dir_path = NULL,
-                  project_name = NULL,
-                  src_name = NULL,
-                  method = "smc-bpf",
-                  samples = 1000) {
+tp_go <- function(dir_path = NULL, project_name = "input", src_name = "out", method = "smc-bpf", samples = 1000) {
   # smc-apf
 
   tp_compile(dir_path, project_name, src_name, method)
@@ -34,41 +38,36 @@ tp_go <- function(dir_path = NULL,
 
 #' Compile a TreePPL program
 #'
-#' @param dir_path The directory that contains the TreePPL code and input file. The executable and the output files will be written here.
-#' @param src_name Name of file with TreePPL program.
-#' @param method Inference method to be used.
-#' @param data_path Path to JSON file with input data.
-#' @param samples The number of samples during inference.
+#' @description
+#' `tp_compile` take paths, compile TreePPL code.
 #'
-#' @return A data frame with sampled values, log weights, normalized weights, and the normalizing constant for all samples.
+#' @param dir_path a character vector giving the TreePPL code directory name.
+#' @param project_name a character vector giving TreePPL code name.
+#' @param src_name a character vector giving the compiled file name.
+#' @param method a character vector giving the inference method name.
+#'
+#' @details
+#' This function takes TreePPL code (.tppl) files and compile it.
+#'
+#' TreePPL need to be install on your computer and the PATH set for R/RSTUDIO (see [install](https://www.google.com) manual).
+#' The executable file will be written in R's [base::tempdir()].
+#'
+#' `dir_path` : The directory that contains the TreePPL code and data file. If NULL, use [tp_tempdir()] output.
+#'
+#' `project_name` : Name of the TreePPL code (.tppl) in dir_path (without extension).
+#'
+#' `src_name` : File name for TreePPL program output.
+#'
+#' `method` : Inference method to be used.
+#'
+#' @return None.
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#'   coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
-#'   output <- tp_run(dir_path = system.file("extdata", package = "treepplr"),
-#'                         src_name = "coin.tppl", data = coinflips, samples = 10)
-#'   if(rlang::is_installed("ggplot2")) {
-#'     ggplot2::ggplot(output) +
-#'     ggplot2::geom_col(ggplot2::aes(.data$samples, .data$nweights), width = 0.005) +
-#'     ggplot2::theme_bw()
-#'   }
-#' }
 
-tp_compile <- function(dir_path = NULL,
-                       project_name = NULL,
-                       src_name = NULL,
-                       method = "smc-bpf") {
+tp_compile <- function(dir_path = NULL, project_name = "input", src_name = "out", method = "smc-bpf") {
   # smc-apf
 
   # if dir = NULL return temp_dir, if not return dir
   temp_dir <- tp_tempdir(dir_path)
-
-  if (is.null(src_name))
-    src_name <- "out"
-
-  if (is.null(project_name))
-    project_name <- "input"
 
   argum <- c(
     paste0(temp_dir, project_name, ".tppl"),
@@ -82,33 +81,33 @@ tp_compile <- function(dir_path = NULL,
 
 #' Run a TreePPL program
 #'
-#' @param dir_path The directory that contains the TreePPL code and input file. The executable and the output files will be written here.
-#' @param src_name Name of file with TreePPL program.
-#' @param method Inference method to be used.
-#' @param data_path Path to JSON file with input data.
-#' @param samples The number of samples during inference.
+#' @description
+#' `tp_run` take paths, execute compiled TreePPL code with data and return current [base::tempdir] path.
 #'
-#' @return A data frame with sampled values, log weights, normalized weights, and the normalizing constant for all samples.
+#' @param dir_path a character vector giving the TreePPL data directory name.
+#' @param project_name a character vector giving TreePPL data name.
+#' @param src_name a character vector giving the TreePPL output name.
+#' @param samples a [base::integer] giving the number of samples.
+#'
+#' @details
+#' This function takes compiled TreePPL code from [tp_compile()] and data (.json) files
+#' and writing TreePPL json output.
+#'
+#' TreePPL need to be install on your computer and the PATH set for R/RSTUDIO (see [install](https://www.google.com) manual).
+#' The executable and the output files will be written in R's [base::tempdir()].
+#'
+#' `dir_path` : The directory that contains TreePPL data file. If NULL, use [tp_tempdir()] output.
+#'
+#' `project_name` : Name of the TreePPL data file in dir_path (without extension).
+#'
+#' `src_name` : File name of TreePPL json output.
+#'
+#' `samples` : The number of samples during inference.
+#'
+#' @return Path to the tmp R directory where output file was written.
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#'   coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
-#'   output <- tp_run(dir = system.file("extdata", package = "treepplr"),
-#'                         src_name = "coin.tppl", data = coinflips, samples = 10)
-#'   if(rlang::is_installed("ggplot2")) {
-#'     ggplot2::ggplot(output) +
-#'     ggplot2::geom_col(ggplot2::aes(.data$samples, .data$nweights), width = 0.005) +
-#'     ggplot2::theme_bw()
-#'   }
-#' }
 
-tp_run <- function(dir_path = NULL,
-                   project_name = NULL,
-                   src_name = NULL,
-                   method = "smc-bpf",
-                   samples = 1000) {
-  # smc-apf
+tp_run <- function(dir_path = NULL, project_name = "input", src_name = "out", samples = 1000) {
 
   # check inputs
   if (method == "smc-apf")
@@ -135,33 +134,27 @@ tp_run <- function(dir_path = NULL,
   ))))
 }
 
-#' Parse a TreePPL output
+#' Parse TreePPL json output
 #'
-#' @param dir_path The directory that contains the TreePPL code and input file. The executable and the output files will be written here.
-#' @param src_name Name of file with TreePPL program.
+#' @description
+#' `tp_parse` take TreePPL json output and return a data.frame
 #'
-#' @return A data frame with sampled values, log weights, normalized weights, and the normalizing constant for all samples.
+#' @param dir_path a character vector giving the TreePPL json output directory name.
+#' @param src_name a character vector giving data.frame output name.
+#'
+#' @details
+#' This function takes a TreePPL json output file compile and write a revBeyes data.fram format.
+#'
+#' `dir_path` : The directory that contains TreePPL json output coming from [tp_run]. If NULL, use [tp_tempdir()] output.
+#'
+#' `project_name` : Name of the TreePPL json output file in dir_path (without extension).
+#'
+#' @return RevBayes data.fram format.
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#'   coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
-#'   output <- tp_run(dir = system.file("extdata", package = "treepplr"),
-#'                         src_name = "coin.tppl", data = coinflips, samples = 10)
-#'   if(rlang::is_installed("ggplot2")) {
-#'     ggplot2::ggplot(output) +
-#'     ggplot2::geom_col(ggplot2::aes(.data$samples, .data$nweights), width = 0.005) +
-#'     ggplot2::theme_bw()
-#'   }
-#' }
 
-tp_parse <- function(dir_path = NULL,
-                      src_name = NULL) {
+tp_parse <- function(dir_path = NULL, src_name = "out") {
   # if dir_path = NULL return temp_dir, if not return dir
   dir_path <- tp_tempdir(dir_path)
-
-  if (is.null(src_name))
-    src_name <- "out"
 
   output_trppl <- fromJSON(paste0(dir_path, src_name, ".json"))
 
@@ -252,9 +245,9 @@ tp_parse <- function(dir_path = NULL,
     for (j in 1:length(subtree$history)) {
       base[["start_state"]]  <- as.numeric(base[["end_state"]])
       base[["end_state"]]  <-  as.numeric(paste(subtree$history[[length(subtree$history) - j +
-                                                        1]]$`__data__`$repertoire, collapse = ""))
+                                                                   1]]$`__data__`$repertoire, collapse = ""))
       base[["transition_time"]]  <- as.numeric(subtree$history[[length(subtree$history) - j +
-                                                       1]]$`__data__`$age)
+                                                                  1]]$`__data__`$age)
       result[nrow(result) + 1, ] <- base
     }
   } else {

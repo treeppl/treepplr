@@ -2,18 +2,19 @@
 % Please edit documentation in R/setter.R
 \name{tp_write}
 \alias{tp_write}
-\title{Prepare input for inference with TreePPL}
+\title{Prepare input for \code{\link[=tp_go]{tp_go()}}}
 \usage{
 tp_write(model_data_strlist)
 }
 \arguments{
-\item{model_string}{A string contain the TreePPL model to be included in the trppl input file.}
-
-\item{data_treeppl_input}{A list of R objects contain the TreePPL data to be included in the TreePPL JSON input file.}
+\item{model_data_strlist}{a structured list coming from \code{\link[=tp_import]{tp_import()}}.}
 }
 \value{
-tuple : path to TreePPL file / path to JSON file
+None.
 }
 \description{
-This function takes R objects and writes out an JSON file to be used by \code{tp_run()}.
+\code{tp_write} writes an JSON file to be used by \code{\link[=tp_go]{tp_go()}}.
+}
+\details{
+This function takes a structured list of TreePPL code and data files (more details in \code{\link[=tp_import]{tp_import()}}) and write 2 files from them.
 }

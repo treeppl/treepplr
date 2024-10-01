@@ -6,37 +6,37 @@
 \usage{
 tp_compile(
   dir_path = NULL,
-  project_name = NULL,
-  src_name = NULL,
+  project_name = "input",
+  src_name = "out",
   method = "smc-bpf"
 )
 }
 \arguments{
-\item{dir_path}{The directory that contains the TreePPL code and input file. The executable and the output files will be written here.}
+\item{dir_path}{a character vector giving the TreePPL code directory name.}
 
-\item{src_name}{Name of file with TreePPL program.}
+\item{project_name}{a character vector giving TreePPL code name.}
 
-\item{method}{Inference method to be used.}
+\item{src_name}{a character vector giving the compiled file name.}
 
-\item{data_path}{Path to JSON file with input data.}
-
-\item{samples}{The number of samples during inference.}
+\item{method}{a character vector giving the inference method name.}
 }
 \value{
-A data frame with sampled values, log weights, normalized weights, and the normalizing constant for all samples.
+None.
 }
 \description{
-Compile a TreePPL program
+\code{tp_compile} take paths, compile TreePPL code.
 }
-\examples{
-\dontrun{
-  coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
-  output <- tp_run(dir_path = system.file("extdata", package = "treepplr"),
-                        src_name = "coin.tppl", data = coinflips, samples = 10)
-  if(rlang::is_installed("ggplot2")) {
-    ggplot2::ggplot(output) +
-    ggplot2::geom_col(ggplot2::aes(.data$samples, .data$nweights), width = 0.005) +
-    ggplot2::theme_bw()
-  }
-}
+\details{
+This function takes TreePPL code (.tppl) files and compile it.
+
+TreePPL need to be install on your computer and the PATH set for R/RSTUDIO (see \href{https://www.google.com}{install} manual).
+The executable file will be written in R's \code{\link[base:tempfile]{base::tempdir()}}.
+
+\code{dir_path} : The directory that contains the TreePPL code and data file. If NULL, use \code{\link[=tp_tempdir]{tp_tempdir()}} output.
+
+\code{project_name} : Name of the TreePPL code (.tppl) in dir_path (without extension).
+
+\code{src_name} : File name for TreePPL program output.
+
+\code{method} : Inference method to be used.
 }

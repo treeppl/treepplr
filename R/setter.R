@@ -1,14 +1,16 @@
-#' Prepare input for inference with TreePPL
+#' Prepare input for [tp_go()]
 #'
-#' This function takes R objects and writes out an JSON file to be used by `tp_run()`.
+#' @description
+#' `tp_write` writes an JSON file to be used by [tp_go()].
 #'
-#' @param model_string A string contain the TreePPL model to be included in the trppl input file.
-#' @param data_treeppl_input A list of R objects contain the TreePPL data to be included in the TreePPL JSON input file.
+#' @param model_data_strlist a structured list coming from [tp_import()].
 #'
-#' @return tuple : path to TreePPL file / path to JSON file
+#' @details
+#' This function takes a structured list of TreePPL code and data files (more details in [tp_import()]) and write 2 files from them.
+#'
+#' @return None.
 #' @export
-#'
-#' @examples
+
 tp_write <- function(model_data_strlist){
 
   dir <- tp_tempdir()

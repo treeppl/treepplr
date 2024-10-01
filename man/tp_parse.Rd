@@ -2,30 +2,25 @@
 % Please edit documentation in R/runner.R
 \name{tp_parse}
 \alias{tp_parse}
-\title{Parse a TreePPL output}
+\title{Parse TreePPL json output}
 \usage{
-tp_parse(dir_path = NULL, src_name = NULL)
+tp_parse(dir_path = NULL, src_name = "out")
 }
 \arguments{
-\item{dir_path}{The directory that contains the TreePPL code and input file. The executable and the output files will be written here.}
+\item{dir_path}{a character vector giving the TreePPL json output directory name.}
 
-\item{src_name}{Name of file with TreePPL program.}
+\item{src_name}{a character vector giving data.frame output name.}
 }
 \value{
-A data frame with sampled values, log weights, normalized weights, and the normalizing constant for all samples.
+RevBayes data.fram format.
 }
 \description{
-Parse a TreePPL output
+\code{tp_parse} take TreePPL json output and return a data.frame
 }
-\examples{
-\dontrun{
-  coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
-  output <- tp_run(dir = system.file("extdata", package = "treepplr"),
-                        src_name = "coin.tppl", data = coinflips, samples = 10)
-  if(rlang::is_installed("ggplot2")) {
-    ggplot2::ggplot(output) +
-    ggplot2::geom_col(ggplot2::aes(.data$samples, .data$nweights), width = 0.005) +
-    ggplot2::theme_bw()
-  }
-}
+\details{
+This function takes a TreePPL json output file compile and write a revBeyes data.fram format.
+
+\code{dir_path} : The directory that contains TreePPL json output coming from \link{tp_run}. If NULL, use \code{\link[=tp_tempdir]{tp_tempdir()}} output.
+
+\code{project_name} : Name of the TreePPL json output file in dir_path (without extension).
 }
