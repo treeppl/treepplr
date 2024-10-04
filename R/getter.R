@@ -25,12 +25,15 @@ tp_import <- function(dir_path, project_name){
   out
 }
 
+#' @export
+#'
 tp_import_model <- function(dir_path, model_name){
   dir_path <-tp_tempdir(dir_path)
   model <- readr::read_file(paste0(dir_path, model_name, ".tppl"))
   model
 }
-
+#' @export
+#'
 tp_import_data <- function(dir_path, data_name){
   dir_path <-tp_tempdir(dir_path)
   data <- jsonlite::fromJSON(paste0(dir_path, data_name, ".json"))
