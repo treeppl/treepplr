@@ -19,8 +19,22 @@ tp_write <- function(model_data_strlist){
 
   # write json with input data
   input_json <- RJSONIO::toJSON(model_data_strlist[[2]])
+  input_json <- .cor_export_num(input_json)
 
   write(input_json, paste0(dir, "input.json"))
+}
+
+.cor_export_num <- function(JSON_str) {
+  JSON_str <- str_replace_all(JSON_str, "age\":", "age\":!")
+  JSON_str <-str_split_fixed(JSON_str, "!", n = Inf)
+  JSON_res <- JSON_str[1]
+  for (i in 2:length(JSON_str)) {
+    if(!str_detect(str_sub(JSON_str[i],1,10), "\\.")){
+      JSON_str[i] <- str_c(str_sub(JSON_str[i],1,9), ".0", str_sub(JSON_str[i],start=10))
+    }
+    JSON_res <- str_c(JSON_res, JSON_str[i])
+  }
+  JSON_res
 }
 
 #' Convert a phyjson_tree object to phyjson_tree list
@@ -34,25 +48,25 @@ tp_write <- function(model_data_strlist){
 #' @export
 #'
 tp_phyjson_list <- function(phyjson_tree) {
-  pjs_list <- list(.rec_phyjson_str(phyjson_tree$tree, phyjson_tree$root_index))
+  pjs_list <- list(.rec_phyjson_list(phyjson_tree$tree, phyjson_tree$root_index))
   names(pjs_list) = phyjson_tree$name
 
   return(pjs_list)
 }
 
-.rec_phyjson_str <- function(tree, row_index) {
+.rec_phyjson_list <- function(tree, row_index) {
   row <- tree[row_index, ]
 
-  sub_pjs_str <- list("label" = row$Label, "age" = row$Age)
+  sub_pjs_list <- list("label" = row$Label, "age" = row$Age)
   if (row$Type != "Leaf") {
-    sub_pjs_str <- c(sub_pjs_str,
+    sub_pjs_list <- c(sub_pjs_list,
                      list(
-                       "left" = .rec_phyjson_str(tree, row$Left),
-                       "right" = .rec_phyjson_str(tree, row$Right)
+                       "left" = .rec_phyjson_list(tree, row$Left),
+                       "right" = .rec_phyjson_list(tree, row$Right)
                      ))
   }
 
-  pjs_str <- list("__constructor__" = row$Type, "__data__" = sub_pjs_str)
+  pjs_list <- list("__constructor__" = row$Type, "__data__" = sub_pjs_list)
 
-  return(pjs_str)
+  return(pjs_list)
 }
