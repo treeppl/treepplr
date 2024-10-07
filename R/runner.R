@@ -7,7 +7,8 @@
 #' @param project_name a character vector giving the project name.
 #' @param src_name a character vector giving the output name.
 #' @param method a character vector giving the inference method name.
-#' @param samples a [base::integer] giving the number of samples.
+#' @param samples a [base::integer] giving the number of samples (mcmc) or particules (smc).
+#' @param run a [base::integer] giving the number of run (mcmc) or sweap (smc).
 #'
 #' @details
 #' This function takes TreePPL code (.tppl) and data (.json) files, compile TreePPL code using [tp_compile()]
@@ -22,18 +23,19 @@
 #'
 #' `src_name` : File name for TreePPL program and TreePPL output.
 #'
-#' `method` : Inference method to be used.
+#' `method` : Inference method to be used (smc, mcmc, etc).
 #'
-#' `samples` : The number of samples during inference.
+#' `samples` : The number of samples (mcmc) / particules (smc) during inference.
+#'
+#' `run` : The number of run (mcmc) / sweap (smc) used for the inference.
 #'
 #' @return Path to the tmp R directory where output file was written.
 #' @export
 
-tp_go <- function(dir_path = NULL, project_name = "input", src_name = "out", method = "smc-bpf", samples = 1000) {
-  # smc-apf
+tp_go <- function(dir_path = NULL, project_name = "input", src_name = "out", method = "smc-bpf", samples = 1000, run = 1) {
 
   tp_compile(dir_path, project_name, src_name, method)
-  return(tp_run(dir_path, project_name, src_name, method, samples))
+  return(tp_run(dir_path, project_name, src_name, method, samples, run))
 }
 
 #' Compile a TreePPL program
@@ -87,7 +89,9 @@ tp_compile <- function(dir_path = NULL, project_name = "input", src_name = "out"
 #' @param dir_path a character vector giving the TreePPL data directory name.
 #' @param project_name a character vector giving TreePPL data name.
 #' @param src_name a character vector giving the TreePPL output name.
-#' @param samples a [base::integer] giving the number of samples.
+#' @param method a character vector giving the inference method name.
+#' @param samples a [base::integer] giving the number of samples (mcmc) or particules (smc).
+#' @param run a [base::integer] giving the number of run (mcmc) or sweap (smc).
 #'
 #' @details
 #' This function takes compiled TreePPL code from [tp_compile()] and data (.json) files
@@ -102,12 +106,16 @@ tp_compile <- function(dir_path = NULL, project_name = "input", src_name = "out"
 #'
 #' `src_name` : File name of TreePPL json output.
 #'
-#' `samples` : The number of samples during inference.
+#' `method` : Inference method to be used (smc, mcmc, etc).
+#'
+#' `samples` : The number of samples (mcmc) / particules (smc) during inference.
+#'
+#' `run` : The number of run (mcmc) / sweap (smc) used for the inference.
 #'
 #' @return Path to the tmp R directory where output file was written.
 #' @export
 
-tp_run <- function(dir_path = NULL, project_name = "input", src_name = "out", samples = 1000) {
+tp_run <- function(dir_path = NULL, project_name = "input", src_name = "out", method = "smc-bpf", samples = 1000, run = "1") {
 
   # check inputs
   if (method == "smc-apf")
@@ -125,13 +133,10 @@ tp_run <- function(dir_path = NULL, project_name = "input", src_name = "out", sa
   # run
   system2(
     command = paste0(dir_path, src_name),
-    args = c(paste0(dir_path, project_name, ".json"), paste(samples, "1")),
+    args = c(paste0(dir_path, project_name, ".json"), paste(samples, run)),
     stdout = paste0(dir_path, src_name, ".json")
   )
 
-  return(as.data.frame(fromJSON(paste0(
-    dir_path, src_name, ".json"
-  ))))
 }
 
 #' Parse TreePPL json output
@@ -141,6 +146,7 @@ tp_run <- function(dir_path = NULL, project_name = "input", src_name = "out", sa
 #'
 #' @param dir_path a character vector giving the TreePPL json output directory name.
 #' @param src_name a character vector giving data.frame output name.
+#' @param run a [base::integer] giving the number of run (mcmc) or sweap (smc).
 #'
 #' @details
 #' This function takes a TreePPL json output file compile and write a revBeyes data.fram format.
@@ -149,20 +155,24 @@ tp_run <- function(dir_path = NULL, project_name = "input", src_name = "out", sa
 #'
 #' `project_name` : Name of the TreePPL json output file in dir_path (without extension).
 #'
-#' @return RevBayes data.fram format.
+#' `run` : The number of run (mcmc) / sweap (smc) used for the inference.
+#'
+#' @return RevBayes dataframe format.
 #' @export
 
-tp_parse <- function(dir_path = NULL, src_name = "out") {
+tp_parse <- function(dir_path = NULL, src_name = "out", run = 1) {
   # if dir_path = NULL return temp_dir, if not return dir
   dir_path <- tp_tempdir(dir_path)
 
-  output_trppl <- fromJSON(paste0(dir_path, src_name, ".json"))
+  output_trppl <- RJSONIO::fromJSON(paste0(dir_path, src_name, ".json"))
 
-  result <- data.frame(matrix(ncol = 12, nrow = 0))
+  result <- data.frame(matrix(ncol = 14, nrow = 0))
   colnames(result) <- c(
     "iteration",
     "log_weight",
     "log_norm_const",
+    "mu",
+    "beta",
     "node_index",
     "branch_start_time",
     "branch_end_time",
@@ -175,11 +185,13 @@ tp_parse <- function(dir_path = NULL, src_name = "out") {
   )
 
   for (i in 1:length(output_trppl[1][[1]])) {
-    res <- data.frame(matrix(ncol = 12, nrow = 0))
+    res <- data.frame(matrix(ncol = 14, nrow = 0))
     colnames(res) <- c(
       "iteration",
       "log_weight",
       "log_norm_const",
+      "mu",
+      "beta",
       "node_index",
       "branch_start_time",
       "branch_end_time",
@@ -201,6 +213,8 @@ tp_parse <- function(dir_path = NULL, src_name = "out") {
       pindex = NA,
       output_trppl$weights[i],
       output_trppl$normConst,
+      output_trppl[1][[1]][[i]][[1]]$mu,
+      output_trppl[1][[1]][[i]][[1]]$beta,
       prevAge = NA,
       state,
       res
@@ -215,6 +229,8 @@ tp_parse <- function(dir_path = NULL, src_name = "out") {
                        pindex,
                        lweight,
                        lnorm_const,
+                       mu,
+                       beta,
                        prevAge,
                        startState,
                        result)
@@ -223,6 +239,8 @@ tp_parse <- function(dir_path = NULL, src_name = "out") {
     iteration = as.numeric(i - 1),
     log_weight = as.numeric(lweight),
     log_norm_const = as.numeric(lnorm_const),
+    mu = as.numeric(mu),
+    beta = as.numeric(beta),
     node_index = as.numeric(subtree$label - 1),
     branch_start_time = as.numeric(prevAge),
     branch_end_time = as.numeric(subtree$age),
@@ -261,6 +279,8 @@ tp_parse <- function(dir_path = NULL, src_name = "out") {
       subtree$label - 1,
       lweight,
       lnorm_const,
+      mu,
+      beta,
       subtree$age,
       base[["end_state"]],
       result
@@ -271,6 +291,8 @@ tp_parse <- function(dir_path = NULL, src_name = "out") {
       subtree$label - 1,
       lweight,
       lnorm_const,
+      mu,
+      beta,
       subtree$age,
       base[["end_state"]],
       result

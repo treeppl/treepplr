@@ -108,7 +108,8 @@ testthat::test_that("Test-runner_4 : tp_run", {
          project_name = "coin",
          src_name = "coincoin",
          method = "smc-bpf",
-         samples = 1000)
+         samples = 1000,
+         run = 1)
 
   expect_no_error(readBin(paste0(dir_path, "/coincoin"), "raw", 10e6))
 
@@ -121,7 +122,8 @@ testthat::test_that("Test-runner_5 : tp_parse", {
   source_name <- "hostrep"
 
   pars <- tp_parse(dir_path = dir_path,
-             src_name = source_name)
+             src_name = source_name,
+             run = 1)
 
   dec = "."
   test <- read.csv(paste0(dir_path, "/hostrep.csv"), dec=dec, stringsAsFactors = FALSE, strip.white = TRUE)

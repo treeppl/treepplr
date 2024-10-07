@@ -20,7 +20,8 @@ Imports:
     rlang,
     RJSONIO,
     strex,
-    tidyr
+    tidyr,
+    tidytree
 Suggests:
     ggplot2,
     knitr,

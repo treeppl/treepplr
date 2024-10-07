@@ -9,7 +9,8 @@ tp_go(
   project_name = "input",
   src_name = "out",
   method = "smc-bpf",
-  samples = 1000
+  samples = 1000,
+  run = 1
 )
 }
 \arguments{
@@ -21,7 +22,9 @@ tp_go(
 
 \item{method}{a character vector giving the inference method name.}
 
-\item{samples}{a \link[base:integer]{base::integer} giving the number of samples.}
+\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (mcmc) or particules (smc).}
+
+\item{run}{a \link[base:integer]{base::integer} giving the number of run (mcmc) or sweap (smc).}
 }
 \value{
 Path to the tmp R directory where output file was written.
@@ -42,7 +45,9 @@ The executable and the output files will be written in R's \code{\link[base:temp
 
 \code{src_name} : File name for TreePPL program and TreePPL output.
 
-\code{method} : Inference method to be used.
+\code{method} : Inference method to be used (smc, mcmc, etc).
 
-\code{samples} : The number of samples during inference.
+\code{samples} : The number of samples (mcmc) / particules (smc) during inference.
+
+\code{run} : The number of run (mcmc) / sweap (smc) used for the inference.
 }

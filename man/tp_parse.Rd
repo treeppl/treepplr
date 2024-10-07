@@ -4,15 +4,17 @@
 \alias{tp_parse}
 \title{Parse TreePPL json output}
 \usage{
-tp_parse(dir_path = NULL, src_name = "out")
+tp_parse(dir_path = NULL, src_name = "out", run = 1)
 }
 \arguments{
 \item{dir_path}{a character vector giving the TreePPL json output directory name.}
 
 \item{src_name}{a character vector giving data.frame output name.}
+
+\item{run}{a \link[base:integer]{base::integer} giving the number of run (mcmc) or sweap (smc).}
 }
 \value{
-RevBayes data.fram format.
+RevBayes dataframe format.
 }
 \description{
 \code{tp_parse} take TreePPL json output and return a data.frame
@@ -23,4 +25,6 @@ This function takes a TreePPL json output file compile and write a revBeyes data
 \code{dir_path} : The directory that contains TreePPL json output coming from \link{tp_run}. If NULL, use \code{\link[=tp_tempdir]{tp_tempdir()}} output.
 
 \code{project_name} : Name of the TreePPL json output file in dir_path (without extension).
+
+\code{run} : The number of run (mcmc) / sweap (smc) used for the inference.
 }

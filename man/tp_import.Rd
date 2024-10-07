@@ -4,12 +4,14 @@
 \alias{tp_import}
 \title{Import input for TreePPL program}
 \usage{
-tp_import(dir_path, project_name)
+tp_import(dir_path, model_name, data_name)
 }
 \arguments{
 \item{dir_path}{a character vector giving the directory name.}
 
-\item{project_name}{a character vector giving the project name.}
+\item{model_name}{a character vector giving the model name.}
+
+\item{data_name}{a character vector giving the data name.}
 }
 \value{
 Structured list : TreePPL model (string) and TreePPL data (Structured list)
@@ -22,5 +24,7 @@ This function takes TreePPL code (.tppl) and data (.json) files and import them.
 
 \code{dir_path} : The directory that contains the TreePPL code and data file. If NULL, use \code{\link[=tp_tempdir]{tp_tempdir()}} output.
 
-\code{project_name} : Name of the TreePPL code and data file in dir_path (without extension).
+\code{model_name} : Name of the TreePPL code in dir_path (without extension).
+
+\code{data_name} : Name of the TreePPL data file in dir_path (without extension).
 }
