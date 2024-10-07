@@ -133,7 +133,7 @@ tp_phylo_2_phyjson_tree <- function(phylo_tree) {
     tree[row$parent, "Age"] <- row$branch.length + tree[i, "Age"]
 
     if (row$parent == row$node) {
-      tree[i, "Type"] = "Root"
+      tree[i, "Type"] = "Node"
       root_index <- i
     } else {
       if (is.na(tree[row$parent, "Right"])) {
