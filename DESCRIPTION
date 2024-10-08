@@ -1,6 +1,6 @@
 Package: treepplr
 Title: R Interface to TreePPL
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person("Mariana", "P Braga", , "mpiresbr@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1253-2536"))

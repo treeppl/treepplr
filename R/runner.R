@@ -32,8 +32,12 @@
 #' @return Path to the tmp R directory where output file was written.
 #' @export
 
-tp_go <- function(dir_path = NULL, project_name = "input", src_name = "out", method = "smc-bpf", samples = 1000, run = 1) {
-
+tp_go <- function(dir_path = NULL,
+                  project_name = "input",
+                  src_name = "out",
+                  method = "smc-bpf",
+                  samples = 1000,
+                  run = 1) {
   tp_compile(dir_path, project_name, src_name, method)
   return(tp_run(dir_path, project_name, src_name, method, samples, run))
 }
@@ -65,7 +69,10 @@ tp_go <- function(dir_path = NULL, project_name = "input", src_name = "out", met
 #' @return None.
 #' @export
 
-tp_compile <- function(dir_path = NULL, project_name = "input", src_name = "out", method = "smc-bpf") {
+tp_compile <- function(dir_path = NULL,
+                       project_name = "input",
+                       src_name = "out",
+                       method = "smc-bpf") {
   # smc-apf
 
   # if dir = NULL return temp_dir, if not return dir
@@ -115,8 +122,12 @@ tp_compile <- function(dir_path = NULL, project_name = "input", src_name = "out"
 #' @return Path to the tmp R directory where output file was written.
 #' @export
 
-tp_run <- function(dir_path = NULL, project_name = "input", src_name = "out", method = "smc-bpf", samples = 1000, run = "1") {
-
+tp_run <- function(dir_path = NULL,
+                   project_name = "input",
+                   src_name = "out",
+                   method = "smc-bpf",
+                   samples = 1000,
+                   run = "1") {
   # check inputs
   if (method == "smc-apf")
     samples <- samples + 1
@@ -160,19 +171,31 @@ tp_run <- function(dir_path = NULL, project_name = "input", src_name = "out", me
 #' @return RevBayes dataframe format.
 #' @export
 
-tp_parse <- function(dir_path = NULL, src_name = "out", run = 1) {
+tp_parse <- function(dir_path = NULL,
+                     src_name = "out",
+                     run = 1) {
   # if dir_path = NULL return temp_dir, if not return dir
   dir_path <- tp_tempdir(dir_path)
 
   output_trppl <- RJSONIO::fromJSON(paste0(dir_path, src_name, ".json"))
+  nbr_lam <- length(output_trppl[1][[1]][[1]][[1]]$lambda)
+  nbr_col <- 14 + nbr_lam
+  name_lam <- c()
 
-  result <- data.frame(matrix(ncol = 14, nrow = 0))
+  for(i in 1:nbr_lam)
+  {
+    name_lam <- c(name_lam, paste0("lambda",i))
+  }
+
+  result <- data.frame(matrix(ncol = nbr_col, nrow = 0))
+
   colnames(result) <- c(
     "iteration",
     "log_weight",
     "log_norm_const",
     "mu",
     "beta",
+    name_lam,
     "node_index",
     "branch_start_time",
     "branch_end_time",
@@ -185,13 +208,14 @@ tp_parse <- function(dir_path = NULL, src_name = "out", run = 1) {
   )
 
   for (i in 1:length(output_trppl[1][[1]])) {
-    res <- data.frame(matrix(ncol = 14, nrow = 0))
+    res <- data.frame(matrix(ncol = nbr_col, nrow = 0))
     colnames(res) <- c(
       "iteration",
       "log_weight",
       "log_norm_const",
       "mu",
       "beta",
+      name_lam,
       "node_index",
       "branch_start_time",
       "branch_end_time",
@@ -207,6 +231,10 @@ tp_parse <- function(dir_path = NULL, src_name = "out", run = 1) {
 
     state <- paste(tree$repertoire, collapse = "")
 
+    lambda <- output_trppl[1][[1]][[i]][[1]]$lambda
+
+    names(lambda) <- name_lam
+
     res <- .peel_tree(
       tree,
       i,
@@ -215,6 +243,7 @@ tp_parse <- function(dir_path = NULL, src_name = "out", run = 1) {
       output_trppl$normConst,
       output_trppl[1][[1]][[i]][[1]]$mu,
       output_trppl[1][[1]][[i]][[1]]$beta,
+      lambda,
       prevAge = NA,
       state,
       res
@@ -231,6 +260,7 @@ tp_parse <- function(dir_path = NULL, src_name = "out", run = 1) {
                        lnorm_const,
                        mu,
                        beta,
+                       lambda,
                        prevAge,
                        startState,
                        result)
@@ -241,6 +271,7 @@ tp_parse <- function(dir_path = NULL, src_name = "out", run = 1) {
     log_norm_const = as.numeric(lnorm_const),
     mu = as.numeric(mu),
     beta = as.numeric(beta),
+    lambda,
     node_index = as.numeric(subtree$label - 1),
     branch_start_time = as.numeric(prevAge),
     branch_end_time = as.numeric(subtree$age),
@@ -281,6 +312,7 @@ tp_parse <- function(dir_path = NULL, src_name = "out", run = 1) {
       lnorm_const,
       mu,
       beta,
+      lambda,
       subtree$age,
       base[["end_state"]],
       result
@@ -293,6 +325,7 @@ tp_parse <- function(dir_path = NULL, src_name = "out", run = 1) {
       lnorm_const,
       mu,
       beta,
+      lambda,
       subtree$age,
       base[["end_state"]],
       result
