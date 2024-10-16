@@ -11,7 +11,7 @@
 #' @return None.
 #' @export
 
-tp_write <- function(model_data_strlist){
+tp_write <- function(model_data_strlist, hostrep_cor = FALSE){
 
   dir <- tp_tempdir()
 
@@ -19,7 +19,9 @@ tp_write <- function(model_data_strlist){
 
   # write json with input data
   input_json <- RJSONIO::toJSON(model_data_strlist[[2]])
-  input_json <- .cor_export_num(input_json)
+  if(hostrep_cor) {
+    input_json <- .cor_export_num(input_json)
+  }
 
   write(input_json, paste0(dir, "input.json"))
 }
