@@ -290,13 +290,20 @@ tp_parse <- function(dir_path = NULL,
 
   base[["end_state"]]  <- base[["start_state"]]
 
-  if (length(subtree$history) != 0) {
-    for (j in 1:length(subtree$history)) {
-      base[["start_state"]]  <- as.numeric(base[["end_state"]])
-      base[["end_state"]]  <-  as.numeric(paste(subtree$history[[length(subtree$history) - j +
-                                                                   1]]$`__data__`$repertoire, collapse = ""))
-      base[["transition_time"]]  <- as.numeric(subtree$history[[length(subtree$history) - j +
-                                                                  1]]$`__data__`$age)
+  chang_nbr <- length(subtree$history)
+  if (chang_nbr != 0) {
+    df <- data.frame(matrix(ncol = 2, nrow = chang_nbr))
+    for (i in 1:chang_nbr) {
+      #"end_state"
+      df[i,1] <- as.numeric(paste(subtree$history[[i]]$`__data__`$repertoire, collapse = ""))
+      #"transition_time"
+      df[i,2] <- as.numeric(subtree$history[[i]]$`__data__`$age)
+    }
+    df <- df[order(-df$X2), ]
+    for (j in 1:chang_nbr) {
+      base[["start_state"]]  <- base[["end_state"]]
+      base[["end_state"]]  <- df[j,1]
+      base[["transition_time"]]  <- df[j,2]
       result[nrow(result) + 1, ] <- base
     }
   } else {
