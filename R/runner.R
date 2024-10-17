@@ -37,8 +37,9 @@ tp_go <- function(dir_path = NULL,
                   src_name = "out",
                   method = "smc-bpf",
                   samples = 1000,
+                  subsample = NULL,
                   run = 1) {
-  tp_compile(dir_path, project_name, src_name, method)
+  tp_compile(dir_path, project_name, src_name, method, subsample)
   return(tp_run(dir_path, project_name, src_name, method, samples, run))
 }
 
@@ -72,7 +73,8 @@ tp_go <- function(dir_path = NULL,
 tp_compile <- function(dir_path = NULL,
                        project_name = "input",
                        src_name = "out",
-                       method = "smc-bpf") {
+                       method = "smc-bpf",
+                       subsample = NULL) {
   # smc-apf
 
   # if dir = NULL return temp_dir, if not return dir
@@ -83,6 +85,10 @@ tp_compile <- function(dir_path = NULL,
     paste("-m", method),
     paste0("--output ", temp_dir, src_name)
   )
+
+  if(!is.null(subsample)) {
+    argum <- c(argum, paste("--subsample", subsample))
+  }
 
   # Compile program
   system2("tpplc", args = argum)
