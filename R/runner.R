@@ -86,7 +86,7 @@ tp_compile <- function(dir_path = NULL,
     paste0("--output ", temp_dir, src_name)
   )
 
-  if(!is.null(subsample)) {
+  if (!is.null(subsample)) {
     argum <- c(argum, paste("--subsample", subsample))
   }
 
@@ -174,7 +174,7 @@ tp_run <- function(dir_path = NULL,
 #'
 #' `run` : The number of run (mcmc) / sweap (smc) used for the inference.
 #'
-#' @return RevBayes dataframe format.
+#' @return List (n=run) RevBayes dataframe format.
 #' @export
 
 tp_parse <- function(dir_path = NULL,
@@ -183,39 +183,31 @@ tp_parse <- function(dir_path = NULL,
   # if dir_path = NULL return temp_dir, if not return dir
   dir_path <- tp_tempdir(dir_path)
 
-  output_trppl <- RJSONIO::fromJSON(paste0(dir_path, src_name, ".json"))
-  nbr_lam <- length(output_trppl[1][[1]][[1]][[1]]$lambda)
-  nbr_col <- 14 + nbr_lam
-  name_lam <- c()
+  output_trppl_list <-
+    RJSONIO::fromJSON(paste0(dir_path, src_name, ".json"))
 
-  for(i in 1:nbr_lam)
-  {
-    name_lam <- c(name_lam, paste0("lambda",i))
+  if (run == 1) {
+    output_trppl_list <- list(output_trppl_list)
   }
 
-  result <- data.frame(matrix(ncol = nbr_col, nrow = 0))
+  result_list <- list()
 
-  colnames(result) <- c(
-    "iteration",
-    "log_weight",
-    "log_norm_const",
-    "mu",
-    "beta",
-    name_lam,
-    "node_index",
-    "branch_start_time",
-    "branch_end_time",
-    "start_state",
-    "end_state",
-    "transition_time",
-    "parent_index",
-    "child1_index",
-    "child2_index"
-  )
+  for (index in 1:length(output_trppl_list)) {
 
-  for (i in 1:length(output_trppl[1][[1]])) {
-    res <- data.frame(matrix(ncol = nbr_col, nrow = 0))
-    colnames(res) <- c(
+    output_trppl <- output_trppl_list[[index]]
+
+    nbr_lam <- length(output_trppl[1][[1]][[1]][[1]]$lambda)
+    nbr_col <- 14 + nbr_lam
+    name_lam <- c()
+
+    for (i in 1:nbr_lam)
+    {
+      name_lam <- c(name_lam, paste0("lambda", i))
+    }
+
+    result <- data.frame(matrix(ncol = nbr_col, nrow = 0))
+
+    colnames(result) <- c(
       "iteration",
       "log_weight",
       "log_norm_const",
@@ -233,30 +225,52 @@ tp_parse <- function(dir_path = NULL,
       "child2_index"
     )
 
-    tree <- output_trppl[1][[1]][[i]][[1]]$tree$`__data__`
+    for (i in 1:length(output_trppl[1][[1]])) {
+      res <- data.frame(matrix(ncol = nbr_col, nrow = 0))
+      colnames(res) <- c(
+        "iteration",
+        "log_weight",
+        "log_norm_const",
+        "mu",
+        "beta",
+        name_lam,
+        "node_index",
+        "branch_start_time",
+        "branch_end_time",
+        "start_state",
+        "end_state",
+        "transition_time",
+        "parent_index",
+        "child1_index",
+        "child2_index"
+      )
 
-    state <- paste(tree$repertoire, collapse = "")
+      tree <- output_trppl[1][[1]][[i]][[1]]$tree$`__data__`
 
-    lambda <- output_trppl[1][[1]][[i]][[1]]$lambda
+      state <- paste(tree$repertoire, collapse = "")
 
-    names(lambda) <- name_lam
+      lambda <- output_trppl[1][[1]][[i]][[1]]$lambda
 
-    res <- .peel_tree(
-      tree,
-      i,
-      pindex = NA,
-      output_trppl$weights[i],
-      output_trppl$normConst,
-      output_trppl[1][[1]][[i]][[1]]$mu,
-      output_trppl[1][[1]][[i]][[1]]$beta,
-      lambda,
-      prevAge = NA,
-      state,
-      res
-    )
-    result <- rbind(result, res)
+      names(lambda) <- name_lam
+
+      res <- .peel_tree(
+        tree,
+        i,
+        pindex = NA,
+        output_trppl$weights[i],
+        output_trppl$normConst,
+        output_trppl[1][[1]][[i]][[1]]$mu,
+        output_trppl[1][[1]][[i]][[1]]$beta,
+        lambda,
+        prevAge = NA,
+        state,
+        res
+      )
+      result <- rbind(result, res)
+    }
+    result_list[[index]] <- result
   }
-  return(result)
+  return(result_list)
 }
 
 .peel_tree <- function(subtree,
@@ -290,8 +304,10 @@ tp_parse <- function(dir_path = NULL,
   )
 
   if (!is.null(subtree$left)) {
-    base[["child1_index"]] <- as.numeric(subtree$left$`__data__`$label - 1)
-    base[["child2_index"]]  <- as.numeric(subtree$right$`__data__`$label - 1)
+    base[["child1_index"]] <-
+      as.numeric(subtree$left$`__data__`$label - 1)
+    base[["child2_index"]]  <-
+      as.numeric(subtree$right$`__data__`$label - 1)
   }
 
   base[["end_state"]]  <- base[["start_state"]]
@@ -301,15 +317,16 @@ tp_parse <- function(dir_path = NULL,
     df <- data.frame(matrix(ncol = 2, nrow = chang_nbr))
     for (i in 1:chang_nbr) {
       #"end_state"
-      df[i,1] <- as.numeric(paste(subtree$history[[i]]$`__data__`$repertoire, collapse = ""))
+      df[i, 1] <-
+        as.numeric(paste(subtree$history[[i]]$`__data__`$repertoire, collapse = ""))
       #"transition_time"
-      df[i,2] <- as.numeric(subtree$history[[i]]$`__data__`$age)
+      df[i, 2] <- as.numeric(subtree$history[[i]]$`__data__`$age)
     }
     df <- df[order(-df$X2), ]
     for (j in 1:chang_nbr) {
       base[["start_state"]]  <- base[["end_state"]]
-      base[["end_state"]]  <- df[j,1]
-      base[["transition_time"]]  <- df[j,2]
+      base[["end_state"]]  <- df[j, 1]
+      base[["transition_time"]]  <- df[j, 2]
       result[nrow(result) + 1, ] <- base
     }
   } else {
