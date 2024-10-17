@@ -36,7 +36,14 @@ tp_write <- function(model_data_strlist, hostrep_cor = FALSE){
     }
     JSON_res <- str_c(JSON_res, JSON_str[i])
   }
-  JSON_res
+  JSON_mtx <- str_replace_all(JSON_res, "host_distances\":", "host_distances\":!")
+  JSON_mtx <-str_split_fixed(JSON_mtx, "!", n = Inf)
+  JSON_juk <- str_replace_all(JSON_mtx[2], "]", "]!")
+  JSON_juk <- str_split_fixed(JSON_juk, "!", n = Inf)
+  JSON_juk[1] <- str_replace_all(JSON_juk[1], "0,", "0.0,")
+  JSON_juk[1] <- str_replace_all(JSON_juk[1], "0 ", "0.0 ")
+  JSON_juk <- str_c(JSON_juk[1], JSON_juk[2])
+  JSON_mtx <- str_c(JSON_mtx[1], JSON_juk)
 }
 
 #' Convert a phyjson_tree object to phyjson_tree list
