@@ -87,7 +87,7 @@ tp_compile <- function(dir_path = NULL,
   )
 
   if (!is.null(subsample)) {
-    argum <- c(argum, paste("--subsample", subsample))
+    argum <- c(argum, paste("--subsample -n", subsample))
   }
 
   # Compile program
