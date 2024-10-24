@@ -274,7 +274,7 @@ tp_parse <- function(dir_path = NULL,
 }
 
 .peel_tree <- function(subtree,
-                       i,
+                       index,
                        pindex,
                        lweight,
                        lnorm_const,
@@ -286,7 +286,7 @@ tp_parse <- function(dir_path = NULL,
                        result)
 {
   base <- c(
-    iteration = as.numeric(i - 1),
+    iteration = as.numeric(index - 1),
     log_weight = as.numeric(lweight),
     log_norm_const = as.numeric(lnorm_const),
     mu = as.numeric(mu),
@@ -336,7 +336,7 @@ tp_parse <- function(dir_path = NULL,
   if (!is.null(subtree$left)) {
     result <- .peel_tree(
       subtree$left$`__data__`,
-      i,
+      index,
       subtree$label - 1,
       lweight,
       lnorm_const,
@@ -349,7 +349,7 @@ tp_parse <- function(dir_path = NULL,
     )
     result <- .peel_tree(
       subtree$right$`__data__`,
-      i,
+      index,
       subtree$label - 1,
       lweight,
       lnorm_const,
