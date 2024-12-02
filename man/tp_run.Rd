@@ -27,7 +27,7 @@ tp_run(
 \item{run}{a \link[base:integer]{base::integer} giving the number of run (mcmc) or sweap (smc).}
 }
 \value{
-Path to the tmp R directory where output file was written.
+Path to the directory where output file was written.
 }
 \description{
 \code{tp_run} take paths, execute compiled TreePPL code with data and return current \link[base:tempfile]{base::tempdir} path.

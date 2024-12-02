@@ -29,7 +29,7 @@
 #'
 #' `run` : The number of run (mcmc) / sweap (smc) used for the inference.
 #'
-#' @return Path to the tmp R directory where output file was written.
+#' @return Path to R directory where output file was written.
 #' @export
 
 tp_go <- function(dir_path = NULL,
@@ -67,7 +67,7 @@ tp_go <- function(dir_path = NULL,
 #'
 #' `method` : Inference method to be used.
 #'
-#' @return None.
+#' @return Path to the directory where output file was written.
 #' @export
 
 tp_compile <- function(dir_path = NULL,
@@ -78,12 +78,12 @@ tp_compile <- function(dir_path = NULL,
   # smc-apf
 
   # if dir = NULL return temp_dir, if not return dir
-  temp_dir <- tp_tempdir(dir_path)
+  dir_path <- tp_tempdir(dir_path)
 
   argum <- c(
-    paste0(temp_dir, project_name, ".tppl"),
+    paste0(dir_path, project_name, ".tppl"),
     paste("-m", method),
-    paste0("--output ", temp_dir, src_name)
+    paste0("--output ", dir_path, src_name)
   )
 
   if (!is.null(subsample)) {
@@ -92,6 +92,8 @@ tp_compile <- function(dir_path = NULL,
 
   # Compile program
   system2("tpplc", args = argum)
+
+  return(dir_path)
 }
 
 #' Run a TreePPL program
@@ -125,7 +127,7 @@ tp_compile <- function(dir_path = NULL,
 #'
 #' `run` : The number of run (mcmc) / sweap (smc) used for the inference.
 #'
-#' @return Path to the tmp R directory where output file was written.
+#' @return Path to the directory where output file was written.
 #' @export
 
 tp_run <- function(dir_path = NULL,
@@ -153,7 +155,30 @@ tp_run <- function(dir_path = NULL,
     args = c(paste0(dir_path, project_name, ".json"), paste(samples, run)),
     stdout = paste0(dir_path, src_name, ".json")
   )
+  return(dir_path)
+}
 
+#' @export
+tp_parse_coin <- function(dir_path = NULL,
+                     src_name = "out",
+                     run = 1) {
+  # if dir_path = NULL return temp_dir, if not return dir
+  dir_path <- tp_tempdir(dir_path)
+
+  output_trppl_list <-
+    RJSONIO::fromJSON(paste0(dir_path, src_name, ".json"))
+
+  if (run == 1) {
+    output_trppl_list <- list(output_trppl_list)
+  }
+
+  result_list <- list()
+
+  for (index in 1:length(output_trppl_list)) {
+    result_list <-  rbind(result_list, as.data.frame(output_trppl_list[[index]]))
+  }
+
+  return(result_list)
 }
 
 #' Parse TreePPL json output

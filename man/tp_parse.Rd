@@ -14,7 +14,7 @@ tp_parse(dir_path = NULL, src_name = "out", run = 1)
 \item{run}{a \link[base:integer]{base::integer} giving the number of run (mcmc) or sweap (smc).}
 }
 \value{
-RevBayes dataframe format.
+List (n=run) RevBayes dataframe format.
 }
 \description{
 \code{tp_parse} take TreePPL json output and return a data.frame

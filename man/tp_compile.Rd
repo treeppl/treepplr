@@ -8,7 +8,8 @@ tp_compile(
   dir_path = NULL,
   project_name = "input",
   src_name = "out",
-  method = "smc-bpf"
+  method = "smc-bpf",
+  subsample = NULL
 )
 }
 \arguments{
@@ -21,7 +22,7 @@ tp_compile(
 \item{method}{a character vector giving the inference method name.}
 }
 \value{
-None.
+Path to the directory where output file was written.
 }
 \description{
 \code{tp_compile} take paths, compile TreePPL code.

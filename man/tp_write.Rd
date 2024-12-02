@@ -4,7 +4,7 @@
 \alias{tp_write}
 \title{Prepare input for \code{\link[=tp_go]{tp_go()}}}
 \usage{
-tp_write(model_data_strlist)
+tp_write(model_data_strlist, hostrep_cor = FALSE)
 }
 \arguments{
 \item{model_data_strlist}{a structured list coming from \code{\link[=tp_import]{tp_import()}}.}

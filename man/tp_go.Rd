@@ -10,6 +10,7 @@ tp_go(
   src_name = "out",
   method = "smc-bpf",
   samples = 1000,
+  subsample = NULL,
   run = 1
 )
 }
@@ -27,7 +28,7 @@ tp_go(
 \item{run}{a \link[base:integer]{base::integer} giving the number of run (mcmc) or sweap (smc).}
 }
 \value{
-Path to the tmp R directory where output file was written.
+Path to R directory where output file was written.
 }
 \description{
 \code{tp_go} take paths, execute TreePPL and return current \link[base:tempfile]{base::tempdir} path.
