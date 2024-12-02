@@ -19,10 +19,12 @@ Imports:
     readr,
     rlang,
     RJSONIO,
+    stringr,
     strex,
     tidyr,
     tidytree
 Suggests:
+    devtools,
     ggplot2,
     knitr,
     testthta,

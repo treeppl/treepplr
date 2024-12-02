@@ -27,23 +27,23 @@ tp_write <- function(model_data_strlist, hostrep_cor = FALSE){
 }
 
 .cor_export_num <- function(JSON_str) {
-  JSON_str <- str_replace_all(JSON_str, "age\":", "age\":!")
-  JSON_str <-str_split_fixed(JSON_str, "!", n = Inf)
+  JSON_str <- stringr::str_replace_all(JSON_str, "age\":", "age\":!")
+  JSON_str <-stringr::str_split_fixed(JSON_str, "!", n = Inf)
   JSON_res <- JSON_str[1]
   for (i in 2:length(JSON_str)) {
-    if(!str_detect(str_sub(JSON_str[i],1,10), "\\.")){
-      JSON_str[i] <- str_c(str_sub(JSON_str[i],1,9), ".0", str_sub(JSON_str[i],start=10))
+    if(!stringr::str_detect(stringr::str_sub(JSON_str[i],1,10), "\\.")){
+      JSON_str[i] <- stringr::str_c(stringr::str_sub(JSON_str[i],1,9), ".0", stringr::str_sub(JSON_str[i],start=10))
     }
-    JSON_res <- str_c(JSON_res, JSON_str[i])
+    JSON_res <- stringr::str_c(JSON_res, JSON_str[i])
   }
-  JSON_mtx <- str_replace_all(JSON_res, "host_distances\":", "host_distances\":!")
-  JSON_mtx <-str_split_fixed(JSON_mtx, "!", n = Inf)
-  JSON_juk <- str_replace_all(JSON_mtx[2], "]", "]!")
-  JSON_juk <- str_split_fixed(JSON_juk, "!", n = Inf)
-  JSON_juk[1] <- str_replace_all(JSON_juk[1], "0,", "0.0,")
-  JSON_juk[1] <- str_replace_all(JSON_juk[1], "0 ", "0.0 ")
-  JSON_juk <- str_c(JSON_juk[1], JSON_juk[2])
-  JSON_mtx <- str_c(JSON_mtx[1], JSON_juk)
+  JSON_mtx <- stringr::str_replace_all(JSON_res, "host_distances\":", "host_distances\":!")
+  JSON_mtx <- stringr::str_split_fixed(JSON_mtx, "!", n = Inf)
+  JSON_juk <- stringr::str_replace_all(JSON_mtx[2], "]", "]!")
+  JSON_juk <- stringr::str_split_fixed(JSON_juk, "!", n = Inf)
+  JSON_juk[1] <- stringr::str_replace_all(JSON_juk[1], "0,", "0.0,")
+  JSON_juk[1] <- stringr::str_replace_all(JSON_juk[1], "0 ", "0.0 ")
+  JSON_juk <- stringr::str_c(JSON_juk[1], JSON_juk[2])
+  JSON_mtx <- stringr::str_c(JSON_mtx[1], JSON_juk)
 }
 
 #' Convert a phyjson_tree object to phyjson_tree list
