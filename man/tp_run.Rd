@@ -5,49 +5,13 @@
 \title{Run a TreePPL program}
 \usage{
 tp_run(
-  dir_path = NULL,
-  project_name = "input",
-  src_name = "out",
+  model_name = "input",
+  data_name = "input",
   method = "smc-bpf",
   samples = 1000,
   run = "1"
 )
 }
-\arguments{
-\item{dir_path}{a character vector giving the TreePPL data directory name.}
-
-\item{project_name}{a character vector giving TreePPL data name.}
-
-\item{src_name}{a character vector giving the TreePPL output name.}
-
-\item{method}{a character vector giving the inference method name.}
-
-\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (mcmc) or particules (smc).}
-
-\item{run}{a \link[base:integer]{base::integer} giving the number of run (mcmc) or sweap (smc).}
-}
-\value{
-Path to the directory where output file was written.
-}
 \description{
-\code{tp_run} take paths, execute compiled TreePPL code with data and return current \link[base:tempfile]{base::tempdir} path.
-}
-\details{
-This function takes compiled TreePPL code from \code{\link[=tp_compile]{tp_compile()}} and data (.json) files
-and writing TreePPL json output.
-
-TreePPL need to be install on your computer and the PATH set for R/RSTUDIO (see \href{https://www.google.com}{install} manual).
-The executable and the output files will be written in R's \code{\link[base:tempfile]{base::tempdir()}}.
-
-\code{dir_path} : The directory that contains TreePPL data file. If NULL, use \code{\link[=tp_tempdir]{tp_tempdir()}} output.
-
-\code{project_name} : Name of the TreePPL data file in dir_path (without extension).
-
-\code{src_name} : File name of TreePPL json output.
-
-\code{method} : Inference method to be used (smc, mcmc, etc).
-
-\code{samples} : The number of samples (mcmc) / particules (smc) during inference.
-
-\code{run} : The number of run (mcmc) / sweap (smc) used for the inference.
+Run a TreePPL program
 }

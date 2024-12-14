@@ -4,40 +4,8 @@
 \alias{tp_compile}
 \title{Compile a TreePPL program}
 \usage{
-tp_compile(
-  dir_path = NULL,
-  project_name = "input",
-  src_name = "out",
-  method = "smc-bpf",
-  subsample = NULL
-)
-}
-\arguments{
-\item{dir_path}{a character vector giving the TreePPL code directory name.}
-
-\item{project_name}{a character vector giving TreePPL code name.}
-
-\item{src_name}{a character vector giving the compiled file name.}
-
-\item{method}{a character vector giving the inference method name.}
-}
-\value{
-Path to the directory where output file was written.
+tp_compile(model_name = "input", method = "smc-bpf", subsample = NULL)
 }
 \description{
-\code{tp_compile} take paths, compile TreePPL code.
-}
-\details{
-This function takes TreePPL code (.tppl) files and compile it.
-
-TreePPL need to be install on your computer and the PATH set for R/RSTUDIO (see \href{https://www.google.com}{install} manual).
-The executable file will be written in R's \code{\link[base:tempfile]{base::tempdir()}}.
-
-\code{dir_path} : The directory that contains the TreePPL code and data file. If NULL, use \code{\link[=tp_tempdir]{tp_tempdir()}} output.
-
-\code{project_name} : Name of the TreePPL code (.tppl) in dir_path (without extension).
-
-\code{src_name} : File name for TreePPL program output.
-
-\code{method} : Inference method to be used.
+Compile a TreePPL program
 }

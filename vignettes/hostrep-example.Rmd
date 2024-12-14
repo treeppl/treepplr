@@ -37,14 +37,13 @@ if(!require("evolnets", quietly = TRUE)) {
 Run the `hostrep.tppl` TreePPL program using the created input data. 
 
 ```{r}
-input <- tp_import(dir_path = system.file("extdata", package = "treepplr"), 
-                   model_name = "host_rep", data_name = "host_rep")
-tp_write(input, hostrep_cor = TRUE)
-dirout <- tp_go()
+model <- tp_model("hostrep3states")
+data <- tp_data("hostrep3states")
+output_json <- tp_treeppl(model = model, model_name = "hostrep", data = data, data_name = "hostrep")
 ```
 
 ```{r}
-output <- tp_parse()
+output <- tp_parse(output_json)
 ```
 
 Prepare the post-treatment function

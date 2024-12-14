@@ -8,7 +8,7 @@ if (require("testthat", quietly = TRUE)) {
       dev.off()
     }
     oldask <- devAskNewPage(ask = FALSE)
-    # g2i.options(projpath=getwd())
+
     testfiles <-
       dir(paste0(gspace2infr::projpath(), "/tests/testthat/"),
           # pattern = "*.R",
@@ -32,7 +32,7 @@ if (require("testthat", quietly = TRUE)) {
     # cf ?test_check for using library() here:
     library("testthat")
     library(pkg, character.only = TRUE)
-    # print(gspace2infr.get_gspace_path()) # FIXME Comment out this later
+
     report <- test_check(pkg)
     print("DONE")
     print(warnings())
