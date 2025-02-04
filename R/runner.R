@@ -134,7 +134,7 @@ tp_compile <- function(model_name = "input",
   argum <- c(
     paste0(dir_path, model_name, ".tppl"),
     paste("-m", method),
-    paste0("--output ", dir_path, model_name)
+    paste0("--output ", dir_path, model_name, ".exe")
   )
 
   if (!is.null(subsample)) {
@@ -164,7 +164,7 @@ tp_run <- function(model_name = "input",
 
   # run
   system2(
-    command = paste0(dir_path, model_name),
+    command = paste0(dir_path, model_name, ".exe"),
     args = c(paste0(dir_path, data_name, ".json"), paste(samples, run)),
     stdout = paste0(dir_path, model_name, "_out.json")
   )

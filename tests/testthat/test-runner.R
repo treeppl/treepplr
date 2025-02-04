@@ -83,7 +83,7 @@ testthat::test_that("Test-runner_1a : tp_compile", {
 
   treepplr:::tp_compile()
 
-  expect_no_error(readBin(paste0(temp_dir, "input"), "raw", 10e6))
+  expect_no_error(readBin(paste0(temp_dir, "input.exe"), "raw", 10e6))
 })
 
 testthat::test_that("Test-runner_1b : tp_compile", {
@@ -101,7 +101,7 @@ testthat::test_that("Test-runner_1b : tp_compile", {
   treepplr:::tp_compile(model_name = "coin",
                         method = "smc-bpf")
 
-  expect_no_error(readBin(paste0(temp_dir, "coin"), "raw", 10e6))
+  expect_no_error(readBin(paste0(temp_dir, "coin.exe"), "raw", 10e6))
 
 })
 
