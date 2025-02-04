@@ -116,9 +116,11 @@ cor_export_num <- function(JSON_str) {
   JSON_juk <- stringr::str_replace_all(JSON_mtx[2], "]", "]!")
   JSON_juk <- stringr::str_split_fixed(JSON_juk, "!", n = Inf)
   JSON_juk[1] <- stringr::str_replace_all(JSON_juk[1], "0,", "0.0,")
-  JSON_juk[1] <- stringr::str_replace_all(JSON_juk[1], "0 ", "0.0 ")
+  JSON_juk[1] <- stringr::str_replace_all(JSON_juk[1], " 0 ]", " 0.0 ]")
   JSON_juk <- stringr::str_c(JSON_juk[1], JSON_juk[2])
   JSON_mtx <- stringr::str_c(JSON_mtx[1], JSON_juk)
+
+  return(JSON_mtx)
 }
 
 #' Compile a TreePPL program
