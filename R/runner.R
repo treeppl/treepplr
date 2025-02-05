@@ -116,9 +116,11 @@ cor_export_num <- function(JSON_str) {
   JSON_juk <- stringr::str_replace_all(JSON_mtx[2], "]", "]!")
   JSON_juk <- stringr::str_split_fixed(JSON_juk, "!", n = Inf)
   JSON_juk[1] <- stringr::str_replace_all(JSON_juk[1], "0,", "0.0,")
-  JSON_juk[1] <- stringr::str_replace_all(JSON_juk[1], "0 ", "0.0 ")
+  JSON_juk[1] <- stringr::str_replace_all(JSON_juk[1], " 0 ]", " 0.0 ]")
   JSON_juk <- stringr::str_c(JSON_juk[1], JSON_juk[2])
   JSON_mtx <- stringr::str_c(JSON_mtx[1], JSON_juk)
+
+  return(JSON_mtx)
 }
 
 #' Compile a TreePPL program
@@ -132,7 +134,7 @@ tp_compile <- function(model_name = "input",
   argum <- c(
     paste0(dir_path, model_name, ".tppl"),
     paste("-m", method),
-    paste0("--output ", dir_path, model_name)
+    paste0("--output ", dir_path, model_name, ".exe")
   )
 
   if (!is.null(subsample)) {
@@ -162,7 +164,7 @@ tp_run <- function(model_name = "input",
 
   # run
   system2(
-    command = paste0(dir_path, model_name),
+    command = paste0(dir_path, model_name, ".exe"),
     args = c(paste0(dir_path, data_name, ".json"), paste(samples, run)),
     stdout = paste0(dir_path, model_name, "_out.json")
   )
