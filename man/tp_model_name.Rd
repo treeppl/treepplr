@@ -11,5 +11,6 @@ A list of model names.
 }
 \description{
 Provide a list of all the model names supported by treepplr.
-They can also be use to find data attach to these models (see \code{\link[=tp_data]{tp_data()}})
+They can also be use to find data attach to these models
+(see \code{\link[=tp_data]{tp_data()}})
 }

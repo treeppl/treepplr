@@ -7,7 +7,7 @@
 #'
 #' @return ...
 #'
-tp_check_input <- function(model, data){
+tp_check_input <- function(model, data) {
 
 
 }

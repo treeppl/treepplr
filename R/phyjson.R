@@ -3,12 +3,14 @@
 #' @description
 #' `tp_phyjson` takes a variable number of argument and return a phyjson object.
 #'
-#' @details
-#' This function takes a variable number of argument, so that users can pass as arguments
-#'  either independent lists for each parameter or a single structured list of list.
-#' it's use like a list (name_arg = value_arg, etc)
+#' @param ... Variadic arguments (see details).
 #'
-#' @return A phyjson object (S3)
+#' @details
+#' This function takes a variable number of argument, so that users can pass as
+#' arguments either independent lists for each parameter or a single structured
+#' list of list. It's use like a list (name_arg = value_arg, etc).
+#'
+#' @return A phyjson object (S3).
 #' @export
 #'
 tp_phyjson <- function(...) {
@@ -26,7 +28,8 @@ tp_phyjson <- function(...) {
 #' Create a from a phylo object
 #'
 #' @description
-#' `tp_phylo_2_phyjson` takes an object of class "phylo" and return a phyjson object.
+#' `tp_phylo_2_phyjson` takes an object of class "phylo" and return a phyjson
+#' object.
 #'
 #' @param phylo_tree an object of class [ape::phylo].
 #'
@@ -37,7 +40,7 @@ tp_phyjson <- function(...) {
 tp_phylo_2_phyjson <- function(phylo_tree) {
   name <- deparse(substitute(phylo_tree))
 
-  df_ <- as_tibble(phylo_tree)
+  df_ <- tibble::as_tibble(phylo_tree)
 
   tree <- data.frame(matrix(
     c(NA, NA, 0.0, NA, NA),
@@ -49,13 +52,13 @@ tp_phylo_2_phyjson <- function(phylo_tree) {
 
   num_leaf <- nrow(df_) - phylo_tree$Nnode
 
-  for (i in 1:nrow(df_)) {
-    row <- df_[i,]
-    tree[i, "Label"] = row$node
+  for (i in seq_len(nrow(df_))) {
+    row <- df_[i, ]
+    tree[i, "Label"] <- row$node
     tree[row$parent, "Age"] <- row$branch.length + tree[i, "Age"]
 
     if (row$parent == row$node) {
-      tree[i, "Type"] = "Node"
+      tree[i, "Type"] <- "Node"
       root_index <- i
     } else {
       if (is.na(tree[row$parent, "Right"])) {
@@ -64,9 +67,9 @@ tp_phylo_2_phyjson <- function(phylo_tree) {
         tree[row$parent, "Left"] <- row$node
       }
       if (i <= num_leaf) {
-        tree[i, "Type"] = "Leaf"
+        tree[i, "Type"] <- "Leaf"
       } else {
-        tree[i, "Type"] = "Node"
+        tree[i, "Type"] <- "Node"
       }
     }
   }
@@ -79,7 +82,8 @@ tp_phylo_2_phyjson <- function(phylo_tree) {
 #' Convert a phyjson object to phyjson list
 #'
 #' @description
-#' `tp_phyjson` takes an object of class "phyjson" and return a phyjson list ready to be export as a JSON
+#' `tp_phyjson` takes an object of class "phyjson" and return a phyjson list
+#' ready to be export as a JSON
 #'
 #' @param phyjson an object of class "phyjson".
 #'
@@ -88,9 +92,9 @@ tp_phylo_2_phyjson <- function(phylo_tree) {
 #'
 tp_phyjson_list <- function(phyjson) {
   pjs_list <- list(rec_phyjson_list(phyjson$tree, phyjson$root_index))
-  names(pjs_list) = phyjson$name
+  names(pjs_list) <- phyjson$name
 
-  return(pjs_list)
+  pjs_list
 }
 
 rec_phyjson_list <- function(tree, row_index) {
@@ -107,5 +111,5 @@ rec_phyjson_list <- function(tree, row_index) {
 
   pjs_list <- list("__constructor__" = row$Type, "__data__" = sub_pjs_list)
 
-  return(pjs_list)
+  pjs_list
 }

@@ -10,16 +10,8 @@ if (require("testthat", quietly = TRUE)) {
     oldask <- devAskNewPage(ask = FALSE)
 
     testfiles <-
-      dir(paste0(gspace2infr::projpath(), "/tests/testthat/"),
-          # pattern = "*.R",
+      dir(system.file("/tests/testthat/", package = "treepplr"),
           full.names = TRUE)
-    more_testfiles <-   # those that are not compatible with R CMD check
-      dir(
-        paste0(gspace2infr::projpath(), "/tests_nocheck/"),
-        pattern = "*.R",
-        full.names = TRUE
-      )
-    testfiles <- c(testfiles, more_testfiles)
     timings <- t(sapply(testfiles, function(fich) {
       system.time(source(fich))
     }))
