@@ -4,21 +4,26 @@
 \alias{tp_model}
 \title{Import model for TreePPL program}
 \usage{
-tp_model(model)
+tp_model(model_input)
 }
 \arguments{
-\item{model}{polymorphic parameter (see below).}
+\item{model_input}{polymorphic parameter (see below).}
 }
 \value{
-A TreePPL model (S3)
+A TreePPL model (S3). A structured list with a 1
+string as a representation of the TreePPL model and a class
+object = (\code{\link[=tp_model_name]{tp_model_name()}} or "custom")
 }
 \description{
-\code{tp_model} takes TreePPL model code and out an model to be check by \code{\link[=tp_check]{tp_check()}}.
+\code{tp_model} takes TreePPL programm code and out an model to becheck by
+\code{\link[=tp_treeppl]{tp_treeppl()}}.
 }
 \details{
-This function takes TreePPL model code and import them.
+This function takes TreePPL programm code and import them.
 
-\code{model} : The full path of the model file that contains the TreePPL model code OR
-\code{model} : The model name of one model supported by treepplr package (see \code{\link[=tp_model_name]{tp_model_name()}} for model supported) OR
-\code{model} : The full string contains the TreePPL model code.
+\code{model_input} : The full path of the model file that contains the TreePPL
+programm code OR
+\code{model_input} : The model name of one model supported by treepplr package
+(see \code{\link[=tp_model_name]{tp_model_name()}} for model supported) OR
+\code{model_input} : The full string containing TreePPL programm code.
 }

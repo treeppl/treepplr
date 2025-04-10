@@ -27,7 +27,7 @@ Run the `coin.tppl` TreePPL program using the created input data.
 ```{r}
 model <- tp_model("coin")
 data <- tp_data("coin")
-output_json <- tp_treeppl(model = model, model_name = "coin", data = data, data_name = "coin")
+output_json <- tp_treeppl(model = model, model_file_name = "coin", data = data, data_file_name = "coin")
 ```
 
 ```{r}

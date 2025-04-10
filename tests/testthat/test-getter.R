@@ -1,6 +1,7 @@
 temp_dir <- treepplr::tp_tempdir(temp_dir = NULL)
 setwd(temp_dir)
 require(testthat)
+require(crayon)
 
 cat(crayon::yellow("\nTest-getter : Import data and model.\n"))
 
@@ -117,8 +118,8 @@ testthat::test_that("Test-getter_2a : tp_data data string", {
   cat("\tTest-getter_2c : tp_data\n")
 
   data <-
-    tp_data(tp_phyjson(
-      coinflips = c(
+    tp_data(list(
+      c(
         FALSE,
         TRUE,
         TRUE,
@@ -141,9 +142,10 @@ testthat::test_that("Test-getter_2a : tp_data data string", {
         TRUE
       )
     ))
+
   data_right <-
     tp_phyjson(
-      coinflips = c(
+      c(
         FALSE,
         TRUE,
         TRUE,

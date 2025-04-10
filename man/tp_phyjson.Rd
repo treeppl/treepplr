@@ -6,14 +6,17 @@
 \usage{
 tp_phyjson(...)
 }
+\arguments{
+\item{...}{Variadic arguments (see details).}
+}
 \value{
-A phyjson object (S3)
+A phyjson object (S3).
 }
 \description{
 \code{tp_phyjson} takes a variable number of argument and return a phyjson object.
 }
 \details{
-This function takes a variable number of argument, so that users can pass as arguments
-either independent lists for each parameter or a single structured list of list.
-it's use like a list (name_arg = value_arg, etc)
+This function takes a variable number of argument, so that users can pass as
+arguments either independent lists for each parameter or a single structured
+list of list. It's use like a list (name_arg = value_arg, etc).
 }

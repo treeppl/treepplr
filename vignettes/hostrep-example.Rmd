@@ -2,7 +2,7 @@
 title: "Host repertory model example"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{coin-example}
+  %\VignetteIndexEntry{hostrep-example}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -25,10 +25,13 @@ if(!require("evolnets", quietly = TRUE)) {
   library(devtools)
   if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-
+  library(BiocManager)
   BiocManager::install("ggtree")
   BiocManager::install("treeio")
   devtools::install_github("maribraga/evolnets")
+  library(ggtree)
+  library(treeio)
+  library(evolnets)
 } else {
   library(evolnets)
 }
@@ -39,7 +42,7 @@ Run the `hostrep.tppl` TreePPL program using the created input data.
 ```{r}
 model <- tp_model("hostrep3states")
 data <- tp_data("hostrep3states")
-output_json <- tp_treeppl(model = model, model_name = "hostrep", data = data, data_name = "hostrep")
+output_json <- tp_treeppl(model = model, model_file_name = "hostrep", data = data, data_file_name = "hostrep")
 ```
 
 ```{r}

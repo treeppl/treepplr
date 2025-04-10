@@ -2,16 +2,44 @@
 % Please edit documentation in R/runner.R
 \name{tp_write}
 \alias{tp_write}
-\title{Prepare input for \code{\link[=tp_treeppl]{tp_treeppl()}}}
+\title{Prepare input for \code{\link[=tp_compile]{tp_compile()}}}
 \usage{
-tp_write(model = NULL, model_name = "input", data = NULL, data_name = "input")
+tp_write(
+  model = NULL,
+  model_file_name = "tmp_model_file",
+  data = NULL,
+  data_file_name = "tmp_data_file"
+)
 }
 \arguments{
-\item{model_data_strlist}{a structured list coming from \code{\link[=tp_import]{tp_import()}}.}
+\item{model}{a TreePPL model (S3).}
+
+\item{model_file_name}{a character vector giving a model name.}
+
+\item{data}{a phyjson object (S3).}
+
+\item{data_file_name}{a character vector giving a data name.}
 }
 \description{
-\code{tp_write} writes an JSON file to be used by \code{\link[=tp_treeppl]{tp_treeppl()}}.
+\code{tp_write} writes an JSON file to be used by \code{\link[=tp_compile]{tp_compile()}}.
 }
 \details{
-This function takes a structured list of TreePPL code and data files (more details in \code{\link[=tp_import]{tp_import()}}) and write 2 files from them.
+This function takes TreePPL object (S3) and phyjson object (S3) and write
+them in \code{\link[base:tempfile]{base::tempdir()}}.
+
+\code{model} : A TreePPL model (S3), see \link{tp_model} for further details.
+Use 'NULL' if you have previously provide an model. Check already provide
+model with \link{tp_model_stored}.
+
+\code{model_file_name} : a character vector giving to \link{tp_treeppl} as
+a model name.  Use a \link{tp_data_stored} name if you have already
+write your model with \link{tp_write}.
+
+\code{data} : A phyjson object (S3), see \code{\link[=tp_phyjson]{tp_phyjson()}} for further
+details. Use 'NULL' if you have previously provide data. Check already
+provide data with \link{tp_data_stored}.
+
+\code{data_file_name} : a character vector giving to \link{tp_treeppl}
+a data name. Use a \link{tp_data_stored} name if you have already write
+your data with \link{tp_write}.
 }
