@@ -13,5 +13,6 @@ tp_phyjson_list(phyjson)
 A structured list how contain a phyjson
 }
 \description{
-\code{tp_phyjson} takes an object of class "phyjson" and return a phyjson list ready to be export as a JSON
+\code{tp_phyjson} takes an object of class "phyjson" and return a phyjson list
+ready to be export as a JSON
 }
