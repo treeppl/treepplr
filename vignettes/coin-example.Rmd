@@ -24,18 +24,16 @@ library(ggplot2)
 
 Run the `coin.tppl` TreePPL program using the created input data. 
 
-```{r, eval=FALSE}
-coinflips <- tibble(coinflips = sample(c(TRUE, FALSE), 20, replace = TRUE))
-
-input <- treeppl_input(coinflips)
-
-output <- run_treeppl(dir = system.file("extdata", package = "treepplr"), 
-                      source = "coin.tppl", data = input, samples = 100)
-
+```{r}
+model <- tp_model("coin")
+data <- tp_data("coin")
+output_json <- tp_treeppl(model = model, model_file_name = "coin", data = data, data_file_name = "coin")
 ```
 
-```{r, echo=FALSE}
-output <- readRDS("coin_rdata/output.rds")
+```{r}
+output <-  tp_parse_coin(output_json)
+max <- max(output["weights"])
+output["weights"] <- exp(output["weights"] - max)
 ```
 
 Plot the posterior distribution (normalized weights).
@@ -43,7 +41,7 @@ Plot the posterior distribution (normalized weights).
 ```{r}
 if(rlang::is_installed("ggplot2")) {
   ggplot(output) +
-  geom_col(aes(samples, nweights), width = 0.005) +
+  geom_density(aes(samples, weight=weights)) +
   theme_bw()
 }
 ```
