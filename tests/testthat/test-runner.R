@@ -1,6 +1,7 @@
 temp_dir <- treepplr::tp_tempdir(temp_dir = NULL)
 setwd(temp_dir)
 require(testthat)
+require(crayon)
 
 cat(crayon::yellow("\nTest-runner : Write, compile and run.\n"))
 
@@ -39,8 +40,8 @@ testthat::test_that("Test-setter_0: tp_write", {
 
   treepplr:::tp_write(model = model_right, data = data_right)
 
-  model <- tp_model(paste0(temp_dir, "input.tppl"))
-  data <- tp_data(paste0(temp_dir, "input.json"))
+  model <- tp_model(paste0(temp_dir, "tmp_model_file.tppl"))
+  data <- tp_data(paste0(temp_dir, "tmp_data_file.json"))
 
   expect_equal(model, model_right)
   expect_equal(data, data_right)
@@ -83,7 +84,7 @@ testthat::test_that("Test-runner_1a : tp_compile", {
 
   treepplr:::tp_compile()
 
-  expect_no_error(readBin(paste0(temp_dir, "input.exe"), "raw", 10e6))
+  expect_no_error(readBin(paste0(temp_dir, "tmp_model_file.exe"), "raw", 10e6))
 })
 
 testthat::test_that("Test-runner_1b : tp_compile", {
@@ -94,11 +95,11 @@ testthat::test_that("Test-runner_1b : tp_compile", {
 
   treepplr:::tp_write(
     model = model,
-    model_name = "coin",
+    model_file_name = "coin",
     data = data,
-    data_name = "coin"
+    data_file_name = "coin"
   )
-  treepplr:::tp_compile(model_name = "coin",
+  treepplr:::tp_compile(model_file_name = "coin",
                         method = "smc-bpf")
 
   expect_no_error(readBin(paste0(temp_dir, "coin.exe"), "raw", 10e6))
@@ -144,7 +145,7 @@ testthat::test_that("Test-runner_2a : tp_run", {
 
   out <- treepplr:::tp_run()
 
-  expect_no_error(readBin(paste0(temp_dir, "input_out.json"), "raw", 10e6))
+  expect_no_error(readBin(paste0(temp_dir, "tmp_model_file_out.json"), "raw", 10e6))
 })
 
 testthat::test_that("Test-runner_2b : tp_run", {
@@ -155,20 +156,19 @@ testthat::test_that("Test-runner_2b : tp_run", {
 
   treepplr:::tp_write(
     model = model,
-    model_name = "coin",
+    model_file_name = "coin",
     data = data,
-    data_name = "coin"
+    data_file_name = "coin"
   )
 
-  treepplr:::tp_compile(model_name = "coin",
+  treepplr:::tp_compile(model_file_name = "coin",
                         method = "smc-bpf")
 
   out <- treepplr:::tp_run(
-    model_name = "coin",
-    data_name = "coin",
-    method = "smc-bpf",
+    model_file_name = "coin",
+    data_file_name = "coin",
     samples = 1000,
-    run = 1
+    n_runs = 1
   )
 
   expect_no_error(readBin(paste0(temp_dir, "coin_out.json"), "raw", 10e6))
@@ -180,11 +180,13 @@ testthat::test_that("Test-runner_3a : tp_treppl", {
   model <- tp_model("hostrep3states")
   data <- tp_data("hostrep3states")
 
-  out <- tp_treeppl(model = model,
-             model_name = "hostrep",
-             data = data,
-             data_name = "hostrep",
-             samples = 2)
+  out <- tp_treeppl(
+    model = model,
+    model_file_name = "hostrep",
+    data = data,
+    data_file_name = "hostrep",
+    samples = 2
+  )
 
-  expect_no_error(tp_parse(out, run = 1))
+  expect_no_error(tp_parse(out, n_runs = 1))
 })

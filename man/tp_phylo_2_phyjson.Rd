@@ -13,5 +13,6 @@ tp_phylo_2_phyjson(phylo_tree)
 A phyjson object (S3)
 }
 \description{
-\code{tp_phylo_2_phyjson} takes an object of class "phylo" and return a phyjson object.
+\code{tp_phylo_2_phyjson} takes an object of class "phylo" and return a phyjson
+object.
 }

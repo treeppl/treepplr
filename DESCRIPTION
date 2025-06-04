@@ -1,6 +1,6 @@
 Package: treepplr
 Title: R Interface to TreePPL
-Version: 0.1.2
+Version: 0.9.0
 Authors@R: 
     person("Mariana", "P Braga", , "mpiresbr@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1253-2536"))
@@ -14,20 +14,24 @@ URL: https://github.com/treeppl/treepplr,
 BugReports: https://github.com/treeppl/treepplr/issues
 Imports: 
     assertthat,
-    dplyr,
     jsonlite,
-    magrittr,
     readr,
-    rlang,
     RJSONIO,
     stringr,
-    strex,
-    tidyr,
-    tidytree
+    tibble
 Suggests:
     devtools,
     ggplot2,
     knitr,
-    testthta,
-    rmarkdown
+    testthat,
+    crayon,
+    BiocManager,
+    ggtree,
+    evolnets,
+    treeio,
+    rmarkdown,
+    pandoc,
+    dplyr,
+    rlang,
+    magrittr
 VignetteBuilder: knitr
