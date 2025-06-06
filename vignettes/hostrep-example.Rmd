@@ -21,20 +21,20 @@ knitr::opts_chunk$set(
 library(treepplr)
 library(ggplot2)
 library(magrittr)
-if(!require("evolnets", quietly = TRUE)) {
-  library(devtools)
-  if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-  library(BiocManager)
-  BiocManager::install("ggtree")
-  BiocManager::install("treeio")
-  devtools::install_github("maribraga/evolnets")
-  library(ggtree)
-  library(treeio)
-  library(evolnets)
-} else {
-  library(evolnets)
-}
+#if(!require("evolnets", quietly = TRUE)) {
+#  library(devtools)
+#  if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+#  library(BiocManager)
+#  BiocManager::install("ggtree")
+#  BiocManager::install("treeio")
+#  devtools::install_github("maribraga/evolnets")
+#  library(ggtree)
+#  library(treeio)
+#  library(evolnets)
+#} else {
+#  library(evolnets)
+#}
 ```
 
 Run the `hostrep.tppl` TreePPL program using the created input data. 
@@ -81,12 +81,12 @@ get_history <- function(parsed_output){
 Add complementary data
 
 ```{r}
-symbiont_tree <- evolnets::read_tree_from_revbayes(paste0(system.file("extdata", package = "treepplr"),
-                                                          "/tree_subroot_Rev.tre"))
-host_tree <- treeio::read.tree(paste0(system.file("extdata", package = "treepplr"), 
-                             "/host_tree.tre"))
-matrix <- read.csv(paste0(system.file("extdata", package = "treepplr"), 
-                             "/host_matrix.csv"), row.names = 1) %>% as.matrix()
+#symbiont_tree <- evolnets::read_tree_from_revbayes(paste0(system.file("extdata", package = "treepplr"),
+#                                                          "/tree_subroot_Rev.tre"))
+#host_tree <- treeio::read.tree(paste0(system.file("extdata", package = "treepplr"), 
+#                             "/host_tree.tre"))
+#matrix <- read.csv(paste0(system.file("extdata", package = "treepplr"), 
+#                             "/host_matrix.csv"), row.names = 1) %>% as.matrix()
 ```
   
 Plot the posterior distribution.
@@ -95,10 +95,10 @@ Plot the posterior distribution.
 # history is together with the logs
 tp_hist <- get_history(output)
 
-# calculate posterior at nodes
-tp_at_nodes <- evolnets::posterior_at_nodes(tp_hist, symbiont_tree, host_tree, state = c(1,2))
+## calculate posterior at nodes
+#tp_at_nodes <- evolnets::posterior_at_nodes(tp_hist, symbiont_tree, host_tree, state = c(1,2))
 
-# plot data nad ancestral states
-(tp_asr_fund <- evolnets::plot_matrix_phylo(matrix, tp_at_nodes, symbiont_tree, host_tree, type = "repertoires", repertoire = "fundamental"))
-(tp_asr_real <- evolnets::plot_matrix_phylo(matrix, tp_at_nodes, symbiont_tree, host_tree, type = "repertoires", repertoire = "realized"))
+## plot data nad ancestral states
+#(tp_asr_fund <- evolnets::plot_matrix_phylo(matrix, tp_at_nodes, symbiont_tree, host_tree, type = "repertoires", repertoire = "fundamental"))
+#(tp_asr_real <- evolnets::plot_matrix_phylo(matrix, tp_at_nodes, symbiont_tree, host_tree, type = "repertoires", repertoire = "realized"))
 ```
