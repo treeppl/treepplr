@@ -25,9 +25,18 @@ Suggests:
     knitr,
     testthat,
     crayon,
+    BiocManager,
+    ggtree (>= 3.16.0),
+    evolnets (>= 0.0.0.9000),
+    treeio (>= 1.32.0),
     rmarkdown,
     pandoc,
     dplyr,
     rlang,
     magrittr
 VignetteBuilder: knitr
+Config/Needs/website: rmarkdown
+Remotes:  
+    github::maribraga/evolnets,
+    bioc::ggtree,
+    bioc::treeio
