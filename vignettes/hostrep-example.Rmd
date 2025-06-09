@@ -17,10 +17,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 library(treepplr)
 library(ggplot2)
 library(magrittr)
+library(dplyr)
 
 if(!require("evolnets", quietly = TRUE)) {
  library(devtools)
@@ -43,9 +44,11 @@ if(!require("evolnets", quietly = TRUE)) {
 load("rdata/hostrep/rdata.RData")
 ```
 
+This is a very simplified workflow in *treepplr* for analysis of host repertoire evolution to show the overall structure. A real analysis would include many other steps such as testing of different inference methods and check of convergence.
+
 ## Run treeppl
 
-Run the `hostrep.tppl` TreePPL program using the input data available in the package.
+Run the `hostrep.tppl` TreePPL program using the input data available in the package and default inference options.
 
 ```{r, eval=FALSE}
 model <- tp_model("hostrep3states")
@@ -62,6 +65,22 @@ The output from *tp_parse()* contains all information outputted by treeppl, so w
 
 ## Parameter estimates
 
+```{r}
+logs <-  output[[1]] %>% 
+  dplyr::select(iteration, log_weight, mu, beta) %>% 
+  unique() %>% 
+  dplyr::mutate(weight = exp(log_weight - max(.$log_weight)))
+
+ggplot(logs) +
+  geom_histogram(aes(mu, y = after_stat(density), weight=weight), col = "white", fill = "lightblue") +
+  geom_density(aes(mu, weight=weight)) +
+  theme_bw()
+
+ggplot(logs) +
+  geom_histogram(aes(beta, y = after_stat(density), weight=weight), col = "white", fill = "lightblue") +
+  geom_density(aes(beta, weight=weight)) +
+  theme_bw()
+```
 
 
 ## Character history

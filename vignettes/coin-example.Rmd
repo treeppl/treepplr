@@ -22,27 +22,40 @@ library(treepplr)
 library(ggplot2)
 ```
 
-Run the `coin.tppl` TreePPL program using the created input data. 
-
-```{r}
-model <- tp_model("coin")
-data <- tp_data("coin")
-output_json <- tp_treeppl(model = model, model_file_name = "coin", data = data, data_file_name = "coin")
+```{r, echo=FALSE}
+load("rdata/coin/rdata.RData")
 ```
 
+Load the coin model and example data available within *treepplr* 
+
+```{r, eval=FALSE}
+model <- tp_model("coin")
+data <- tp_data("coin")
+```
+
+The data in this example is a sequence of coin flip results. *phyjson* is the data format that *treeppl* can read.
+
 ```{r}
-output <-  tp_parse_coin(output_json)
-max <- max(output["weights"])
-output["weights"] <- exp(output["weights"] - max)
+data
+```
+
+Run the `coin.tppl` TreePPL program. 
+
+```{r, eval=FALSE}
+output_json <- tp_treeppl(model = model, model_file_name = "coin", data = data, data_file_name = "coin")
 ```
 
 Plot the posterior distribution (normalized weights).
 
 ```{r}
-if(rlang::is_installed("ggplot2")) {
-  ggplot(output) +
+output <-  tp_parse_coin(output_json)
+max <- max(output["weights"])
+output["weights"] <- exp(output["weights"] - max)
+
+ggplot(output) +
+  geom_histogram(aes(samples, y = after_stat(density), weight=weights), col = "white", fill = "lightblue") +
   geom_density(aes(samples, weight=weights)) +
   theme_bw()
-}
+
 ```
 
