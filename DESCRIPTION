@@ -15,10 +15,11 @@ BugReports: https://github.com/treeppl/treepplr/issues
 Imports: 
     assertthat,
     jsonlite,
+    methods,
     readr,
     RJSONIO,
     stringr,
-    tibble
+    tidytree
 Suggests:
     devtools,
     ggplot2,
@@ -36,7 +37,7 @@ Suggests:
     magrittr
 VignetteBuilder: knitr
 Config/Needs/website: rmarkdown
-Remotes:  
+Remotes: 
     github::maribraga/evolnets,
     bioc::ggtree,
     bioc::treeio

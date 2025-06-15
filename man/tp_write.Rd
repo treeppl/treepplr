@@ -16,7 +16,7 @@ tp_write(
 
 \item{model_file_name}{a character vector giving a model name.}
 
-\item{data}{a phyjson object (S3).}
+\item{data}{a json object (S3).}
 
 \item{data_file_name}{a character vector giving a data name.}
 }
@@ -24,7 +24,7 @@ tp_write(
 \code{tp_write} writes an JSON file to be used by \code{\link[=tp_compile]{tp_compile()}}.
 }
 \details{
-This function takes TreePPL object (S3) and phyjson object (S3) and write
+This function takes TreePPL object (S3) and json object (S3) and write
 them in \code{\link[base:tempfile]{base::tempdir()}}.
 
 \code{model} : A TreePPL model (S3), see \link{tp_model} for further details.
@@ -35,7 +35,7 @@ model with \link{tp_model_stored}.
 a model name.  Use a \link{tp_data_stored} name if you have already
 write your model with \link{tp_write}.
 
-\code{data} : A phyjson object (S3), see \code{\link[=tp_phyjson]{tp_phyjson()}} for further
+\code{data} : A json object (S3), see \code{\link[=tp_json]{tp_json()}} for further
 details. Use 'NULL' if you have previously provide data. Check already
 provide data with \link{tp_data_stored}.
 

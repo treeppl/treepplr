@@ -1,7 +1,7 @@
-#' Create a phyjson object
+#' Create a json object
 #'
 #' @description
-#' `tp_phyjson` takes a variable number of argument and return a phyjson object.
+#' `tp_json` takes a variable number of argument and return a json object.
 #'
 #' @param ... Variadic arguments (see details).
 #'
@@ -10,17 +10,17 @@
 #' arguments either independent lists for each parameter or a single structured
 #' list of list. It's use like a list (name_arg = value_arg, etc).
 #'
-#' @return A phyjson object (S3).
+#' @return A json object (S3).
 #' @export
 #'
-tp_phyjson <- function(...) {
+tp_json <- function(...) {
   dotlist <- list(...)
 
   if (length(dotlist) == 1L && is.list(dotlist[[1]])) {
     dotlist <- dotlist[[1]]
   }
 
-  class(dotlist) <- "phyjson"
+  class(dotlist) <- "json"
 
   dotlist
 }
@@ -28,19 +28,19 @@ tp_phyjson <- function(...) {
 #' Create a from a phylo object
 #'
 #' @description
-#' `tp_phylo_2_phyjson` takes an object of class "phylo" and return a phyjson
+#' `tp_phylo_2_json` takes an object of class "phylo" and return a json
 #' object.
 #'
 #' @param phylo_tree an object of class [ape::phylo].
 #'
-#' @return A phyjson object (S3)
+#' @return A json object (S3)
 #' @export
 #'
 
-tp_phylo_2_phyjson <- function(phylo_tree) {
+tp_phylo_2_json <- function(phylo_tree) {
   name <- deparse(substitute(phylo_tree))
 
-  df_ <- tibble::as_tibble(phylo_tree)
+  df_ <- tidytree::as_tibble(phylo_tree)
 
   tree <- data.frame(matrix(
     c(NA, NA, 0.0, NA, NA),
@@ -74,38 +74,41 @@ tp_phylo_2_phyjson <- function(phylo_tree) {
     }
   }
 
-  tp_phyjson(name = name,
-             tree = tree,
-             root_index = root_index)
+  json_df <- tp_json(name = name,
+          tree = tree,
+          root_index = root_index)
+
+  tp_json_list(json_df)
+
 }
 
-#' Convert a phyjson object to phyjson list
+#' Convert a json object to json list
 #'
 #' @description
-#' `tp_phyjson` takes an object of class "phyjson" and return a phyjson list
+#' `tp_json` takes an object of class "json" and return a json list
 #' ready to be export as a JSON
 #'
-#' @param phyjson an object of class "phyjson".
+#' @param json an object of class "json".
 #'
-#' @return A structured list how contain a phyjson
+#' @return A structured list how contain a json
 #' @export
 #'
-tp_phyjson_list <- function(phyjson) {
-  pjs_list <- list(rec_phyjson_list(phyjson$tree, phyjson$root_index))
-  names(pjs_list) <- phyjson$name
+tp_json_list <- function(json) {
+  pjs_list <- list(rec_json_list(json$tree, json$root_index))
+  names(pjs_list) <- json$name
 
   pjs_list
 }
 
-rec_phyjson_list <- function(tree, row_index) {
+rec_json_list <- function(tree, row_index) {
   row <- tree[row_index, ]
 
   sub_pjs_list <- list("label" = row$Label, "age" = row$Age)
   if (row$Type != "Leaf") {
     sub_pjs_list <- c(sub_pjs_list,
                       list(
-                        "left" = rec_phyjson_list(tree, row$Left),
-                        "right" = rec_phyjson_list(tree, row$Right)
+                        "left" = rec_json_list(tree, row$Left),
+                        "right" = rec_json_list(tree, row$Right)
                       ))
   }
 
