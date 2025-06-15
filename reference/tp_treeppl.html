@@ -78,7 +78,7 @@
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>a phyjson object (S3).</p></dd>
+<dd><p>a json object (S3).</p></dd>
 
 
 <dt id="arg-data-file-name">data_file_name<a class="anchor" aria-label="anchor" href="#arg-data-file-name"></a></dt>
@@ -154,7 +154,7 @@ method</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function takes TreePPL object (S3) and phyjson object (S3),
+    <p>This function takes TreePPL object (S3) and json object (S3),
 compile TreePPL model, run it with data and returning TreePPL output.</p>
 <p>TreePPL need to be install on your computer and the PATH set for R/RSTUDIO
 (see <a href="https://treeppl.org/docs/Howtos" class="external-link">install</a> manual).
@@ -165,7 +165,7 @@ model with <a href="tp_model_stored.html">tp_model_stored</a>.</p>
 <p><code>model_file_name</code> : a character vector giving to tp_treeppl as
 a model name.  Use a <a href="tp_data_stored.html">tp_data_stored</a> name if you have already
 write your model with tp_treeppl.</p>
-<p><code>data</code> : A phyjson object (S3), see <code><a href="tp_phyjson.html">tp_phyjson()</a></code> for further
+<p><code>data</code> : A json object (S3), see <code><a href="tp_json.html">tp_json()</a></code> for further
 details. Use 'NULL' if you have previously provide data. Check already
 provide data with <a href="tp_data_stored.html">tp_data_stored</a>.</p>
 <p><code>data_file_name</code> : a character vector giving to tp_treeppl

@@ -13,14 +13,14 @@
 <url><loc>http://treeppl.org/treepplr/reference/tp_compile_stored.html</loc></url>
 <url><loc>http://treeppl.org/treepplr/reference/tp_data.html</loc></url>
 <url><loc>http://treeppl.org/treepplr/reference/tp_data_stored.html</loc></url>
+<url><loc>http://treeppl.org/treepplr/reference/tp_json.html</loc></url>
+<url><loc>http://treeppl.org/treepplr/reference/tp_json_list.html</loc></url>
 <url><loc>http://treeppl.org/treepplr/reference/tp_model.html</loc></url>
 <url><loc>http://treeppl.org/treepplr/reference/tp_model_name.html</loc></url>
 <url><loc>http://treeppl.org/treepplr/reference/tp_model_stored.html</loc></url>
 <url><loc>http://treeppl.org/treepplr/reference/tp_parse.html</loc></url>
 <url><loc>http://treeppl.org/treepplr/reference/tp_parse_coin.html</loc></url>
-<url><loc>http://treeppl.org/treepplr/reference/tp_phyjson.html</loc></url>
-<url><loc>http://treeppl.org/treepplr/reference/tp_phyjson_list.html</loc></url>
-<url><loc>http://treeppl.org/treepplr/reference/tp_phylo_2_phyjson.html</loc></url>
+<url><loc>http://treeppl.org/treepplr/reference/tp_phylo_2_json.html</loc></url>
 <url><loc>http://treeppl.org/treepplr/reference/tp_run.html</loc></url>
 <url><loc>http://treeppl.org/treepplr/reference/tp_tempdir.html</loc></url>
 <url><loc>http://treeppl.org/treepplr/reference/tp_treeppl.html</loc></url>
