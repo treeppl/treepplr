@@ -40,7 +40,7 @@ tp_phyjson <- function(...) {
 tp_phylo_2_phyjson <- function(phylo_tree) {
   name <- deparse(substitute(phylo_tree))
 
-  df_ <- tibble::as_tibble(phylo_tree)
+  df_ <- tidytree::as_tibble(phylo_tree)
 
   tree <- data.frame(matrix(
     c(NA, NA, 0.0, NA, NA),
