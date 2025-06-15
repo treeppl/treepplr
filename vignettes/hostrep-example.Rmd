@@ -114,11 +114,11 @@ This table can be used by *evolnets* for plotting results, together with the phy
 ```{r, eval=FALSE}
 # get data from treepplr
 symbiont_tree <- evolnets::read_tree_from_revbayes(
-  system.file("extdata/tree_subroot_Rev.tre", package = "treepplr"))
+  system.file("extdata/hostrep3states_treeRev.tre", package = "treepplr"))
 host_tree <- treeio::read.tree(
-  system.file("extdata/host_tree.tre", package = "treepplr"))
+  system.file("extdata/hostrep3states_host_tree.tre", package = "treepplr"))
 matrix <- read.csv(
-  system.file("extdata/host_matrix.csv", package = "treepplr"), 
+  system.file("extdata/hostrep3states_extant_interactions.csv", package = "treepplr"), 
   row.names = 1) %>% 
   as.matrix()
 ```
