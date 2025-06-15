@@ -13,7 +13,8 @@ editor_options:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  warning = FALSE
+  warning = FALSE,
+  message = FALSE
 )
 ```
 
@@ -40,25 +41,34 @@ if(!require("evolnets", quietly = TRUE)) {
 
 ```
 
-```{r, echo=FALSE}
-load("rdata/hostrep/rdata.RData")
-```
+This is a very simplified workflow in **treepplr** for analysis of host repertoire evolution. The data used here is simulated and the inference is too simple. A real analysis would include many other steps such as testing of different inference methods and check of convergence.
 
-This is a very simplified workflow in *treepplr* for analysis of host repertoire evolution to show the overall structure. A real analysis would include many other steps such as testing of different inference methods and check of convergence.
+The purpose of this vignette is to show how to run **TreePPL** with **treepplr**, and how to process the output with **evolnets**.
+
+## Load model and data files
+
+Load the 3-state host repertoire model and example data available within **treepplr**.
+
+```{r}
+model <- tp_model("hostrep3states")
+data <- tp_data("hostrep3states")
+```
 
 ## Run treeppl
 
-Run the `hostrep.tppl` TreePPL program using the input data available in the package and default inference options.
+Now we can compile and run the TreePPL program using the default inference options.
 
 ```{r, eval=FALSE}
-model <- tp_model("hostrep3states")
-data <- tp_data("hostrep3states")
-output_json <- tp_treeppl(model = model, model_file_name = "hostrep", 
+output_list <- tp_treeppl(model = model, model_file_name = "hostrep", 
                           data = data, data_file_name = "hostrep")
 ```
 
+```{r, echo=FALSE}
+output_list <- readRDS("rdata/hostrep/output_hostrep3states.rds")
+```
+
 ```{r}
-output <- tp_parse(output_json)
+output <- tp_parse(output_list)
 ```
 
 The output from *tp_parse()* contains all information outputted by treeppl, so we need to separate the sampled character histories from the sampled parameter values.
@@ -82,8 +92,9 @@ ggplot(logs) +
   theme_bw()
 ```
 
-
 ## Character history
+
+Extract table with character history samples
 
 ```{r}
 # post-treatment function
@@ -100,18 +111,14 @@ get_history <- function(parsed_output){
     
   return(table)
 }
+
+tp_hist <- get_history(output)
 ```
 
-Extract table with character history samples
+
+This table can be used by **evolnets** for plotting results, together with the phylogenetic trees and the known extant interactions.
 
 ```{r}
-tp_hist <- get_history(output)
-head(tp_hist)
-```
-
-This table can be used by *evolnets* for plotting results, together with the phylogenetic trees and the known extant interactions.
-
-```{r, eval=FALSE}
 # get data from treepplr
 symbiont_tree <- evolnets::read_tree_from_revbayes(
   system.file("extdata/hostrep3states_treeRev.tre", package = "treepplr"))
@@ -123,17 +130,23 @@ matrix <- read.csv(
   as.matrix()
 ```
 
-```{r}
+### Plot data and inferred ancestral fundamental host repertoires
+
+```{r, fig.height=4, fig.width=6}
 # calculate posterior at nodes
 tp_at_nodes <- evolnets::posterior_at_nodes(tp_hist, symbiont_tree, host_tree, state = c(1,2))
 
-# plot data and inferred ancestral states
-# fundamental host repertoire
+#plot
 (tp_asr_fund <- evolnets::plot_matrix_phylo(matrix, tp_at_nodes, symbiont_tree, 
                                             host_tree, type = "repertoires", 
                                             repertoire = "fundamental"))
-# realized host repertoire
+```
+
+### Plot data and inferred ancestral realized host repertoires
+
+```{r, fig.height=4, fig.width=6}
 (tp_asr_real <- evolnets::plot_matrix_phylo(matrix, tp_at_nodes, symbiont_tree, 
                                             host_tree, type = "repertoires", 
                                             repertoire = "realized"))
 ```
+
