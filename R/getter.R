@@ -24,7 +24,7 @@ tp_model <- function(model_input) {
   class_model <- NULL
   res <- try(file.exists(model_input), silent = TRUE)
   # If path exist import model from film
-  if (class(res) != "try-error" && res) {
+  if (!is(res, "try-error") && res) {
     model <- readr::read_file(model_input)
     class_model <- "custom"
     # If not path exist
@@ -32,7 +32,7 @@ tp_model <- function(model_input) {
     res <-
       try(get(model_input, treepplr::tp_model_name()), silent = TRUE)
     # but model_input as the name of a know model
-    if (class(res) != "try-error") {
+    if (!is(res, "try-error")) {
       model <- find_file(res, "tppl")
       class_model <- res
       # OR model_input is a string
@@ -68,32 +68,32 @@ tp_model <- function(model_input) {
 #' (see [treepplr::tp_model_name()] for exemple data supported) OR
 #' `data_input` : The list (or strucutred list) containing TreePPL program data.
 #'
-#' @return A phyjson data (S3), see [treepplr::tp_phyjson()] for further
+#' @return A json data (S3), see [treepplr::tp_json()] for further
 #' details.
 #' @export
 #'
 tp_data <- function(data_input) {
   res <- try(file.exists(data_input), silent = TRUE)
   # If path exist import data from film
-  if (class(res) != "try-error" && res) {
-    data <- tp_phyjson(jsonlite::fromJSON(data_input))
+  if (!is(res, "try-error") && res) {
+    data <- tp_json(jsonlite::fromJSON(data_input))
     # If not path exist
   } else if (assertthat::is.string(data_input)) {
     res <-
       try(get(data_input, treepplr::tp_model_name()), silent = TRUE)
     # but data_input as the name of a know model
-    if (class(res) != "try-error") {
-      data <- tp_phyjson(find_file(res, "json"))
+    if (!is(res, "try-error")) {
+      data <- tp_json(find_file(res, "json"))
     }
     # OR data_input is a list (or a strucutred list)
-    # (need to be verify as an coherant phyjson class later)
+    # (need to be verify as an coherant json class later)
   } else if (is.list(data_input)) {
-    data <- tp_phyjson(data_input)
+    data <- tp_json(data_input)
   }
 
-  if (class(data) == "phyjson") {
+  if (is(data, "json")) {
     data
   } else {
-    stop("Unknow R type (not a valid path, a know data model or a phyjson S3)")
+    stop("Unknow R type (not a valid path, known data model, or json S3)")
   }
 }

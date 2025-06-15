@@ -36,7 +36,7 @@ data <- tp_data("coin")
 The data in this example is a sequence of coin flip results. *treeppl* can only read data in JSON format, that's why all example data are in this format.
 
 ```{r}
-data
+str(data)
 ```
 
 ## Run TreePPL
