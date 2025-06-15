@@ -30,7 +30,7 @@ tp_treeppl(
 
 \item{model_file_name}{a character vector giving a model name.}
 
-\item{data}{a phyjson object (S3).}
+\item{data}{a json object (S3).}
 
 \item{data_file_name}{a character vector giving a data name.}
 
@@ -76,7 +76,7 @@ TreePPL output in JSON format.
 \code{tp_treeppl} execute TreePPL and return TreePPL output (string JSON format).
 }
 \details{
-This function takes TreePPL object (S3) and phyjson object (S3),
+This function takes TreePPL object (S3) and json object (S3),
 compile TreePPL model, run it with data and returning TreePPL output.
 
 TreePPL need to be install on your computer and the PATH set for R/RSTUDIO
@@ -91,7 +91,7 @@ model with \link{tp_model_stored}.
 a model name.  Use a \link{tp_data_stored} name if you have already
 write your model with \link{tp_treeppl}.
 
-\code{data} : A phyjson object (S3), see \code{\link[=tp_phyjson]{tp_phyjson()}} for further
+\code{data} : A json object (S3), see \code{\link[=tp_json]{tp_json()}} for further
 details. Use 'NULL' if you have previously provide data. Check already
 provide data with \link{tp_data_stored}.
 
