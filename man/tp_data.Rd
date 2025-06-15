@@ -10,7 +10,7 @@ tp_data(data_input)
 \item{data_input}{polymorphic parameter (see below).}
 }
 \value{
-A phyjson data (S3), see \code{\link[=tp_phyjson]{tp_phyjson()}} for further
+A json data (S3), see \code{\link[=tp_json]{tp_json()}} for further
 details.
 }
 \description{

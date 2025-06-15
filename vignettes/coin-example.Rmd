@@ -13,49 +13,57 @@ editor_options:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  warning = FALSE
+  warning = FALSE,
+  message = FALSE
 )
 ```
 
 ```{r setup}
 library(treepplr)
+library(dplyr)
 library(ggplot2)
 ```
 
-```{r, echo=FALSE}
-load("rdata/coin/rdata.RData")
-```
+## Load model and data files
 
-Load the coin model and example data available within *treepplr* 
+Load the coin model and example data available within *treepplr.*
 
-```{r, eval=FALSE}
+```{r}
 model <- tp_model("coin")
 data <- tp_data("coin")
 ```
 
-The data in this example is a sequence of coin flip results. *phyjson* is the data format that *treeppl* can read.
+The data in this example is a sequence of coin flip results. *treeppl* can only read data in JSON format, that's why all example data are in this format.
 
 ```{r}
-data
+str(data)
 ```
 
-Run the `coin.tppl` TreePPL program. 
+## Run TreePPL
+
+Now we can compile and run the TreePPL program. The function *tp_treeppl()* has many optional arguments to change the inference method used. Here, we will use the default settings and only pass the model and the data.
 
 ```{r, eval=FALSE}
-output_json <- tp_treeppl(model = model, model_file_name = "coin", data = data, data_file_name = "coin")
+output_list <- tp_treeppl(model = model, data = data)
 ```
 
-Plot the posterior distribution (normalized weights).
-
-```{r}
-output <-  tp_parse_coin(output_json)
-max <- max(output["weights"])
-output["weights"] <- exp(output["weights"] - max)
-
-ggplot(output) +
-  geom_histogram(aes(samples, y = after_stat(density), weight=weights), col = "white", fill = "lightblue") +
-  geom_density(aes(samples, weight=weights)) +
-  theme_bw()
-
+```{r, echo=FALSE}
+output_list <- readRDS("rdata/coin/output_coin.rds")
 ```
 
+## Plot the posterior distribution
+
+TreePPL outputs the log weight of each sample, so first we need to get the normalized weights and then we can plot the posterior distribution produced.
+
+```{r, fig.height=5, fig.width=5}
+# turn list into a data frame where each row represents one sample 
+# and calculate normalized weights from log weights
+output <-  tp_parse_coin(output_list) %>% 
+  dplyr::mutate(weight = exp(log_weight - max(.$log_weight)))
+
+ggplot2::ggplot(output) +
+  ggplot2::geom_histogram(aes(samples, y = after_stat(density), weight=weight), col = "white", fill = "lightblue") +
+  ggplot2::geom_density(aes(samples, weight=weight)) +
+  ggplot2::theme_bw()
+
+```

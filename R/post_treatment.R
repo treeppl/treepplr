@@ -22,14 +22,16 @@ tp_parse_coin <- function(treeppl_out,
     treeppl_out <- list(treeppl_out)
   }
 
-  result_list <- list()
+  result_df <- list()
 
   for (index in seq_along(treeppl_out)) {
-    result_list <-
-      rbind(result_list, as.data.frame(treeppl_out[[index]]))
+    result_df <-
+      rbind(result_df, as.data.frame(treeppl_out[[index]]))
   }
 
-  return(result_list)
+  result_df <- dplyr::rename(result_df, "log_weight" = "weights")
+
+  return(result_df)
 }
 
 #' Parse TreePPL json output

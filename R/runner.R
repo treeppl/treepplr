@@ -5,7 +5,7 @@
 #'
 #' @param model a TreePPL model (S3).
 #' @param model_file_name a character vector giving a model name.
-#' @param data a phyjson object (S3).
+#' @param data a json object (S3).
 #' @param data_file_name a character vector giving a data name.
 #' @param compile_model a [base::logical] to tell if the model need to be
 #' compile
@@ -30,7 +30,7 @@
 #' method
 #'
 #' @details
-#' This function takes TreePPL object (S3) and phyjson object (S3),
+#' This function takes TreePPL object (S3) and json object (S3),
 #' compile TreePPL model, run it with data and returning TreePPL output.
 #'
 #' TreePPL need to be install on your computer and the PATH set for R/RSTUDIO
@@ -45,7 +45,7 @@
 #' a model name.  Use a [treepplr::tp_data_stored] name if you have already
 #' write your model with [treepplr::tp_treeppl].
 #'
-#' `data` : A phyjson object (S3), see [treepplr::tp_phyjson()] for further
+#' `data` : A json object (S3), see [treepplr::tp_json()] for further
 #' details. Use 'NULL' if you have previously provide data. Check already
 #' provide data with [treepplr::tp_data_stored].
 #'
@@ -154,11 +154,11 @@ tp_treeppl <-
 #'
 #' @param model a TreePPL model (S3).
 #' @param model_file_name a character vector giving a model name.
-#' @param data a phyjson object (S3).
+#' @param data a json object (S3).
 #' @param data_file_name a character vector giving a data name.
 #'
 #' @details
-#' This function takes TreePPL object (S3) and phyjson object (S3) and write
+#' This function takes TreePPL object (S3) and json object (S3) and write
 #' them in [base::tempdir()].
 #'
 #' `model` : A TreePPL model (S3), see [treepplr::tp_model] for further details.
@@ -169,7 +169,7 @@ tp_treeppl <-
 #' a model name.  Use a [treepplr::tp_data_stored] name if you have already
 #' write your model with [treepplr::tp_write].
 #'
-#' `data` : A phyjson object (S3), see [treepplr::tp_phyjson()] for further
+#' `data` : A json object (S3), see [treepplr::tp_json()] for further
 #' details. Use 'NULL' if you have previously provide data. Check already
 #' provide data with [treepplr::tp_data_stored].
 #'

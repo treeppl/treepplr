@@ -9,7 +9,7 @@ tp_check_input(model, data)
 \arguments{
 \item{model}{A TreePPL model (S3)}
 
-\item{data}{A phyjson object (S3)}
+\item{data}{A json object (S3)}
 }
 \value{
 ...
