@@ -1,0 +1,77 @@
+---
+title: "Constant rate birth (CRB) model"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Constant-Rate-Birth}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+```{r setup}
+library(treepplr)
+library(ape)
+library(ggplot2)
+library(magrittr)
+```
+
+
+## Data
+
+We will use an example (random) tree that comes with the package.
+
+```{r, fig.width=6, fig.height=4}
+tree <- ape::read.tree(system.file(
+  "extdata/crb_tree_15_tips.tre", package = "treepplr"))
+ape::plot.phylo(tree, cex = 0.5)
+```
+
+We need to convert the tree to a **TreePPL** readable format and read the CRB model.
+
+```{r}
+data <- tp_phylo_2_json(tree)
+model <- tp_model(system.file("extdata/crb.tppl", package = "treepplr"))
+```
+
+
+## Run treeppl
+
+Compile and run the TreePPL program with standard inference settings.
+
+```{r, eval=FALSE}
+output_list <- tp_treeppl(model = model, data = data)
+```
+
+```{r, echo=FALSE}
+output_list <- readRDS("rdata/crb/output_crb.rds")
+```
+
+
+## Plot posterior
+
+TreePPL outputs the log weight of each sample, so first we need to get the normalized weights and then we can plot the posterior distribution produced.
+
+```{r, fig.height=4, fig.width=6}
+# turn list into a data frame where each row represents one sample 
+# and calculate normalized weights from log weights
+output <-  tp_parse_coin(output_list) %>% 
+  dplyr::mutate(weight = exp(log_weight - max(.$log_weight)))
+
+ggplot2::ggplot(output) +
+  ggplot2::geom_histogram(aes(samples, y = after_stat(density), weight=weight), 
+                          col = "white", fill = "lightblue") +
+  ggplot2::geom_density(aes(samples, weight=weight)) +
+  ggplot2::theme_bw()
+
+```
+
