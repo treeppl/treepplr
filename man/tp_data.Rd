@@ -7,22 +7,18 @@
 tp_data(data_input)
 }
 \arguments{
-\item{data_input}{polymorphic parameter (see below).}
+\item{data_input}{One of tree options:
+\itemize{
+\item The full path of the JSON file that contains the data, OR
+\item A string with the name of a model supported by treepplr
+(see \code{\link[=tp_model_names]{tp_model_names()}}), OR
+\item A list (or structured list) containing TreePPL data.
+}}
 }
 \value{
-A json data (S3), see \code{\link[=tp_json]{tp_json()}} for further
-details.
+json data (S3), see \code{\link[=tp_json]{tp_json()}} for further details.
 }
 \description{
-\code{tp_data} takes TreePPL program data and out an data to be use by
+\code{tp_data} takes data and prepares it to be used by
 \code{\link[=tp_treeppl]{tp_treeppl()}}.
-}
-\details{
-This function takes TreePPL program data and import them.
-
-\code{data_input} : The full path of the data file that contains
-the TreePPL program data OR
-\code{data_input} : The model name of one model supported by treepplr package
-(see \code{\link[=tp_model_name]{tp_model_name()}} for exemple data supported) OR
-\code{data_input} : The list (or strucutred list) containing TreePPL program data.
 }

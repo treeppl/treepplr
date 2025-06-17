@@ -15,5 +15,5 @@ tp_check_input(model, data)
 ...
 }
 \description{
-This function check the conformity of model/data for \code{tp_go()}.
+This function checks the input for \code{tp_go()}.
 }

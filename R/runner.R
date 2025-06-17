@@ -1,105 +1,84 @@
 #' Compile and run a TreePPL program
 #'
 #' @description
-#' `tp_treeppl` execute TreePPL and return TreePPL output (string JSON format).
+#' `tp_treeppl` executes TreePPL and returns the inference output (string JSON format).
 #'
-#' @param model a TreePPL model (S3).
-#' @param model_file_name a character vector giving a model name.
-#' @param data a json object (S3).
-#' @param data_file_name a character vector giving a data name.
-#' @param compile_model a [base::logical] to tell if the model need to be
-#' compile
-#' @param samples a [base::integer] giving the number of samples (mcmc) or
-#' particules (smc).
-#' @param seed a [base::numeric] to use as a random seed.
-#' @param n_runs a [base::integer] giving the number of run (mcmc)/sweap (smc).
-#' @param method a character vector giving the inference method name.
-#' @param align a [base::logical] to tell if need to align the model.
-#' @param cps a character vector giving the configuration of CPS transformation.
-#' @param delay a character vector giving the configuration of delayed sampling.
-#' @param kernel a [base::numeric] value giving the driftScale for driftKernel
-#' in MCMC.
-#' @param mcmc_lw_gprob a [base::numeric] probability of performing a global
-#' MCMC step.
-#' @param pmcmc_particles a [base::integer] number of particles for the smc
-#' proposal computation
-#' @param prune a [base::logical] to tell if the model will try to be pruned.
-#' @param subsample a [base::integer] number of draw to subsample from the
-#' posterior distribution.
-#' @param resample a character vector giving the selected resample placement
-#' method
+#' @inheritParams tp_write
+#' @inheritParams tp_compile
+#' @inheritParams tp_run
+#' @param compile_model a [base::logical]. Compile the model?
+#'
 #'
 #' @details
-#' This function takes TreePPL object (S3) and json object (S3),
-#' compile TreePPL model, run it with data and returning TreePPL output.
 #'
-#' TreePPL need to be install on your computer and the PATH set for R/RSTUDIO
-#' (see [install](https://treeppl.org/docs/Howtos) manual).
-#' The executable and the output files will be written in R's [base::tempdir()].
+#' This function takes a TreePPL object (the model) and a json object (the data),
+#' compiles the TreePPL model, runs it with the data and returns TreePPL output.
+#'
+#' TreePPL has to be installed on your computer
+#' (see [install](https://treeppl.org/getting-started/installation) manual).
+#' The executable and the output files will be written in R's [base::tempdir].
 #'
 #' `model` : A TreePPL model (S3), see [treepplr::tp_model] for further details.
-#' Use 'NULL' if you have previously provide an model. Check already provide
-#' model with [treepplr::tp_model_stored].
+#' Use 'NULL' if you have previously provided a model. Check already provided
+#' models with [treepplr::tp_stored_model].
 #'
-#' `model_file_name` : a character vector giving to [treepplr::tp_treeppl] as
-#' a model name.  Use a [treepplr::tp_data_stored] name if you have already
-#' write your model with [treepplr::tp_treeppl].
+#' `model_file_name` : a string given to [treepplr::tp_treeppl] as
+#' a model name.  Use a [treepplr::tp_stored_data] name if you have already
+#' written your model with [treepplr::tp_treeppl].
 #'
-#' `data` : A json object (S3), see [treepplr::tp_json()] for further
-#' details. Use 'NULL' if you have previously provide data. Check already
-#' provide data with [treepplr::tp_data_stored].
+#' `data` : A json object (S3), see [treepplr::tp_json] for further
+#' details. Use 'NULL' if you have previously provided data. Check already
+#' provided data with [treepplr::tp_stored_data].
 #'
-#' `data_file_name` : a character vector giving to [treepplr::tp_treeppl]
-#' a data name. Use a [treepplr::tp_data_stored] name if you have already write
+#' `data_file_name` : a string given to [treepplr::tp_treeppl] as
+#' a data name. Use a [treepplr::tp_stored_data] name if you have already written
 #' your data with [treepplr::tp_treeppl].
 #'
-#' `compile_model` : a [base::logical] telling if the model need to be compiled.
-#' Can be use to avoid to compile a model again in R's [base::tempdir()]
-#' if you have already compile a `model` in a previous call of
-#' [treepplr::tp_treeppl]. Check already compile model
-#' with [treepplr::tp_compile_stored].
+#' `compile_model` : a [base::logical] telling if the model needs to be compiled.
+#' Can be used to avoid compiling the same model again in R's [base::tempdir].
+#' Check already compiled models with [treepplr::tp_stored_compiled].
 #'
-#' `samples` : The number of samples (mcmc) / particules (smc) during inference.
+#' `samples` : The number of samples (MCMC) / particles (SMC) during inference.
 #'
-#' `seed` : The random seed to use. Using 'NULL' initialized randomly.
+#' `seed` : The random seed to use. Using 'NULL' initializes it randomly.
 #'
-#' `n_runs` : The number of run (mcmc) / sweap (smc) used for the inference.
+#' `n_runs` : The number of runs (MCMC) / sweeps (SMC) used for the inference.
 #'
-#' `method` : Inference method to be used. The selected inference method.
+#' `method` : Inference method to be used.
 #' The supported methods are: is-lw, smc-bpf, smc-apf, mcmc-lightweight,
 #' mcmc-trace, mcmc-naive, pmcmc-pimh.
 #'
-#' The following options are highly dependable of the method used.
-#' Check \[not implemented yet\] for more information.
 #'
-#' `align` : Whether or not to align the model for certain inference algorithms.
 #'
-#' `cps` : Configuration of CPS transformation (only applicable to certain
-#'  inference algorithms). The supported options are: none, partial, and full.
+#' **The following options are only applicable to certain methods:**
+#'
+#' `align` : Whether or not to align the model.
+#'
+#' `cps` : Configuration of CPS transformation.
+#' The supported options are: none, partial, and full.
 #'
 #' `delay` : The model is transformed to an efficient representation if
 #' possible. The supported options are: static or dynamic. Use 'NULL' to ignore.
 #'
 #' `kernel` : The value of the driftScale for driftKernel in MCMC. Use 'NULL'
-#' to ignore. Use in conjuction with `method` mcmc-lightweight".
-#' Use 'NULL' to ignore
+#' to ignore. Use together with `method` mcmc-lightweight".
+#' Use 'NULL' to ignore.
 #'
 #' `mcmc_lw_gprob` : The probability of performing a global MH step
 #' (non-global means only modify a single sample in the previous trace).
-#'  Use in conjuction with `method` mcmc-lightweight". Use 'NULL' to ignore
+#'  Use together with `method` mcmc-lightweight". Use 'NULL' to ignore.
 #'
-#' `pmcmc_particles` : The number of particles for the smc proposal computation.
+#' `pmcmc_particles` : The number of particles for the SMC proposal computation.
 #' This option is used if one of the following methods are used: pmcmc-*.
-#' Use 'NULL' to ignore
+#' Use 'NULL' to ignore.
 #'
 #' `prune` : The model is pruned if possible.
 #'
-#' `subsample` : The number of draw to subsample from the posterior
-#' distribution. Use in conjuction with `method` smc-apf or smc-bpf.
+#' `subsample` : The number of draws to subsample from the posterior
+#' distribution. Use together with `method` smc-apf or smc-bpf.
 #' Use 'NULL' to ignore.
 #'
-#' `resample`: The selected resample placement method, for inference algorithms
-#' where applicable. The supported methods are:
+#' `resample`: The selected resample placement method. The supported methods are:
 #' likelihood (resample immediately after all likelihood updates),
 #' align (resample after aligned likelihood updates, forces --align),
 #' and manual (sample only at manually defined resampling locations).
@@ -127,10 +106,12 @@ tp_treeppl <-
            prune = FALSE,
            subsample =  NULL,
            resample = NULL) {
+
     tp_write(model, model_file_name, data, data_file_name)
     if (compile_model) {
       tp_compile(
         model_file_name,
+        samples,
         seed,
         method,
         align,
@@ -147,35 +128,16 @@ tp_treeppl <-
     return(tp_run(model_file_name, data_file_name, samples, n_runs))
   }
 
-#' Prepare input for [tp_compile()]
+#' Prepare input for [tp_compile]
 #'
 #' @description
-#' `tp_write` writes an JSON file to be used by [tp_compile()].
+#' This function takes a TreePPL object (the model) and/or a json object (the data) and writes
+#' them in [base::tempdir] as a .tppl and a .json file, respectively.
 #'
 #' @param model a TreePPL model (S3).
-#' @param model_file_name a character vector giving a model name.
-#' @param data a json object (S3).
-#' @param data_file_name a character vector giving a data name.
-#'
-#' @details
-#' This function takes TreePPL object (S3) and json object (S3) and write
-#' them in [base::tempdir()].
-#'
-#' `model` : A TreePPL model (S3), see [treepplr::tp_model] for further details.
-#' Use 'NULL' if you have previously provide an model. Check already provide
-#' model with [treepplr::tp_model_stored].
-#'
-#' `model_file_name` : a character vector giving to [treepplr::tp_treeppl] as
-#' a model name.  Use a [treepplr::tp_data_stored] name if you have already
-#' write your model with [treepplr::tp_write].
-#'
-#' `data` : A json object (S3), see [treepplr::tp_json()] for further
-#' details. Use 'NULL' if you have previously provide data. Check already
-#' provide data with [treepplr::tp_data_stored].
-#'
-#' `data_file_name` : a character vector giving to [treepplr::tp_treeppl]
-#' a data name. Use a [treepplr::tp_data_stored] name if you have already write
-#' your data with [treepplr::tp_write].
+#' @param model_file_name a string giving a name to the temporary model file.
+#' @param data a json object with all data needed for inference (S3).
+#' @param data_file_name a string giving a name to the temporary data file.
 #'
 #' @export
 tp_write <- function(model = NULL,
@@ -195,81 +157,35 @@ tp_write <- function(model = NULL,
   }
 }
 
-#' Compile for [tp_run()]
+#' Compile the TreePPL program
 #'
 #' @description
-#' `tp_compile` compile a TreePPL model to use by [treepplr::tp_run].
+#' `tp_compile` compiles a TreePPL model to be used by [treepplr::tp_run].
 #'
-#' @param model_file_name a character vector giving a model name.
+#' @param model_file_name a string giving a name to the temporary model file.
+#' @param samples a [base::integer] giving the number of samples (MCMC) /
+#' particles (SMC).
 #' @param seed a [base::numeric] to use as a random seed.
-#' @param method a character vector giving the inference method name.
-#' @param align a [base::logical] to tell if need to align the model.
-#' @param cps a character vector giving the configuration of CPS transformation.
-#' @param delay a character vector giving the configuration of delayed sampling.
+#' @param method a string giving the inference method name.
+#' @param align a [base::logical]. Whether or not to align the model.
+#' @param cps a string giving the configuration of CPS transformation.
+#' @param delay a string giving the configuration of delayed sampling.
 #' @param kernel a [base::numeric] value giving the driftScale for driftKernel
 #' in MCMC.
 #' @param mcmc_lw_gprob a [base::numeric] probability of performing a global
 #' MCMC step.
-#' @param pmcmc_particles a [base::integer] number of particles for the smc
-#' proposal computation
-#' @param prune a [base::logical] to tell if the model will try to be pruned.
-#' @param subsample a [base::integer] number of draw to subsample from the
+#' @param pmcmc_particles a [base::integer] number of particles for the SMC
+#' proposal computation.
+#' @param prune a [base::logical]. Whether or not to prune the model.
+#' @param subsample a [base::integer] number of draws to subsample from the
 #' posterior distribution.
-#' @param resample a character vector giving the selected resample placement
-#' method.
+#' @param resample a string giving the selected resample placement method.
 #'
-#' @details
-#'
-#' `model_file_name` : a character vector giving to [treepplr::tp_treeppl] as
-#' a model name.  Use a [treepplr::tp_data_stored] name if you have already
-#' write your model with [treepplr::tp_treeppl].
-#'
-#' `seed` : The random seed to use. Using 'NULL' initialized randomly.
-#'
-#' `method` : Inference method to be used. The selected inference method.
-#' The supported methods are: is-lw, smc-bpf, smc-apf, mcmc-lightweight,
-#' mcmc-trace, mcmc-naive, pmcmc-pimh.
-#'
-#' The following options are highly dependable of the method used.
-#' Check \[not implemented yet\] for more information.
-#'
-#' `align` : Whether or not to align the model for certain inference algorithms.
-#'
-#' `cps` : Configuration of CPS transformation (only applicable to certain
-#'  inference algorithms). The supported options are: none, partial, and full.
-#'
-#' `delay` : The model is transformed to an efficient representation if
-#' possible. The supported options are: static or dynamic. Use 'NULL' to ignore.
-#'
-#' `kernel` : The value of the driftScale for driftKernel in MCMC. Use 'NULL'
-#' to ignore. Use in conjuction with `method` mcmc-lightweight".
-#' Use 'NULL' to ignore
-#'
-#' `mcmc_lw_gprob` : The probability of performing a global MH step
-#' (non-global means only modify a single sample in the previous trace).
-#'  Use in conjuction with `method` mcmc-lightweight". Use 'NULL' to ignore
-#'
-#' `pmcmc_particles` : The number of particles for the smc proposal computation.
-#' This option is used if one of the following methods are used: pmcmc-*.
-#' Use 'NULL' to ignore
-#'
-#' `prune` : The model is pruned if possible.
-#'
-#' `subsample` : The number of draw to subsample from the posterior
-#' distribution. Use in conjuction with `method` smc-apf or smc-bpf.
-#' Use 'NULL' to ignore.
-#'
-#' `resample`: The selected resample placement method, for inference algorithms
-#' where applicable. The supported methods are:
-#' likelihood (resample immediately after all likelihood updates),
-#' align (resample after aligned likelihood updates, forces --align),
-#' and manual (sample only at manually defined resampling locations).
-#' Use 'NULL' to ignore.
-#'
-#' @return The R's [base::tempdir()] whreŕe the compile file is stored.
+#' @return The directory wheŕe the compiled file is stored.
 #' @export
 
 tp_compile <- function(model_file_name = "tmp_model_file",
+                       samples = 1000,
                        seed = NULL,
                        method = "smc-bpf",
                        align = FALSE,
@@ -281,11 +197,12 @@ tp_compile <- function(model_file_name = "tmp_model_file",
                        prune = FALSE,
                        subsample =  NULL,
                        resample = NULL) {
-  # if dir = NULL return temp_dir, if not return dir
+
   dir_path <- tp_tempdir()
 
   argum <- c(
     paste0(dir_path, model_file_name, ".tppl"),
+    paste0("--particles ", samples),
     paste0("-m ", method),
     paste0("--output ", dir_path, model_file_name, ".exe")
   )
@@ -344,29 +261,13 @@ tp_compile <- function(model_file_name = "tmp_model_file",
 
 #' Run a TreePPL program
 #'
-#' #'
 #' @description
-#' `tp_treeppl` execute TreePPL and return TreePPL output (string JSON format).
+#' `tp_treeppl` executes TreePPL and returns the inference output in JSON format.
 #'
-#' @param model_file_name a character vector giving a model name.
-#' @param data_file_name a character vector giving a data name.
-#' @param samples a [base::integer] giving the number of samples (mcmc) or
-#' particules (smc).
-#' @param n_runs a [base::integer] giving the number of run (mcmc)/sweap (smc).
-#'
-#' @details
-#'
-#' `model_file_name` : a character vector giving to [treepplr::tp_treeppl] as
-#' a model name.  Use a [treepplr::tp_data_stored] name if you have already
-#' write your model with [treepplr::tp_treeppl].
-#'
-#' `data_file_name` : a character vector giving to [treepplr::tp_treeppl]
-#' a data name. Use a [treepplr::tp_data_stored] name if you have already write
-#' your data with [treepplr::tp_treeppl].
-#'
-#' `samples` : The number of samples (mcmc) / particules (smc) during inference.
-#'
-#' `n_runs` : The number of run (mcmc) / sweap (smc) used for the inference.
+#' @inheritParams tp_write
+#' @param samples a [base::integer] giving the number of samples (MCMC) /
+#' particles (SMC).
+#' @param n_runs a [base::integer] giving the number of runs (MCMC) / sweeps (SMC).
 #'
 #' @return TreePPL output in JSON format.
 #' @export

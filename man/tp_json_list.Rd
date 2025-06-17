@@ -7,12 +7,12 @@
 tp_json_list(json)
 }
 \arguments{
-\item{json}{an object of class "json".}
+\item{json}{an object of class json.}
 }
 \value{
-A structured list how contain a json
+A structured list
 }
 \description{
-\code{tp_json} takes an object of class "json" and return a json list
-ready to be export as a JSON
+\code{tp_json} takes an object of class json and returns a json list
+ready to be exported as a JSON
 }

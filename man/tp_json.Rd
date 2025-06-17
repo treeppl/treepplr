@@ -13,10 +13,10 @@ tp_json(...)
 A json object (S3).
 }
 \description{
-\code{tp_json} takes a variable number of argument and return a json object.
+\code{tp_json} takes a variable number of arguments and returns a json object.
 }
 \details{
-This function takes a variable number of argument, so that users can pass as
-arguments either independent lists for each parameter or a single structured
-list of list. It's use like a list (name_arg = value_arg, etc).
+This function takes a variable number of arguments, so that users can pass as
+arguments either independent lists, or a single structured
+list of list (name_arg = value_arg).
 }
