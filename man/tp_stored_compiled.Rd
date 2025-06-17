@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{tp_stored_compiled}
 \alias{tp_stored_compiled}
-\title{List of compiled models in \link[base:tempfile]{base::tempdir})}
+\title{List of compiled models in \link[base:tempfile]{base::tempdir}}
 \usage{
 tp_stored_compiled()
 }
@@ -11,5 +11,5 @@ A list of compiled model file names.
 }
 \description{
 Provides a list of all the compiled model file names currently
-stored in \link[base:tempfile]{base::tempdir}).
+stored in \link[base:tempfile]{base::tempdir}.
 }
