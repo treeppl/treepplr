@@ -7,11 +7,11 @@
 tp_tempdir(temp_dir = NULL, sep = NULL, sub = NULL)
 }
 \arguments{
-\item{temp_dir}{NULL, or a path to be used; if NULL, R's \code{\link[base:tempfile]{base::tempdir()}}
+\item{temp_dir}{NULL, or a path to be used; if NULL, R's \link[base:tempfile]{base::tempdir}
 is used.}
 
 \item{sep}{Better ignored; non-default values are passed to
-\code{\link[base:normalizePath]{base::normalizePath()}}.}
+\link[base:normalizePath]{base::normalizePath}.}
 
 \item{sub}{Extension for defining a sub-directory within the directory
 defined by \link[base:tempfile]{base::tempdir}.}

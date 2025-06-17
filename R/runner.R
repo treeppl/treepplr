@@ -111,6 +111,7 @@ tp_treeppl <-
     if (compile_model) {
       tp_compile(
         model_file_name,
+        samples,
         seed,
         method,
         align,
@@ -180,10 +181,11 @@ tp_write <- function(model = NULL,
 #' posterior distribution.
 #' @param resample a string giving the selected resample placement method.
 #'
-#' @return The directory whreŕe the compiled file is stored.
+#' @return The directory wheŕe the compiled file is stored.
 #' @export
 
 tp_compile <- function(model_file_name = "tmp_model_file",
+                       samples = 1000,
                        seed = NULL,
                        method = "smc-bpf",
                        align = FALSE,
@@ -200,6 +202,7 @@ tp_compile <- function(model_file_name = "tmp_model_file",
 
   argum <- c(
     paste0(dir_path, model_file_name, ".tppl"),
+    paste0("--particles ", samples),
     paste0("-m ", method),
     paste0("--output ", dir_path, model_file_name, ".exe")
   )

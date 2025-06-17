@@ -23,6 +23,7 @@ library(treepplr)
 library(ggplot2)
 library(magrittr)
 library(dplyr)
+library(ape)
 
 if(!require("evolnets", quietly = TRUE)) {
  library(devtools)
@@ -30,10 +31,8 @@ if(!require("evolnets", quietly = TRUE)) {
    install.packages("BiocManager")
  library(BiocManager)
  BiocManager::install("ggtree")
- BiocManager::install("treeio")
  devtools::install_github("maribraga/evolnets")
  library(ggtree)
- library(treeio)
  library(evolnets)
 } else {
  library(evolnets)
@@ -122,7 +121,7 @@ This table can be used by **evolnets** for plotting results, together with the p
 # get data from treepplr
 symbiont_tree <- evolnets::read_tree_from_revbayes(
   system.file("extdata/hostrep3states_treeRev.tre", package = "treepplr"))
-host_tree <- treeio::read.tree(
+host_tree <- ape::read.tree(
   system.file("extdata/hostrep3states_host_tree.tre", package = "treepplr"))
 matrix <- read.csv(
   system.file("extdata/hostrep3states_extant_interactions.csv", package = "treepplr"), 

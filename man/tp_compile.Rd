@@ -6,6 +6,7 @@
 \usage{
 tp_compile(
   model_file_name = "tmp_model_file",
+  samples = 1000,
   seed = NULL,
   method = "smc-bpf",
   align = FALSE,
@@ -21,6 +22,9 @@ tp_compile(
 }
 \arguments{
 \item{model_file_name}{a string giving a name to the temporary model file.}
+
+\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (MCMC) /
+particles (SMC).}
 
 \item{seed}{a \link[base:numeric]{base::numeric} to use as a random seed.}
 
@@ -47,12 +51,9 @@ proposal computation.}
 posterior distribution.}
 
 \item{resample}{a string giving the selected resample placement method.}
-
-\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (MCMC) /
-particles (SMC).}
 }
 \value{
-The directory whreŕe the compiled file is stored.
+The directory wheŕe the compiled file is stored.
 }
 \description{
 \code{tp_compile} compiles a TreePPL model to be used by \link{tp_run}.

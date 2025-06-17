@@ -54,26 +54,26 @@ testthat::test_that("Test-utils_1c : stored_files", {
   testthat::expect_equal(res, c("testx", "testx1"))
 })
 
-testthat::test_that("Test-utils_2 : tp_model_stored", {
-  cat("\tTest-utils_2 : tp_model_stored with tppl\n")
+testthat::test_that("Test-utils_2 : tp_stored_model", {
+  cat("\tTest-utils_2 : tp_stored_model with tppl\n")
 
-  res <- treepplr::tp_model_stored()
-
-  testthat::expect_equal(res, c("test", "test1"))
-})
-
-testthat::test_that("Test-utils_3 : tp_data_stored", {
-  cat("\tTest-utils_3 : tp_data_stored\n")
-
-  res <- treepplr::tp_data_stored()
+  res <- treepplr::tp_stored_model()
 
   testthat::expect_equal(res, c("test", "test1"))
 })
 
-testthat::test_that("Test-utils_4 : tp_compile_stored", {
-  cat("\tTest-utils_4 : tp_compile_stored\n")
+testthat::test_that("Test-utils_3 : tp_stored_data", {
+  cat("\tTest-utils_3 : tp_stored_data\n")
 
-  res <- treepplr::tp_compile_stored()
+  res <- treepplr::tp_stored_data()
+
+  testthat::expect_equal(res, c("test", "test1"))
+})
+
+testthat::test_that("Test-utils_4 : tp_stored_compiled", {
+  cat("\tTest-utils_4 : tp_stored_compiled\n")
+
+  res <- treepplr::tp_stored_compiled()
 
   testthat::expect_equal(res, c("testx", "testx1"))
 })

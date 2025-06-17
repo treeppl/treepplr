@@ -12,5 +12,5 @@ A list of model names.
 \description{
 Provides a list of all model names supported by treepplr.
 The names can also be used to find data for these models
-(see \code{\link[=tp_data]{tp_data()}}).
+(see \link{tp_data}).
 }

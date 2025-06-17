@@ -2,8 +2,8 @@
 % Please edit documentation in R/utils.R
 \name{tp_stored_model}
 \alias{tp_stored_model}
-\title{Model file names stored by user in \code{\link[base:tempfile]{base::tempdir()}}) using
-\code{\link[=tp_write]{tp_write()}})}
+\title{Model file names stored by user in \link[base:tempfile]{base::tempdir}) using
+\link{tp_write})}
 \usage{
 tp_stored_model()
 }
@@ -12,6 +12,6 @@ A list of model file names.
 }
 \description{
 Provides a list of all the model file names currently
-stored in \code{\link[base:tempfile]{base::tempdir()}}). To verify if there is a
-matching data file, see \code{\link[=tp_data_stored]{tp_data_stored()}}.
+stored in \link[base:tempfile]{base::tempdir}). To verify if there is a
+matching data file, see \link{tp_stored_data}.
 }

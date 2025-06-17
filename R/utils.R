@@ -4,10 +4,10 @@
 #' `tp_tempdir` returns a normalized path for a temporary directory where the
 #' executables can read and write temporary files.
 #'
-#' @param temp_dir NULL, or a path to be used; if NULL, R's [base::tempdir()]
+#' @param temp_dir NULL, or a path to be used; if NULL, R's [base::tempdir]
 #' is used.
 #' @param sep Better ignored; non-default values are passed to
-#' [base::normalizePath()].
+#' [base::normalizePath].
 #' @param sub Extension for defining a sub-directory within the directory
 #' defined by [base::tempdir].
 #'
@@ -62,12 +62,12 @@ find_file <- function(model_name, exten) {
   }
 }
 
-#' Model file names stored by user in [base::tempdir()]) using
-#' [treepplr::tp_write()])
+#' Model file names stored by user in [base::tempdir]) using
+#' [treepplr::tp_write])
 #'
 #' @description Provides a list of all the model file names currently
-#' stored in [base::tempdir()]). To verify if there is a
-#' matching data file, see [treepplr::tp_data_stored()].
+#' stored in [base::tempdir]). To verify if there is a
+#' matching data file, see [treepplr::tp_stored_data].
 #'
 #' @return A list of model file names.
 #' @export
@@ -76,12 +76,12 @@ tp_stored_model <- function() {
   stored_files("tppl")
 }
 
-#' Data file names stored by user in [base::tempdir()]) using
-#' [treepplr::tp_write()])
+#' Data file names stored by user in [base::tempdir]) using
+#' [treepplr::tp_write])
 #'
 #' @description Provides a list of all the data file names currently
-#' stored in [base::tempdir()]). To verify if there is a
-#' matching model file, see [treepplr::tp_model_stored()].
+#' stored in [base::tempdir]). To verify if there is a
+#' matching model file, see [treepplr::tp_stored_model].
 #'
 #' @return A list of data file names.
 #' @export
@@ -93,10 +93,10 @@ tp_stored_data <- function() {
   list
 }
 
-#' List of compiled models in [base::tempdir()])
+#' List of compiled models in [base::tempdir])
 #'
 #' @description Provides a list of all the compiled model file names currently
-#' stored in [base::tempdir()]).
+#' stored in [base::tempdir]).
 #'
 #' @return A list of compiled model file names.
 #' @export
@@ -105,7 +105,7 @@ tp_stored_compiled <- function() {
   stored_files("exe")
 }
 
-#Provides file names already provided by user, stored in [base::tempdir()])
+#Provides file names already provided by user, stored in [base::tempdir])
 stored_files <- function(exten) {
   tmp <- list.files(tp_tempdir())
   list_na <-
@@ -118,7 +118,7 @@ stored_files <- function(exten) {
 #'
 #' @description Provides a list of all model names supported by treepplr.
 #' The names can also be used to find data for these models
-#' (see [treepplr::tp_data()]).
+#' (see [treepplr::tp_data]).
 #'
 #' @return A list of model names.
 #' @export
