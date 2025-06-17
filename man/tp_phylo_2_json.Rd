@@ -2,7 +2,7 @@
 % Please edit documentation in R/json.R
 \name{tp_phylo_2_json}
 \alias{tp_phylo_2_json}
-\title{Create a from a phylo object}
+\title{Convert phylo to json}
 \usage{
 tp_phylo_2_json(phylo_tree)
 }
@@ -13,6 +13,6 @@ tp_phylo_2_json(phylo_tree)
 A json object (S3)
 }
 \description{
-\code{tp_phylo_2_json} takes an object of class "phylo" and return a json
+\code{tp_phylo_2_json} takes an object of class \code{phylo} and returns a json
 object.
 }

@@ -1,9 +1,8 @@
-#' Provide normalized names and make return an tmp_dir.
+#' Temporary directory for running treeppl
 #'
 #' @description
-#' `tp_tempdir` provides a temporary directory where the executables can
-#' read and write temporaty files. Its path is returned in normalized format
-#' \bold{with} system-dependent terminal separator.
+#' `tp_tempdir` returns a normalized path for a temporary directory where the
+#' executables can read and write temporary files.
 #'
 #' @param temp_dir NULL, or a path to be used; if NULL, R's [base::tempdir()]
 #' is used.
@@ -34,7 +33,7 @@ tp_tempdir <- function(temp_dir = NULL,
   }
 }
 
-#Provide a separator character platform dependent
+# Platform-dependent separator character
 sep <- function() {
   if (.Platform$OS.type == "windows")
     "\\"
@@ -42,7 +41,7 @@ sep <- function() {
     "/"
 }
 
-#Find model and data describe in model_name
+# Find model and data files for model_name
 find_file <- function(model_name, exten) {
   if (exten == "tppl") {
     readr::read_file(paste0(
@@ -63,52 +62,51 @@ find_file <- function(model_name, exten) {
   }
 }
 
-#' Provide model filenames stored by user in [base::tempdir()]) using
+#' Model file names stored by user in [base::tempdir()]) using
 #' [treepplr::tp_write()])
 #'
-#' @description Provide a list of all the model filenames currently
-#' stored in [base::tempdir()]). They can also be use to verify if data are
-#' attach to these models (see [treepplr::tp_data_stored()])
+#' @description Provides a list of all the model file names currently
+#' stored in [base::tempdir()]). To verify if there is a
+#' matching data file, see [treepplr::tp_data_stored()].
 #'
-#' @return A list of model filenames.
+#' @return A list of model file names.
 #' @export
 
-tp_model_stored <- function() {
-  model_data_stored("tppl")
+tp_stored_model <- function() {
+  stored_files("tppl")
 }
 
-#' Provide data filenames stored by user in [base::tempdir()]) using
+#' Data file names stored by user in [base::tempdir()]) using
 #' [treepplr::tp_write()])
 #'
-#' @description Provide a list of all the data filenames currently
-#' stored in [base::tempdir()]). They can also be use to verify if model are
-#' attach to these data (see [treepplr::tp_model_stored()])
+#' @description Provides a list of all the data file names currently
+#' stored in [base::tempdir()]). To verify if there is a
+#' matching model file, see [treepplr::tp_model_stored()].
 #'
-#' @return A list of data filenames.
+#' @return A list of data file names.
 #' @export
 
-tp_data_stored <- function() {
-  res <- model_data_stored("json")
+tp_stored_data <- function() {
+  res <- stored_files("json")
   list_na <- stringr::str_extract(res, "^((?!_out).)*$")
   list <- list_na[!is.na(list_na)]
   list
 }
 
-#' Provide model filenames compiled by user in [base::tempdir()]) using
-#' [treepplr::tp_write()])
+#' List of compiled models in [base::tempdir()])
 #'
-#' @description Provide a list of all the compiled model filenames currently
+#' @description Provides a list of all the compiled model file names currently
 #' stored in [base::tempdir()]).
 #'
-#' @return A list of compiled model filenames.
+#' @return A list of compiled model file names.
 #' @export
 
-tp_compile_stored <- function() {
-  model_data_stored("exe")
+tp_stored_compiled <- function() {
+  stored_files("exe")
 }
 
-#Provide file names already provide by user stored in [base::tempdir()])
-model_data_stored <- function(exten) {
+#Provides file names already provided by user, stored in [base::tempdir()])
+stored_files <- function(exten) {
   tmp <- list.files(tp_tempdir())
   list_na <-
     stringr::str_extract(tmp, paste0(".*(?=\\.", exten, ")"))
@@ -116,15 +114,15 @@ model_data_stored <- function(exten) {
   list
 }
 
-#' Provide normalized model names supported by treepplr
+#' Model names supported by treepplr
 #'
-#' @description Provide a list of all the model names supported by treepplr.
-#' They can also be use to find data attach to these models
-#' (see [treepplr::tp_data()])
+#' @description Provides a list of all model names supported by treepplr.
+#' The names can also be used to find data for these models
+#' (see [treepplr::tp_data()]).
 #'
 #' @return A list of model names.
 #' @export
-tp_model_name <- function() {
+tp_model_names <- function() {
   list(
     custom = "custom",
     coin = "coin",

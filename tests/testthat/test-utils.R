@@ -27,29 +27,29 @@ lis <-
   )
 sapply(lis, function(x) write(".", file = x))
 
-testthat::test_that("Test-utils_1a : model_data_stored", {
-  cat("\tTest-utils_1a : model_data_stored with tppl\n")
+testthat::test_that("Test-utils_1a : stored_files", {
+  cat("\tTest-utils_1a : stored_files with tppl\n")
 
-  res <- treepplr:::model_data_stored("tppl")
+  res <- treepplr:::stored_files("tppl")
 
   print(res)
 
   testthat::expect_equal(res, c("test", "test1"))
 })
 
-testthat::test_that("Test-utils_1b : model_data_stored", {
-  cat("\tTest-utils_1b : model_data_stored with json\n")
+testthat::test_that("Test-utils_1b : stored_files", {
+  cat("\tTest-utils_1b : stored_files with json\n")
 
-  res <- treepplr:::model_data_stored("json")
+  res <- treepplr:::stored_files("json")
 
   testthat::expect_equal(res, c("test", "test1", "test1_out",
                                 "test_out", "testt_out"))
 })
 
-testthat::test_that("Test-utils_1c : model_data_stored", {
-  cat("\tTest-utils_1c : model_data_stored with exe\n")
+testthat::test_that("Test-utils_1c : stored_files", {
+  cat("\tTest-utils_1c : stored_files with exe\n")
 
-  res <- treepplr:::model_data_stored("exe")
+  res <- treepplr:::stored_files("exe")
 
   testthat::expect_equal(res, c("testx", "testx1"))
 })

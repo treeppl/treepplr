@@ -2,7 +2,7 @@
 % Please edit documentation in R/runner.R
 \name{tp_compile}
 \alias{tp_compile}
-\title{Compile for \code{\link[=tp_run]{tp_run()}}}
+\title{Compile the TreePPL program}
 \usage{
 tp_compile(
   model_file_name = "tmp_model_file",
@@ -20,17 +20,17 @@ tp_compile(
 )
 }
 \arguments{
-\item{model_file_name}{a character vector giving a model name.}
+\item{model_file_name}{a string giving a name to the temporary model file.}
 
 \item{seed}{a \link[base:numeric]{base::numeric} to use as a random seed.}
 
-\item{method}{a character vector giving the inference method name.}
+\item{method}{a string giving the inference method name.}
 
-\item{align}{a \link[base:logical]{base::logical} to tell if need to align the model.}
+\item{align}{a \link[base:logical]{base::logical}. Whether or not to align the model.}
 
-\item{cps}{a character vector giving the configuration of CPS transformation.}
+\item{cps}{a string giving the configuration of CPS transformation.}
 
-\item{delay}{a character vector giving the configuration of delayed sampling.}
+\item{delay}{a string giving the configuration of delayed sampling.}
 
 \item{kernel}{a \link[base:numeric]{base::numeric} value giving the driftScale for driftKernel
 in MCMC.}
@@ -38,67 +38,22 @@ in MCMC.}
 \item{mcmc_lw_gprob}{a \link[base:numeric]{base::numeric} probability of performing a global
 MCMC step.}
 
-\item{pmcmc_particles}{a \link[base:integer]{base::integer} number of particles for the smc
-proposal computation}
+\item{pmcmc_particles}{a \link[base:integer]{base::integer} number of particles for the SMC
+proposal computation.}
 
-\item{prune}{a \link[base:logical]{base::logical} to tell if the model will try to be pruned.}
+\item{prune}{a \link[base:logical]{base::logical}. Whether or not to prune the model.}
 
-\item{subsample}{a \link[base:integer]{base::integer} number of draw to subsample from the
+\item{subsample}{a \link[base:integer]{base::integer} number of draws to subsample from the
 posterior distribution.}
 
-\item{resample}{a character vector giving the selected resample placement
-method.}
+\item{resample}{a string giving the selected resample placement method.}
+
+\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (MCMC) /
+particles (SMC).}
 }
 \value{
-The R's \code{\link[base:tempfile]{base::tempdir()}} whreŕe the compile file is stored.
+The directory whreŕe the compiled file is stored.
 }
 \description{
-\code{tp_compile} compile a TreePPL model to use by \link{tp_run}.
-}
-\details{
-\code{model_file_name} : a character vector giving to \link{tp_treeppl} as
-a model name.  Use a \link{tp_data_stored} name if you have already
-write your model with \link{tp_treeppl}.
-
-\code{seed} : The random seed to use. Using 'NULL' initialized randomly.
-
-\code{method} : Inference method to be used. The selected inference method.
-The supported methods are: is-lw, smc-bpf, smc-apf, mcmc-lightweight,
-mcmc-trace, mcmc-naive, pmcmc-pimh.
-
-The following options are highly dependable of the method used.
-Check [not implemented yet] for more information.
-
-\code{align} : Whether or not to align the model for certain inference algorithms.
-
-\code{cps} : Configuration of CPS transformation (only applicable to certain
-inference algorithms). The supported options are: none, partial, and full.
-
-\code{delay} : The model is transformed to an efficient representation if
-possible. The supported options are: static or dynamic. Use 'NULL' to ignore.
-
-\code{kernel} : The value of the driftScale for driftKernel in MCMC. Use 'NULL'
-to ignore. Use in conjuction with \code{method} mcmc-lightweight".
-Use 'NULL' to ignore
-
-\code{mcmc_lw_gprob} : The probability of performing a global MH step
-(non-global means only modify a single sample in the previous trace).
-Use in conjuction with \code{method} mcmc-lightweight". Use 'NULL' to ignore
-
-\code{pmcmc_particles} : The number of particles for the smc proposal computation.
-This option is used if one of the following methods are used: pmcmc-*.
-Use 'NULL' to ignore
-
-\code{prune} : The model is pruned if possible.
-
-\code{subsample} : The number of draw to subsample from the posterior
-distribution. Use in conjuction with \code{method} smc-apf or smc-bpf.
-Use 'NULL' to ignore.
-
-\code{resample}: The selected resample placement method, for inference algorithms
-where applicable. The supported methods are:
-likelihood (resample immediately after all likelihood updates),
-align (resample after aligned likelihood updates, forces --align),
-and manual (sample only at manually defined resampling locations).
-Use 'NULL' to ignore.
+\code{tp_compile} compiles a TreePPL model to be used by \link{tp_run}.
 }

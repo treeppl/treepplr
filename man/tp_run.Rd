@@ -12,33 +12,18 @@ tp_run(
 )
 }
 \arguments{
-\item{model_file_name}{a character vector giving a model name.}
+\item{model_file_name}{a string giving a name to the temporary model file.}
 
-\item{data_file_name}{a character vector giving a data name.}
+\item{data_file_name}{a string giving a name to the temporary data file.}
 
-\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (mcmc) or
-particules (smc).}
+\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (MCMC) /
+particles (SMC).}
 
-\item{n_runs}{a \link[base:integer]{base::integer} giving the number of run (mcmc)/sweap (smc).}
+\item{n_runs}{a \link[base:integer]{base::integer} giving the number of runs (MCMC) / sweeps (SMC).}
 }
 \value{
 TreePPL output in JSON format.
 }
 \description{
-\code{tp_treeppl} execute TreePPL and return TreePPL output (string JSON format).
-}
-\details{
-#'
-
-\code{model_file_name} : a character vector giving to \link{tp_treeppl} as
-a model name.  Use a \link{tp_data_stored} name if you have already
-write your model with \link{tp_treeppl}.
-
-\code{data_file_name} : a character vector giving to \link{tp_treeppl}
-a data name. Use a \link{tp_data_stored} name if you have already write
-your data with \link{tp_treeppl}.
-
-\code{samples} : The number of samples (mcmc) / particules (smc) during inference.
-
-\code{n_runs} : The number of run (mcmc) / sweap (smc) used for the inference.
+\code{tp_treeppl} executes TreePPL and returns the inference output in JSON format.
 }

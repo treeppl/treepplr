@@ -1,14 +1,14 @@
 #' Create a json object
 #'
 #' @description
-#' `tp_json` takes a variable number of argument and return a json object.
+#' `tp_json` takes a variable number of arguments and returns a json object.
 #'
 #' @param ... Variadic arguments (see details).
 #'
 #' @details
-#' This function takes a variable number of argument, so that users can pass as
-#' arguments either independent lists for each parameter or a single structured
-#' list of list. It's use like a list (name_arg = value_arg, etc).
+#' This function takes a variable number of arguments, so that users can pass as
+#' arguments either independent lists, or a single structured
+#' list of list (name_arg = value_arg).
 #'
 #' @return A json object (S3).
 #' @export
@@ -25,10 +25,10 @@ tp_json <- function(...) {
   dotlist
 }
 
-#' Create a from a phylo object
+#' Convert phylo to json
 #'
 #' @description
-#' `tp_phylo_2_json` takes an object of class "phylo" and return a json
+#' `tp_phylo_2_json` takes an object of class `phylo` and returns a json
 #' object.
 #'
 #' @param phylo_tree an object of class [ape::phylo].
@@ -85,12 +85,12 @@ tp_phylo_2_json <- function(phylo_tree) {
 #' Convert a json object to json list
 #'
 #' @description
-#' `tp_json` takes an object of class "json" and return a json list
-#' ready to be export as a JSON
+#' `tp_json` takes an object of class json and returns a json list
+#' ready to be exported as a JSON
 #'
-#' @param json an object of class "json".
+#' @param json an object of class json.
 #'
-#' @return A structured list how contain a json
+#' @return A structured list
 #' @export
 #'
 tp_json_list <- function(json) {

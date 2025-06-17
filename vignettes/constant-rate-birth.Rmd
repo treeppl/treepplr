@@ -64,7 +64,7 @@ TreePPL outputs the log weight of each sample, so first we need to get the norma
 ```{r, fig.height=4, fig.width=6}
 # turn list into a data frame where each row represents one sample 
 # and calculate normalized weights from log weights
-output <-  tp_parse_coin(output_list) %>% 
+output <-  tp_parse(output_list) %>% 
   dplyr::mutate(weight = exp(log_weight - max(.$log_weight)))
 
 ggplot2::ggplot(output) +

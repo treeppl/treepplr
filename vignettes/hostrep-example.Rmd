@@ -68,10 +68,10 @@ output_list <- readRDS("rdata/hostrep/output_hostrep3states.rds")
 ```
 
 ```{r}
-output <- tp_parse(output_list)
+output <- tp_parse_host_rep(output_list)
 ```
 
-The output from *tp_parse()* contains all information outputted by treeppl, so we need to separate the sampled character histories from the sampled parameter values.
+The output from *tp_parse_host_rep()* contains all information outputted by treeppl, so we need to separate the sampled character histories from the sampled parameter values.
 
 ## Parameter estimates
 

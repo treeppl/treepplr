@@ -188,5 +188,5 @@ testthat::test_that("Test-runner_3a : tp_treppl", {
     samples = 2
   )
 
-  expect_no_error(tp_parse(out, n_runs = 1))
+  expect_no_error(tp_parse_host_rep(out, n_runs = 1))
 })
