@@ -36,7 +36,7 @@ testthat::test_that("Test-setter_0: tp_write", {
         TRUE
       )
     )
-  class(data_right) <- "phyjson"
+  class(data_right) <- "json"
 
   treepplr:::tp_write(model = model_right, data = data_right)
 
@@ -78,7 +78,7 @@ testthat::test_that("Test-runner_1a : tp_compile", {
     )
   )
   model_data_right <- list(model = model_right, data = data_right)
-  class(data_right) <- "phyjson"
+  class(data_right) <- "json"
 
   treepplr:::tp_write(model = model_right, data = data_right)
 
@@ -137,7 +137,7 @@ testthat::test_that("Test-runner_2a : tp_run", {
     )
   )
   model_data_right <- list(model = model_right, data = data_right)
-  class(data_right) <- "phyjson"
+  class(data_right) <- "json"
 
   treepplr:::tp_write(model = model_right, data = data_right)
 
@@ -188,5 +188,5 @@ testthat::test_that("Test-runner_3a : tp_treppl", {
     samples = 2
   )
 
-  expect_no_error(tp_parse(out, n_runs = 1))
+  expect_no_error(tp_parse_host_rep(out, n_runs = 1))
 })

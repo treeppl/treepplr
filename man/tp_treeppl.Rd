@@ -28,29 +28,28 @@ tp_treeppl(
 \arguments{
 \item{model}{a TreePPL model (S3).}
 
-\item{model_file_name}{a character vector giving a model name.}
+\item{model_file_name}{a string giving a name to the temporary model file.}
 
-\item{data}{a phyjson object (S3).}
+\item{data}{a json object with all data needed for inference (S3).}
 
-\item{data_file_name}{a character vector giving a data name.}
+\item{data_file_name}{a string giving a name to the temporary data file.}
 
-\item{compile_model}{a \link[base:logical]{base::logical} to tell if the model need to be
-compile}
+\item{compile_model}{a \link[base:logical]{base::logical}. Compile the model?}
 
-\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (mcmc) or
-particules (smc).}
+\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (MCMC) /
+particles (SMC).}
 
 \item{seed}{a \link[base:numeric]{base::numeric} to use as a random seed.}
 
-\item{n_runs}{a \link[base:integer]{base::integer} giving the number of run (mcmc)/sweap (smc).}
+\item{n_runs}{a \link[base:integer]{base::integer} giving the number of runs (MCMC) / sweeps (SMC).}
 
-\item{method}{a character vector giving the inference method name.}
+\item{method}{a string giving the inference method name.}
 
-\item{align}{a \link[base:logical]{base::logical} to tell if need to align the model.}
+\item{align}{a \link[base:logical]{base::logical}. Whether or not to align the model.}
 
-\item{cps}{a character vector giving the configuration of CPS transformation.}
+\item{cps}{a string giving the configuration of CPS transformation.}
 
-\item{delay}{a character vector giving the configuration of delayed sampling.}
+\item{delay}{a string giving the configuration of delayed sampling.}
 
 \item{kernel}{a \link[base:numeric]{base::numeric} value giving the driftScale for driftKernel
 in MCMC.}
@@ -58,94 +57,89 @@ in MCMC.}
 \item{mcmc_lw_gprob}{a \link[base:numeric]{base::numeric} probability of performing a global
 MCMC step.}
 
-\item{pmcmc_particles}{a \link[base:integer]{base::integer} number of particles for the smc
-proposal computation}
+\item{pmcmc_particles}{a \link[base:integer]{base::integer} number of particles for the SMC
+proposal computation.}
 
-\item{prune}{a \link[base:logical]{base::logical} to tell if the model will try to be pruned.}
+\item{prune}{a \link[base:logical]{base::logical}. Whether or not to prune the model.}
 
-\item{subsample}{a \link[base:integer]{base::integer} number of draw to subsample from the
+\item{subsample}{a \link[base:integer]{base::integer} number of draws to subsample from the
 posterior distribution.}
 
-\item{resample}{a character vector giving the selected resample placement
-method}
+\item{resample}{a string giving the selected resample placement method.}
 }
 \value{
 TreePPL output in JSON format.
 }
 \description{
-\code{tp_treeppl} execute TreePPL and return TreePPL output (string JSON format).
+\code{tp_treeppl} executes TreePPL and returns the inference output (string JSON format).
 }
 \details{
-This function takes TreePPL object (S3) and phyjson object (S3),
-compile TreePPL model, run it with data and returning TreePPL output.
+This function takes a TreePPL object (the model) and a json object (the data),
+compiles the TreePPL model, runs it with the data and returns TreePPL output.
 
-TreePPL need to be install on your computer and the PATH set for R/RSTUDIO
-(see \href{https://treeppl.org/docs/Howtos}{install} manual).
-The executable and the output files will be written in R's \code{\link[base:tempfile]{base::tempdir()}}.
+TreePPL has to be installed on your computer
+(see \href{https://treeppl.org/getting-started/installation}{install} manual).
+The executable and the output files will be written in R's \link[base:tempfile]{base::tempdir}.
 
 \code{model} : A TreePPL model (S3), see \link{tp_model} for further details.
-Use 'NULL' if you have previously provide an model. Check already provide
-model with \link{tp_model_stored}.
+Use 'NULL' if you have previously provided a model. Check already provided
+models with \link{tp_stored_model}.
 
-\code{model_file_name} : a character vector giving to \link{tp_treeppl} as
-a model name.  Use a \link{tp_data_stored} name if you have already
-write your model with \link{tp_treeppl}.
+\code{model_file_name} : a string given to \link{tp_treeppl} as
+a model name.  Use a \link{tp_stored_data} name if you have already
+written your model with \link{tp_treeppl}.
 
-\code{data} : A phyjson object (S3), see \code{\link[=tp_phyjson]{tp_phyjson()}} for further
-details. Use 'NULL' if you have previously provide data. Check already
-provide data with \link{tp_data_stored}.
+\code{data} : A json object (S3), see \link{tp_json} for further
+details. Use 'NULL' if you have previously provided data. Check already
+provided data with \link{tp_stored_data}.
 
-\code{data_file_name} : a character vector giving to \link{tp_treeppl}
-a data name. Use a \link{tp_data_stored} name if you have already write
+\code{data_file_name} : a string given to \link{tp_treeppl} as
+a data name. Use a \link{tp_stored_data} name if you have already written
 your data with \link{tp_treeppl}.
 
-\code{compile_model} : a \link[base:logical]{base::logical} telling if the model need to be compiled.
-Can be use to avoid to compile a model again in R's \code{\link[base:tempfile]{base::tempdir()}}
-if you have already compile a \code{model} in a previous call of
-\link{tp_treeppl}. Check already compile model
-with \link{tp_compile_stored}.
+\code{compile_model} : a \link[base:logical]{base::logical} telling if the model needs to be compiled.
+Can be used to avoid compiling the same model again in R's \link[base:tempfile]{base::tempdir}.
+Check already compiled models with \link{tp_stored_compiled}.
 
-\code{samples} : The number of samples (mcmc) / particules (smc) during inference.
+\code{samples} : The number of samples (MCMC) / particles (SMC) during inference.
 
-\code{seed} : The random seed to use. Using 'NULL' initialized randomly.
+\code{seed} : The random seed to use. Using 'NULL' initializes it randomly.
 
-\code{n_runs} : The number of run (mcmc) / sweap (smc) used for the inference.
+\code{n_runs} : The number of runs (MCMC) / sweeps (SMC) used for the inference.
 
-\code{method} : Inference method to be used. The selected inference method.
+\code{method} : Inference method to be used.
 The supported methods are: is-lw, smc-bpf, smc-apf, mcmc-lightweight,
 mcmc-trace, mcmc-naive, pmcmc-pimh.
 
-The following options are highly dependable of the method used.
-Check [not implemented yet] for more information.
+\strong{The following options are only applicable to certain methods:}
 
-\code{align} : Whether or not to align the model for certain inference algorithms.
+\code{align} : Whether or not to align the model.
 
-\code{cps} : Configuration of CPS transformation (only applicable to certain
-inference algorithms). The supported options are: none, partial, and full.
+\code{cps} : Configuration of CPS transformation.
+The supported options are: none, partial, and full.
 
 \code{delay} : The model is transformed to an efficient representation if
 possible. The supported options are: static or dynamic. Use 'NULL' to ignore.
 
 \code{kernel} : The value of the driftScale for driftKernel in MCMC. Use 'NULL'
-to ignore. Use in conjuction with \code{method} mcmc-lightweight".
-Use 'NULL' to ignore
+to ignore. Use together with \code{method} mcmc-lightweight".
+Use 'NULL' to ignore.
 
 \code{mcmc_lw_gprob} : The probability of performing a global MH step
 (non-global means only modify a single sample in the previous trace).
-Use in conjuction with \code{method} mcmc-lightweight". Use 'NULL' to ignore
+Use together with \code{method} mcmc-lightweight". Use 'NULL' to ignore.
 
-\code{pmcmc_particles} : The number of particles for the smc proposal computation.
+\code{pmcmc_particles} : The number of particles for the SMC proposal computation.
 This option is used if one of the following methods are used: pmcmc-*.
-Use 'NULL' to ignore
+Use 'NULL' to ignore.
 
 \code{prune} : The model is pruned if possible.
 
-\code{subsample} : The number of draw to subsample from the posterior
-distribution. Use in conjuction with \code{method} smc-apf or smc-bpf.
+\code{subsample} : The number of draws to subsample from the posterior
+distribution. Use together with \code{method} smc-apf or smc-bpf.
 Use 'NULL' to ignore.
 
-\code{resample}: The selected resample placement method, for inference algorithms
-where applicable. The supported methods are:
+\code{resample}: The selected resample placement method. The supported methods are:
 likelihood (resample immediately after all likelihood updates),
 align (resample after aligned likelihood updates, forces --align),
 and manual (sample only at manually defined resampling locations).

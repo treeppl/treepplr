@@ -1,57 +1,51 @@
-#' Parse TreePPL json coin output
+#' Parse simple TreePPL json output
 #'
 #' @description
-#' `tp_parse_coin` take TreePPL json output and return a data.frame
+#' `tp_parse` takes TreePPL json output and returns a data.frame
 #'
-#' @param treeppl_out a character vector giving the TreePPL json output.
-#' @param n_runs a [base::integer] giving the number of run (mcmc)/sweap (smc).
+#' @param treeppl_out a character vector giving the TreePPL json output
+#' produced by [tp_treeppl].
+#' @param n_runs a [base::integer] giving the number of runs (MCMC) or sweeps (SMC).
 #'
-#' @details
-#' This function takes a TreePPL json output and write a revBeyes data.fram
-#' format.
 #'
-#' `treeppl_out` : A TreePPL json output coming from [tp_treeppl].
-#'
-#' `n_runs` : The number of run (mcmc) / sweap (smc) used for the inference.
-#'
-#' @return List (n=n_runs) RevBayes dataframe format.
+#' @return A list (n = n_runs) of data frames with the output from inference
+#' in TreePPL.
 #' @export
-tp_parse_coin <- function(treeppl_out,
-                          n_runs = 1) {
+tp_parse <- function(treeppl_out, n_runs = 1) {
+
   if (n_runs == 1) {
     treeppl_out <- list(treeppl_out)
   }
 
-  result_list <- list()
+  result_df <- list()
 
   for (index in seq_along(treeppl_out)) {
-    result_list <-
-      rbind(result_list, as.data.frame(treeppl_out[[index]]))
+    result_df <-
+      rbind(result_df, as.data.frame(treeppl_out[[index]]))
   }
 
-  return(result_list)
+  result_df <- dplyr::rename(result_df, "log_weight" = "weights")
+
+  return(result_df)
 }
 
-#' Parse TreePPL json output
+#' Parse TreePPL json output for host repertoire model
 #'
 #' @description
-#' `tp_parse` take TreePPL json output and return a data.frame
+#' `tp_parse_host_rep` takes TreePPL json output from inference with the
+#' model of host repertoire evolution and returns a data.frame
 #'
-#' @param treeppl_out a character vector giving the TreePPL json output.
-#' @param n_runs a [base::integer] giving the number of run (mcmc)/sweap (smc).
+#' @param treeppl_out a character vector giving the TreePPL json output
+#' produced by [tp_treeppl].
 #'
-#' @details
-#' This function takes a TreePPL json output and write a revBeyes data.fram
-#' format.
+#' @param n_runs a [base::integer] giving the number of runs (MCMC) or sweeps (SMC).
 #'
-#' `treeppl_out` : A TreePPL json output coming from [tp_treeppl].
 #'
-#' `n_runs` : The number of run (mcmc) / sweap (smc) used for the inference.
-#'
-#' @return List (n=n_runs) RevBayes dataframe format.
+#' @return A list (n = n_runs) of data frames with the output from inference
+#' in TreePPL under the host repertoire evolution model.
 #' @export
 
-tp_parse <- function(treeppl_out, n_runs = 1) {
+tp_parse_host_rep <- function(treeppl_out, n_runs = 1) {
   if (n_runs == 1) {
     treeppl_out <- list(treeppl_out)
   }

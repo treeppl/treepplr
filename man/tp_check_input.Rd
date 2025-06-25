@@ -9,11 +9,11 @@ tp_check_input(model, data)
 \arguments{
 \item{model}{A TreePPL model (S3)}
 
-\item{data}{A phyjson object (S3)}
+\item{data}{A json object (S3)}
 }
 \value{
 ...
 }
 \description{
-This function check the conformity of model/data for \code{tp_go()}.
+This function checks the input for \code{tp_go()}.
 }
