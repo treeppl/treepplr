@@ -58,32 +58,30 @@ tp_model <- function(model_input) {
 #' (see [treepplr::tp_model_names()]), OR
 #'   * A list (or structured list) containing TreePPL data.
 #'
-#'
-#' @return json data (S3), see [treepplr::tp_json()] for further details.
+#' @return a list, see [treepplr::tp_check_input()] for further details.
 #' @export
 #'
 tp_data <- function(data_input) {
   res <- try(file.exists(data_input), silent = TRUE)
   # If path exists, import data from file
   if (!is(res, "try-error") && res) {
-    data <- tp_json(jsonlite::fromJSON(data_input))
+    data <- tp_list(jsonlite::fromJSON(data_input))
     # If path doens't exist
   } else if (assertthat::is.string(data_input)) {
     res <-
       try(get(data_input, treepplr::tp_model_names()), silent = TRUE)
     # data_input has the name of a known model
     if (!is(res, "try-error")) {
-      data <- tp_json(find_file(res, "json"))
+      data <- tp_list(find_file(res, "json"))
     }
     # OR data_input is a list (or a structured list)
-    # (needs to be verified as valid json class later)
   } else if (is.list(data_input)) {
-    data <- tp_json(data_input)
+    data <- tp_list(data_input)
   }
 
-  if (is(data, "json")) {
+  if (is(data, "list")) {
     data
   } else {
-    stop("Unknow R type (not a valid path, known data model, or json S3)")
+    stop("Unknow R type (not a valid path, known data model, or list)")
   }
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/runner.R
 \name{tp_write}
 \alias{tp_write}
-\title{Prepare input for \link{tp_compile}}
+\title{Prepare input for \code{\link[=tp_compile]{tp_compile()}}}
 \usage{
 tp_write(
   model = NULL,
@@ -14,13 +14,32 @@ tp_write(
 \arguments{
 \item{model}{a TreePPL model (S3).}
 
-\item{model_file_name}{a string giving a name to the temporary model file.}
+\item{model_file_name}{a character vector giving a model name.}
 
-\item{data}{a json object with all data needed for inference (S3).}
+\item{data}{a phyjson object (S3).}
 
-\item{data_file_name}{a string giving a name to the temporary data file.}
+\item{data_file_name}{a character vector giving a data name.}
 }
 \description{
-This function takes a TreePPL object (the model) and/or a json object (the data) and writes
-them in \link[base:tempfile]{base::tempdir} as a .tppl and a .json file, respectively.
+\code{tp_write} writes an JSON file to be used by \code{\link[=tp_compile]{tp_compile()}}.
+}
+\details{
+This function takes TreePPL object (S3) and phyjson object (S3) and write
+them in \code{\link[base:tempfile]{base::tempdir()}}.
+
+\code{model} : A TreePPL model (S3), see \link{tp_model} for further details.
+Use 'NULL' if you have previously provide an model. Check already provide
+model with \link{tp_stored_model}.
+
+\code{model_file_name} : a character vector giving to \link{tp_treeppl} as
+a model name.  Use a \link{tp_stored_data} name if you have already
+write your model with \link{tp_write}.
+
+\code{data} : A list, see \code{\link[=tp_check_input]{tp_check_input()}} for further
+details. Use 'NULL' if you have previously provide data. Check already
+provide data with \link{tp_stored_data}.
+
+\code{data_file_name} : a character vector giving to \link{tp_treeppl}
+a data name. Use a \link{tp_stored_data} name if you have already write
+your data with \link{tp_write}.
 }

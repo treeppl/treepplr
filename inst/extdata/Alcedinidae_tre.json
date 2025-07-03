@@ -1,0 +1,645 @@
+{
+    "rho": 0.5684210526315789,
+    "tree": {
+        "__constructor__": "Node",
+        "__data__": {
+            "left": {
+                "__constructor__": "Node",
+                "__data__": {
+                    "left": {
+                        "__constructor__": "Node",
+                        "__data__": {
+                            "left": {
+                                "__constructor__": "Node",
+                                "__data__": {
+                                    "left": {
+                                        "__constructor__": "Leaf",
+                                        "__data__": {
+                                            "age": 0.0
+                                        }
+                                    },
+                                    "right": {
+                                        "__constructor__": "Leaf",
+                                        "__data__": {
+                                            "age": 0.0
+                                        }
+                                    },
+                                    "age": 5.6357879800000035
+                                }
+                            },
+                            "right": {
+                                "__constructor__": "Node",
+                                "__data__": {
+                                    "left": {
+                                        "__constructor__": "Leaf",
+                                        "__data__": {
+                                            "age": 0.0
+                                        }
+                                    },
+                                    "right": {
+                                        "__constructor__": "Node",
+                                        "__data__": {
+                                            "left": {
+                                                "__constructor__": "Leaf",
+                                                "__data__": {
+                                                    "age": 0.0
+                                                }
+                                            },
+                                            "right": {
+                                                "__constructor__": "Node",
+                                                "__data__": {
+                                                    "left": {
+                                                        "__constructor__": "Leaf",
+                                                        "__data__": {
+                                                            "age": 0.0
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "__constructor__": "Leaf",
+                                                        "__data__": {
+                                                            "age": 0.0
+                                                        }
+                                                    },
+                                                    "age": 4.788021784000003
+                                                }
+                                            },
+                                            "age": 7.595901086000003
+                                        }
+                                    },
+                                    "age": 9.436625322000003
+                                }
+                            },
+                            "age": 12.344087944000004
+                        }
+                    },
+                    "right": {
+                        "__constructor__": "Node",
+                        "__data__": {
+                            "left": {
+                                "__constructor__": "Node",
+                                "__data__": {
+                                    "left": {
+                                        "__constructor__": "Leaf",
+                                        "__data__": {
+                                            "age": 0.0
+                                        }
+                                    },
+                                    "right": {
+                                        "__constructor__": "Node",
+                                        "__data__": {
+                                            "left": {
+                                                "__constructor__": "Node",
+                                                "__data__": {
+                                                    "left": {
+                                                        "__constructor__": "Leaf",
+                                                        "__data__": {
+                                                            "age": 0.0
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "__constructor__": "Leaf",
+                                                        "__data__": {
+                                                            "age": 0.0
+                                                        }
+                                                    },
+                                                    "age": 3.934203885600003
+                                                }
+                                            },
+                                            "right": {
+                                                "__constructor__": "Node",
+                                                "__data__": {
+                                                    "left": {
+                                                        "__constructor__": "Node",
+                                                        "__data__": {
+                                                            "left": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "age": 3.151799962600003
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "__constructor__": "Node",
+                                                        "__data__": {
+                                                            "left": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "age": 5.054547865600003
+                                                        }
+                                                    },
+                                                    "age": 6.284896366600003
+                                                }
+                                            },
+                                            "age": 7.815689979600003
+                                        }
+                                    },
+                                    "age": 10.322430602600003
+                                }
+                            },
+                            "right": {
+                                "__constructor__": "Node",
+                                "__data__": {
+                                    "left": {
+                                        "__constructor__": "Leaf",
+                                        "__data__": {
+                                            "age": 0.0
+                                        }
+                                    },
+                                    "right": {
+                                        "__constructor__": "Node",
+                                        "__data__": {
+                                            "left": {
+                                                "__constructor__": "Node",
+                                                "__data__": {
+                                                    "left": {
+                                                        "__constructor__": "Leaf",
+                                                        "__data__": {
+                                                            "age": 0.0
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "__constructor__": "Node",
+                                                        "__data__": {
+                                                            "left": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "age": 1.5194060636000035
+                                                        }
+                                                    },
+                                                    "age": 4.987038172600004
+                                                }
+                                            },
+                                            "right": {
+                                                "__constructor__": "Node",
+                                                "__data__": {
+                                                    "left": {
+                                                        "__constructor__": "Leaf",
+                                                        "__data__": {
+                                                            "age": 0.0
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "__constructor__": "Node",
+                                                        "__data__": {
+                                                            "left": {
+                                                                "__constructor__": "Node",
+                                                                "__data__": {
+                                                                    "left": {
+                                                                        "__constructor__": "Leaf",
+                                                                        "__data__": {
+                                                                            "age": 0.0
+                                                                        }
+                                                                    },
+                                                                    "right": {
+                                                                        "__constructor__": "Leaf",
+                                                                        "__data__": {
+                                                                            "age": 0.0
+                                                                        }
+                                                                    },
+                                                                    "age": 0.6302633051000042
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "__constructor__": "Node",
+                                                                "__data__": {
+                                                                    "left": {
+                                                                        "__constructor__": "Leaf",
+                                                                        "__data__": {
+                                                                            "age": 0.0
+                                                                        }
+                                                                    },
+                                                                    "right": {
+                                                                        "__constructor__": "Node",
+                                                                        "__data__": {
+                                                                            "left": {
+                                                                                "__constructor__": "Leaf",
+                                                                                "__data__": {
+                                                                                    "age": 0.0
+                                                                                }
+                                                                            },
+                                                                            "right": {
+                                                                                "__constructor__": "Leaf",
+                                                                                "__data__": {
+                                                                                    "age": 0.0
+                                                                                }
+                                                                            },
+                                                                            "age": 1.9625798631000042
+                                                                        }
+                                                                    },
+                                                                    "age": 3.732932013100004
+                                                                }
+                                                            },
+                                                            "age": 5.593307079100004
+                                                        }
+                                                    },
+                                                    "age": 6.096453029600004
+                                                }
+                                            },
+                                            "age": 8.265483261600004
+                                        }
+                                    },
+                                    "age": 10.868354856600003
+                                }
+                            },
+                            "age": 12.551924103600003
+                        }
+                    },
+                    "age": 13.472886818000003
+                }
+            },
+            "right": {
+                "__constructor__": "Node",
+                "__data__": {
+                    "left": {
+                        "__constructor__": "Node",
+                        "__data__": {
+                            "left": {
+                                "__constructor__": "Node",
+                                "__data__": {
+                                    "left": {
+                                        "__constructor__": "Leaf",
+                                        "__data__": {
+                                            "age": 0.0
+                                        }
+                                    },
+                                    "right": {
+                                        "__constructor__": "Node",
+                                        "__data__": {
+                                            "left": {
+                                                "__constructor__": "Leaf",
+                                                "__data__": {
+                                                    "age": 0.0
+                                                }
+                                            },
+                                            "right": {
+                                                "__constructor__": "Leaf",
+                                                "__data__": {
+                                                    "age": 0.0
+                                                }
+                                            },
+                                            "age": 4.534421021000004
+                                        }
+                                    },
+                                    "age": 12.468698222000004
+                                }
+                            },
+                            "right": {
+                                "__constructor__": "Node",
+                                "__data__": {
+                                    "left": {
+                                        "__constructor__": "Leaf",
+                                        "__data__": {
+                                            "age": 0.0
+                                        }
+                                    },
+                                    "right": {
+                                        "__constructor__": "Node",
+                                        "__data__": {
+                                            "left": {
+                                                "__constructor__": "Leaf",
+                                                "__data__": {
+                                                    "age": 0.0
+                                                }
+                                            },
+                                            "right": {
+                                                "__constructor__": "Node",
+                                                "__data__": {
+                                                    "left": {
+                                                        "__constructor__": "Leaf",
+                                                        "__data__": {
+                                                            "age": 0.0
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "__constructor__": "Node",
+                                                        "__data__": {
+                                                            "left": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "age": 6.306427827000004
+                                                        }
+                                                    },
+                                                    "age": 9.400501296000003
+                                                }
+                                            },
+                                            "age": 13.858768259000003
+                                        }
+                                    },
+                                    "age": 20.687669941000003
+                                }
+                            },
+                            "age": 22.826224522000004
+                        }
+                    },
+                    "right": {
+                        "__constructor__": "Node",
+                        "__data__": {
+                            "left": {
+                                "__constructor__": "Leaf",
+                                "__data__": {
+                                    "age": 0.0
+                                }
+                            },
+                            "right": {
+                                "__constructor__": "Node",
+                                "__data__": {
+                                    "left": {
+                                        "__constructor__": "Node",
+                                        "__data__": {
+                                            "left": {
+                                                "__constructor__": "Leaf",
+                                                "__data__": {
+                                                    "age": 0.0
+                                                }
+                                            },
+                                            "right": {
+                                                "__constructor__": "Node",
+                                                "__data__": {
+                                                    "left": {
+                                                        "__constructor__": "Leaf",
+                                                        "__data__": {
+                                                            "age": 0.0
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "__constructor__": "Node",
+                                                        "__data__": {
+                                                            "left": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "__constructor__": "Node",
+                                                                "__data__": {
+                                                                    "left": {
+                                                                        "__constructor__": "Leaf",
+                                                                        "__data__": {
+                                                                            "age": 0.0
+                                                                        }
+                                                                    },
+                                                                    "right": {
+                                                                        "__constructor__": "Leaf",
+                                                                        "__data__": {
+                                                                            "age": 0.0
+                                                                        }
+                                                                    },
+                                                                    "age": 4.220057652000002
+                                                                }
+                                                            },
+                                                            "age": 8.451051068000002
+                                                        }
+                                                    },
+                                                    "age": 11.540726280000001
+                                                }
+                                            },
+                                            "age": 15.288395730000001
+                                        }
+                                    },
+                                    "right": {
+                                        "__constructor__": "Node",
+                                        "__data__": {
+                                            "left": {
+                                                "__constructor__": "Node",
+                                                "__data__": {
+                                                    "left": {
+                                                        "__constructor__": "Node",
+                                                        "__data__": {
+                                                            "left": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "age": 8.614086756000003
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "__constructor__": "Node",
+                                                        "__data__": {
+                                                            "left": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "__constructor__": "Node",
+                                                                "__data__": {
+                                                                    "left": {
+                                                                        "__constructor__": "Leaf",
+                                                                        "__data__": {
+                                                                            "age": 0.0
+                                                                        }
+                                                                    },
+                                                                    "right": {
+                                                                        "__constructor__": "Node",
+                                                                        "__data__": {
+                                                                            "left": {
+                                                                                "__constructor__": "Leaf",
+                                                                                "__data__": {
+                                                                                    "age": 0.0
+                                                                                }
+                                                                            },
+                                                                            "right": {
+                                                                                "__constructor__": "Node",
+                                                                                "__data__": {
+                                                                                    "left": {
+                                                                                        "__constructor__": "Node",
+                                                                                        "__data__": {
+                                                                                            "left": {
+                                                                                                "__constructor__": "Leaf",
+                                                                                                "__data__": {
+                                                                                                    "age": 0.0
+                                                                                                }
+                                                                                            },
+                                                                                            "right": {
+                                                                                                "__constructor__": "Leaf",
+                                                                                                "__data__": {
+                                                                                                    "age": 0.0
+                                                                                                }
+                                                                                            },
+                                                                                            "age": 0.9841688684000028
+                                                                                        }
+                                                                                    },
+                                                                                    "right": {
+                                                                                        "__constructor__": "Node",
+                                                                                        "__data__": {
+                                                                                            "left": {
+                                                                                                "__constructor__": "Leaf",
+                                                                                                "__data__": {
+                                                                                                    "age": 0.0
+                                                                                                }
+                                                                                            },
+                                                                                            "right": {
+                                                                                                "__constructor__": "Leaf",
+                                                                                                "__data__": {
+                                                                                                    "age": 0.0
+                                                                                                }
+                                                                                            },
+                                                                                            "age": 1.0489620646000029
+                                                                                        }
+                                                                                    },
+                                                                                    "age": 1.7140599280000028
+                                                                                }
+                                                                            },
+                                                                            "age": 3.786162539000003
+                                                                        }
+                                                                    },
+                                                                    "age": 8.788450500000003
+                                                                }
+                                                            },
+                                                            "age": 11.058462177000003
+                                                        }
+                                                    },
+                                                    "age": 15.008504773000002
+                                                }
+                                            },
+                                            "right": {
+                                                "__constructor__": "Node",
+                                                "__data__": {
+                                                    "left": {
+                                                        "__constructor__": "Node",
+                                                        "__data__": {
+                                                            "left": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "age": 11.156858750000001
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "__constructor__": "Node",
+                                                        "__data__": {
+                                                            "left": {
+                                                                "__constructor__": "Leaf",
+                                                                "__data__": {
+                                                                    "age": 0.0
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "__constructor__": "Node",
+                                                                "__data__": {
+                                                                    "left": {
+                                                                        "__constructor__": "Leaf",
+                                                                        "__data__": {
+                                                                            "age": 0.0
+                                                                        }
+                                                                    },
+                                                                    "right": {
+                                                                        "__constructor__": "Node",
+                                                                        "__data__": {
+                                                                            "left": {
+                                                                                "__constructor__": "Leaf",
+                                                                                "__data__": {
+                                                                                    "age": 0.0
+                                                                                }
+                                                                            },
+                                                                            "right": {
+                                                                                "__constructor__": "Node",
+                                                                                "__data__": {
+                                                                                    "left": {
+                                                                                        "__constructor__": "Leaf",
+                                                                                        "__data__": {
+                                                                                            "age": 0.0
+                                                                                        }
+                                                                                    },
+                                                                                    "right": {
+                                                                                        "__constructor__": "Node",
+                                                                                        "__data__": {
+                                                                                            "left": {
+                                                                                                "__constructor__": "Leaf",
+                                                                                                "__data__": {
+                                                                                                    "age": 0.0
+                                                                                                }
+                                                                                            },
+                                                                                            "right": {
+                                                                                                "__constructor__": "Leaf",
+                                                                                                "__data__": {
+                                                                                                    "age": 0.0
+                                                                                                }
+                                                                                            },
+                                                                                            "age": 1.9005613184000016
+                                                                                        }
+                                                                                    },
+                                                                                    "age": 3.1001501364000017
+                                                                                }
+                                                                            },
+                                                                            "age": 6.0436507324000015
+                                                                        }
+                                                                    },
+                                                                    "age": 12.382525132400001
+                                                                }
+                                                            },
+                                                            "age": 12.617858124000001
+                                                        }
+                                                    },
+                                                    "age": 15.396725736000002
+                                                }
+                                            },
+                                            "age": 16.828404511000002
+                                        }
+                                    },
+                                    "age": 20.368109713000003
+                                }
+                            },
+                            "age": 23.742999600000005
+                        }
+                    },
+                    "age": 32.145876669
+                }
+            },
+            "age": 34.940139098
+        }
+    }
+}

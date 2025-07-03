@@ -39,7 +39,7 @@ ape::plot.phylo(tree, cex = 0.5)
 We need to convert the tree to a **TreePPL** readable format and read the CRB model.
 
 ```{r}
-data <- tp_phylo_2_json(tree)
+data <- tp_phylo_2_TreePPL(tree, age="down-top")
 model <- tp_model(system.file("extdata/crb.tppl", package = "treepplr"))
 ```
 
