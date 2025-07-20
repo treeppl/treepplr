@@ -110,7 +110,7 @@ stored_files <- function(exten) {
   tmp <- list.files(tp_tempdir())
   list_na <-
     stringr::str_extract(tmp, paste0(".*(?=\\.", exten, ")"))
-  list <- list_na[!is.na(list_na)]
+  list <- stringr::str_sort(list_na[!is.na(list_na)])
   list
 }
 

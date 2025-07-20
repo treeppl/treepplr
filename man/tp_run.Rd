@@ -7,7 +7,6 @@
 tp_run(
   model_file_name = "tmp_model_file",
   data_file_name = "tmp_data_file",
-  samples = 1000,
   n_runs = "1"
 )
 }
@@ -15,9 +14,6 @@ tp_run(
 \item{model_file_name}{a character vector giving a model name.}
 
 \item{data_file_name}{a character vector giving a data name.}
-
-\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (mcmc) or
-particules (smc).}
 
 \item{n_runs}{a \link[base:integer]{base::integer} giving the number of run (mcmc)/sweap (smc).}
 }

@@ -159,12 +159,12 @@ testthat::test_that("Test-runner_2b : tp_run", {
   )
 
   treepplr:::tp_compile(model_file_name = "coin",
+                        samples = 1000,
                         method = "smc-bpf")
 
   out <- treepplr:::tp_run(
     model_file_name = "coin",
     data_file_name = "coin",
-    samples = 1000,
     n_runs = 1
   )
 
@@ -182,7 +182,7 @@ testthat::test_that("Test-runner_3a : tp_treppl", {
     model_file_name = "hostrep",
     data = data,
     data_file_name = "hostrep",
-    samples = 2
+    samples = 10
   )
 
   expect_no_error(tp_parse_host_rep(out, n_runs = 1))

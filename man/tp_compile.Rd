@@ -6,6 +6,7 @@
 \usage{
 tp_compile(
   model_file_name = "tmp_model_file",
+  samples = 1000,
   seed = NULL,
   method = "smc-bpf",
   align = FALSE,
@@ -21,6 +22,9 @@ tp_compile(
 }
 \arguments{
 \item{model_file_name}{a character vector giving a model name.}
+
+\item{samples}{a \link[base:integer]{base::integer} giving the number of samples (mcmc) or
+particules (smc).}
 
 \item{seed}{a \link[base:numeric]{base::numeric} to use as a random seed.}
 

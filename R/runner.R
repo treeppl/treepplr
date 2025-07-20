@@ -131,6 +131,7 @@ tp_treeppl <-
     if (compile_model) {
       tp_compile(
         model_file_name,
+        samples,
         seed,
         method,
         align,
@@ -144,7 +145,7 @@ tp_treeppl <-
         resample
       )
     }
-    return(tp_run(model_file_name, data_file_name, samples, n_runs))
+    return(tp_run(model_file_name, data_file_name, n_runs))
   }
 
 #' Prepare input for [tp_compile()]
@@ -201,6 +202,8 @@ tp_write <- function(model = NULL,
 #' `tp_compile` compile a TreePPL model to use by [treepplr::tp_run].
 #'
 #' @param model_file_name a character vector giving a model name.
+#' @param samples a [base::integer] giving the number of samples (mcmc) or
+#' particules (smc).
 #' @param seed a [base::numeric] to use as a random seed.
 #' @param method a character vector giving the inference method name.
 #' @param align a [base::logical] to tell if need to align the model.
@@ -270,6 +273,7 @@ tp_write <- function(model = NULL,
 #' @export
 
 tp_compile <- function(model_file_name = "tmp_model_file",
+                       samples = 1000,
                        seed = NULL,
                        method = "smc-bpf",
                        align = FALSE,
@@ -283,10 +287,11 @@ tp_compile <- function(model_file_name = "tmp_model_file",
                        resample = NULL) {
   # if dir = NULL return temp_dir, if not return dir
   dir_path <- tp_tempdir()
-
+  options(scipen=999)
   argum <- c(
     paste0(dir_path, model_file_name, ".tppl"),
-    paste0("-m ", method),
+    paste("-m", method),
+    paste("--particles", samples),
     paste0("--output ", dir_path, model_file_name, ".exe")
   )
 
@@ -350,8 +355,6 @@ tp_compile <- function(model_file_name = "tmp_model_file",
 #'
 #' @param model_file_name a character vector giving a model name.
 #' @param data_file_name a character vector giving a data name.
-#' @param samples a [base::integer] giving the number of samples (mcmc) or
-#' particules (smc).
 #' @param n_runs a [base::integer] giving the number of run (mcmc)/sweap (smc).
 #'
 #' @details
@@ -373,7 +376,6 @@ tp_compile <- function(model_file_name = "tmp_model_file",
 
 tp_run <- function(model_file_name = "tmp_model_file",
                    data_file_name = "tmp_data_file",
-                   samples = 1000,
                    n_runs = "1") {
   # if dir_path = NULL return temp_dir, if not return dir
   dir_path <- tp_tempdir()
@@ -383,7 +385,7 @@ tp_run <- function(model_file_name = "tmp_model_file",
     command = paste0(dir_path, model_file_name, ".exe"),
     args = c(
       paste0(dir_path, data_file_name, ".json"),
-      paste(samples, n_runs)
+      paste(n_runs)
     ),
     stdout = paste0(dir_path, model_file_name, "_out.json")
   )
