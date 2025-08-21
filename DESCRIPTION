@@ -1,6 +1,6 @@
 Package: treepplr
 Title: R Interface to TreePPL
-Version: 0.9.1
+Version: 0.10.0
 Authors@R: 
     person("Mariana", "P Braga", , "mpiresbr@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1253-2536"))
@@ -18,10 +18,12 @@ Imports:
     readr,
     jsonlite,
     stringr,
-    tidytree
+    tidytree,
+    utils
 Suggests:
     devtools,
     ggplot2,
+    ape,
     knitr,
     testthat,
     crayon,

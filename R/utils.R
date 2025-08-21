@@ -35,10 +35,36 @@ tp_tempdir <- function(temp_dir = NULL,
 
 # Platform-dependent separator character
 sep <- function() {
-  if (.Platform$OS.type == "windows")
-    "\\"
-  else
-    "/"
+  .Platform$file.sep
+}
+
+# Platform-dependent treeppl self contain installation
+installing_treeppl <- function() {
+  if(Sys.info()['sysname'] == "Linux") {
+    linux_path <- system.file("linux_treeppl", package = "treepplr")
+    # Test if tpplc is already here
+    file_name <- sub('\\.tar\\.gz$', '',list.files(path=linux_path,
+                                                   full.names=FALSE))
+    tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
+    if(!file.exists(tpplc_path)) {
+      utils::untar(list.files(path=linux_path, full.names=TRUE),
+                   exdir="/tmp")
+    }
+    tpplc_path
+  } else if (Sys.info()['sysname'] == "Windows") {
+    # No self container for Windows, need to install it manually
+    "tpplc"
+  } else { #Mac OS have a lot of different name
+    mac_path <- system.file("mac_treeppl", package = "treepplr")
+    file_name <- sub('\\.tar\\.gz$', '',list.files(path=mac_path,
+                                                   full.names=FALSE))
+    tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
+    if(!file.exists(tpplc_path)) {
+      utils::untar(list.files(path=mac_path, full.names=TRUE),
+                   exdir="/tmp")
+    }
+    tpplc_path
+  }
 }
 
 # Find model and data files for model_name
