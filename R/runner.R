@@ -288,7 +288,7 @@ tp_compile <- function(model_file_name = "tmp_model_file",
   # if dir = NULL return temp_dir, if not return dir
   dir_path <- tp_tempdir()
   options(scipen=999)
-  argum <- c(
+  argum <- paste(
     paste0(dir_path, model_file_name, ".tppl"),
     paste("-m", method),
     paste("--particles", samples),
@@ -296,53 +296,58 @@ tp_compile <- function(model_file_name = "tmp_model_file",
   )
 
   if (cps != "none") {
-    argum <- c(argum, paste0("--cps ", cps))
+    argum <- paste(argum, paste0("--cps ", cps))
   }
 
   if (!is.null(seed)) {
-    argum <- c(argum, paste0("--seed ", seed))
+    argum <- paste(argum, paste0("--seed ", seed))
   }
 
   if (align) {
-    argum <- c(argum, "--align ")
+    argum <- paste(argum, "--align ")
   }
 
   if (!is.null(delay)) {
     if (delay == "static") {
-      argum <- c(argum, "--static-delay ")
+      argum <- paste(argum, "--static-delay ")
     }
     if (delay == "dynamic") {
-      argum <- c(argum, "--dynamic-delay ")
+      argum <- paste(argum, "--dynamic-delay ")
     }
   }
 
   if (!is.null(kernel)) {
-    argum <- c(argum, paste0("--kernel --drift ", kernel))
+    argum <- paste(argum, paste0("--kernel --drift ", kernel))
   }
 
   if (!is.null(mcmc_lw_gprob)) {
-    argum <- c(argum, paste0("--mcmc_lw_gprob ", mcmc_lw_gprob))
+    argum <- paste(argum, paste0("--mcmc_lw_gprob ", mcmc_lw_gprob))
   }
 
   if (!is.null(pmcmc_particles)) {
-    argum <- c(argum, paste0("--pmcmcParticles ", pmcmc_particles))
+    argum <- paste(argum, paste0("--pmcmcParticles ", pmcmc_particles))
   }
 
   if (prune) {
-    argum <- c(argum, "--prune ")
+    argum <- paste(argum, "--prune ")
   }
 
   if (!is.null(subsample)) {
-    argum <- c(argum, paste0("--subsample -n ", subsample))
+    argum <- paste(argum, paste0("--subsample -n ", subsample))
   }
 
   if (!is.null(resample)) {
-    argum <- c(argum, paste0("--resample ", resample))
+    argum <- paste(argum, paste0("--resample ", resample))
   }
 
-  # Compile program
+  # Preparing the command line program
+  tpplc_path <- installing_treeppl()
+  command <- paste(tpplc_path, argum)
 
-  system2("tpplc", args = argum)
+  # Compile program
+  # Empty LD_LIBRARY_PATH from R_env for this command specifically
+  # due to conflict with internal env from treeppl self container
+  system(paste0("LD_LIBRARY_PATH= MCORE_LIBS= ", command))
 
   return(dir_path)
 }
@@ -381,14 +386,13 @@ tp_run <- function(model_file_name = "tmp_model_file",
   dir_path <- tp_tempdir()
 
   # n_runs
-  system2(
-    command = paste0(dir_path, model_file_name, ".exe"),
-    args = c(
-      paste0(dir_path, data_file_name, ".json"),
-      paste(n_runs)
-    ),
-    stdout = paste0(dir_path, model_file_name, "_out.json")
-  )
+  # Empty LD_LIBRARY_PATH from R_env for this command specifically
+  # due to conflict with internal env from treeppl self container
+  command <- paste0("LD_LIBRARY_PATH= MCORE_LIBS= ", dir_path, model_file_name, ".exe ",
+                    dir_path, data_file_name, ".json ", n_runs,
+                    paste(">", paste0(dir_path, model_file_name, "_out.json")
+                    ))
+  system(command)
 
   return(jsonlite::fromJSON(paste0(dir_path, model_file_name, "_out.json"), simplifyVector = FALSE))
 }
