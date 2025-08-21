@@ -110,7 +110,7 @@ stored_files <- function(exten) {
   tmp <- list.files(tp_tempdir())
   list_na <-
     stringr::str_extract(tmp, paste0(".*(?=\\.", exten, ")"))
-  list <- list_na[!is.na(list_na)]
+  list <- stringr::str_sort(list_na[!is.na(list_na)])
   list
 }
 
@@ -132,4 +132,29 @@ tp_model_names <- function() {
     crbd = "crbd",
     clads = "clads"
   )
+}
+
+#' Create a flat list
+#'
+#' @description
+#' `tp_list` takes a variable number of arguments and returns a list.
+#'
+#' @param ... Variadic arguments (see details).
+#'
+#' @details
+#' This function takes a variable number of arguments, so that users can pass as
+#' arguments either independent lists, or a single structured
+#' list of list (name_arg = value_arg).
+#'
+#' @return A list.
+#' @export
+#'
+tp_list <- function(...) {
+  dotlist <- list(...)
+
+  if (length(dotlist) == 1L && is.list(dotlist[[1]])) {
+    dotlist <- dotlist[[1]]
+  }
+
+  dotlist
 }

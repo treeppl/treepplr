@@ -32,8 +32,6 @@ testthat::test_that("Test-utils_1a : stored_files", {
 
   res <- treepplr:::stored_files("tppl")
 
-  print(res)
-
   testthat::expect_equal(res, c("test", "test1"))
 })
 
@@ -42,8 +40,8 @@ testthat::test_that("Test-utils_1b : stored_files", {
 
   res <- treepplr:::stored_files("json")
 
-  testthat::expect_equal(res, c("test", "test1", "test1_out",
-                                "test_out", "testt_out"))
+  testthat::expect_equal(res, c("test", "test_out", "test1", "test1_out",
+                                "testt_out"))
 })
 
 testthat::test_that("Test-utils_1c : stored_files", {

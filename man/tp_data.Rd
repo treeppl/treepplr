@@ -16,7 +16,7 @@ tp_data(data_input)
 }}
 }
 \value{
-json data (S3), see \code{\link[=tp_json]{tp_json()}} for further details.
+a list, see \code{\link[=tp_check_input]{tp_check_input()}} for further details.
 }
 \description{
 \code{tp_data} takes data and prepares it to be used by

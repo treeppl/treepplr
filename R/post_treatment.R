@@ -21,10 +21,9 @@ tp_parse <- function(treeppl_out, n_runs = 1) {
 
   for (index in seq_along(treeppl_out)) {
     result_df <-
-      rbind(result_df, as.data.frame(treeppl_out[[index]]))
+      rbind(result_df, data.frame(samples=unlist(treeppl_out[[1]]$samples),
+                                  log_weight=unlist(treeppl_out[[1]]$weights)))
   }
-
-  result_df <- dplyr::rename(result_df, "log_weight" = "weights")
 
   return(result_df)
 }
