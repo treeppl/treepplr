@@ -61,9 +61,10 @@ TreePPL outputs the log weight of each sample, so first we need to get the norma
 output <-  tp_parse(output_list) %>% 
   dplyr::mutate(weight = exp(log_weight - max(.$log_weight)))
 
-ggplot2::ggplot(output) +
-  ggplot2::geom_histogram(aes(samples, y = after_stat(density), weight=weight), col = "white", fill = "lightblue") +
-  ggplot2::geom_density(aes(samples, weight=weight)) +
-  ggplot2::theme_bw()
+ggplot(output, aes(samples, weight=weight)) +
+  geom_histogram(aes(y = after_stat(density)), 
+                 col = "white", fill = "lightblue", binwidth=0.04) +
+  geom_density() +
+  theme_bw()
 
 ```
