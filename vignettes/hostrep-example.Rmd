@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, echo=FALSE, message=FALSE}
+```{r, message=FALSE}
 library(treepplr)
 library(ggplot2)
 library(magrittr)
@@ -80,14 +80,14 @@ logs <-  output[[1]] %>%
   unique() %>% 
   dplyr::mutate(weight = exp(log_weight - max(.$log_weight)))
 
-ggplot(logs) +
-  geom_histogram(aes(mu, y = after_stat(density), weight=weight), col = "white", fill = "lightblue") +
-  geom_density(aes(mu, weight=weight)) +
+ggplot(logs, aes(mu, weight=weight)) +
+  geom_histogram(aes(y = after_stat(density)), col = "white", fill = "lightblue", binwidth=0.04) +
+  geom_density() +
   theme_bw()
 
-ggplot(logs) +
-  geom_histogram(aes(beta, y = after_stat(density), weight=weight), col = "white", fill = "lightblue") +
-  geom_density(aes(beta, weight=weight)) +
+ggplot(logs, aes(mu, weight=weight)) +
+  geom_histogram(aes(y = after_stat(density) ), col = "white", fill = "lightblue", binwidth=0.04) +
+  geom_density() +
   theme_bw()
 ```
 
@@ -119,9 +119,9 @@ This table can be used by **evolnets** for plotting results, together with the p
 
 ```{r}
 # get data from treepplr
-symbiont_tree <- evolnets::read_tree_from_revbayes(
+symbiont_tree <- read_tree_from_revbayes(
   system.file("extdata/hostrep3states_treeRev.tre", package = "treepplr"))
-host_tree <- ape::read.tree(
+host_tree <- read.tree(
   system.file("extdata/hostrep3states_host_tree.tre", package = "treepplr"))
 matrix <- read.csv(
   system.file("extdata/hostrep3states_extant_interactions.csv", package = "treepplr"), 
@@ -133,10 +133,10 @@ matrix <- read.csv(
 
 ```{r, fig.height=4, fig.width=6}
 # calculate posterior at nodes
-tp_at_nodes <- evolnets::posterior_at_nodes(tp_hist, symbiont_tree, host_tree, state = c(1,2))
+tp_at_nodes <- posterior_at_nodes(tp_hist, symbiont_tree, host_tree, state = c(1,2))
 
 #plot
-(tp_asr_fund <- evolnets::plot_matrix_phylo(matrix, tp_at_nodes, symbiont_tree, 
+(tp_asr_fund <- plot_matrix_phylo(matrix, tp_at_nodes, symbiont_tree, 
                                             host_tree, type = "repertoires", 
                                             repertoire = "fundamental"))
 ```
@@ -144,7 +144,7 @@ tp_at_nodes <- evolnets::posterior_at_nodes(tp_hist, symbiont_tree, host_tree, s
 ### Plot data and inferred ancestral realized host repertoires
 
 ```{r, fig.height=4, fig.width=6}
-(tp_asr_real <- evolnets::plot_matrix_phylo(matrix, tp_at_nodes, symbiont_tree, 
+(tp_asr_real <- plot_matrix_phylo(matrix, tp_at_nodes, symbiont_tree, 
                                             host_tree, type = "repertoires", 
                                             repertoire = "realized"))
 ```
