@@ -45,6 +45,9 @@ devtools::install_github("treeppl/treepplr")
 - [`tp_data()`](http://treeppl.org/treepplr/reference/tp_data.md) :
   Import data for TreePPL program
 
+- [`tp_fp_fetch()`](http://treeppl.org/treepplr/reference/tp_fp_fetch.md)
+  : Fetch the latest version of treeppl
+
 - [`tp_list()`](http://treeppl.org/treepplr/reference/tp_list.md) :
   Create a flat list
 
