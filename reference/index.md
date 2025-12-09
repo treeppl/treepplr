@@ -1,0 +1,74 @@
+# Package index
+
+## All functions
+
+- [`tp_TreePPL_json()`](http://treeppl.org/treepplr/reference/tp_TreePPL_json.md)
+  : Convert a tppl_tree to TreePPL json str
+
+- [`tp_check_input()`](http://treeppl.org/treepplr/reference/tp_check_input.md)
+  : Check input for inference with TreePPL
+
+- [`tp_compile()`](http://treeppl.org/treepplr/reference/tp_compile.md)
+  :
+
+  Compile for
+  [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md)
+
+- [`tp_data()`](http://treeppl.org/treepplr/reference/tp_data.md) :
+  Import data for TreePPL program
+
+- [`tp_list()`](http://treeppl.org/treepplr/reference/tp_list.md) :
+  Create a flat list
+
+- [`tp_model()`](http://treeppl.org/treepplr/reference/tp_model.md) :
+  Import a TreePPL model
+
+- [`tp_model_names()`](http://treeppl.org/treepplr/reference/tp_model_names.md)
+  : Model names supported by treepplr
+
+- [`tp_parse()`](http://treeppl.org/treepplr/reference/tp_parse.md) :
+  Parse simple TreePPL json output
+
+- [`tp_parse_host_rep()`](http://treeppl.org/treepplr/reference/tp_parse_host_rep.md)
+  : Parse TreePPL json output for host repertoire model
+
+- [`tp_phylo_2_TreePPL()`](http://treeppl.org/treepplr/reference/tp_phylo_2_TreePPL.md)
+  : Convert phylo obj to TreePPL tree
+
+- [`tp_phylo_2_tppl_tree()`](http://treeppl.org/treepplr/reference/tp_phylo_2_tppl_tree.md)
+  : Convert phylo to a tppl_tree
+
+- [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md) : Run a
+  TreePPL program
+
+- [`tp_stored_compiled()`](http://treeppl.org/treepplr/reference/tp_stored_compiled.md)
+  :
+
+  List of compiled models in
+  [base::tempdir](https://rdrr.io/r/base/tempfile.html)
+
+- [`tp_stored_data()`](http://treeppl.org/treepplr/reference/tp_stored_data.md)
+  :
+
+  Data file names stored by user in
+  [base::tempdir](https://rdrr.io/r/base/tempfile.html) using tp_write
+
+- [`tp_stored_model()`](http://treeppl.org/treepplr/reference/tp_stored_model.md)
+  :
+
+  Model file names stored by user in
+  [base::tempdir](https://rdrr.io/r/base/tempfile.html) using tp_write
+
+- [`tp_tempdir()`](http://treeppl.org/treepplr/reference/tp_tempdir.md)
+  : Temporary directory for running treeppl
+
+- [`tp_treeppl()`](http://treeppl.org/treepplr/reference/tp_treeppl.md)
+  : Compile and run a TreePPL program
+
+- [`tp_write()`](http://treeppl.org/treepplr/reference/tp_write.md) :
+
+  Prepare input for
+  [`tp_compile()`](http://treeppl.org/treepplr/reference/tp_compile.md)
+
+- [`tree_age_cumul()`](http://treeppl.org/treepplr/reference/tree_age_cumul.md)
+  : Calculate age in a tppl_tree
