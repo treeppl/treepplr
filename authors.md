@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/treeppl/treepplr/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/treeppl/treepplr/blob/v0.2/DESCRIPTION)
 
 P Braga M (2025). *treepplr: R Interface to TreePPL*. R package version
 0.10.0, <https://github.com/treeppl/treepplr>.
