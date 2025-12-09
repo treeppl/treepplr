@@ -38,33 +38,78 @@ sep <- function() {
   .Platform$file.sep
 }
 
+#' Fetch the latest version of treeppl
+#' @export
+
+tp_fp_fetch <- function() {
+  if (Sys.info()["sysname"] == "Windows") {
+    # no self container for Windows, need to install it manually
+    0.0
+  } else {
+    # get repo info
+    repo_info <- gh::gh("GET /repos/treeppl/treepplr/releases")
+    # Check for Linux
+    if (Sys.info()["sysname"] == "Linux") {
+      # assets[[2]] because releases are in alphabetical order (1 = Mac, 2 = Linux)
+      asset <- repo_info[[1]]$assets[[2]]
+      folder_name <- "treeppl-linux"
+    } else {
+      asset <- repo_info[[1]]$assets[[1]]
+      folder_name <- "treeppl-mac"
+    }
+
+    # online hash
+    online_hash <- asset$digest
+    # local hash
+    file_name <- list.files(path = system.file(folder_name, package = "treepplr"), full.names = TRUE)
+    # download file if file_name is empty
+    if (length(file_name) == 0) {
+      # download
+      fn <- paste(system.file(folder_name, package = "treepplr"), asset$name, sep = "/")
+      curl::curl_download(
+        asset$browser_download_url,
+        destfile = fn,
+        quiet = FALSE
+      )
+    } else {
+      local_hash <- paste0("sha256:", cli::hash_file_sha256(file_name))
+      # compare local and online hash and download the file if they differ
+      if (!identical(local_hash, online_hash)) {
+        # remove old file
+        file.remove(file_name)
+        # download
+        fn <- paste(system.file(folder_name, package = "treepplr"), asset$name, sep = "/")
+        curl::curl_download(
+          asset$browser_download_url,
+          destfile = fn,
+          quiet = FALSE
+        )
+      }
+    }
+  }
+  repo_info[[1]]$tag_name
+}
+
 # Platform-dependent treeppl self contain installation
 installing_treeppl <- function() {
-  if(Sys.info()['sysname'] == "Linux") {
-    linux_path <- system.file("linux_treeppl", package = "treepplr")
-    # Test if tpplc is already here
-    file_name <- sub('\\.tar\\.gz$', '',list.files(path=linux_path,
-                                                   full.names=FALSE))
-    tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
-    if(!file.exists(tpplc_path)) {
-      utils::untar(list.files(path=linux_path, full.names=TRUE),
-                   exdir="/tmp")
-    }
-    tpplc_path
-  } else if (Sys.info()['sysname'] == "Windows") {
+  tag <- tp_fp_fetch()
+  if (Sys.info()['sysname'] == "Windows") {
     # No self container for Windows, need to install it manually
     "tpplc"
-  } else { #Mac OS have a lot of different name
-    mac_path <- system.file("mac_treeppl", package = "treepplr")
-    file_name <- sub('\\.tar\\.gz$', '',list.files(path=mac_path,
-                                                   full.names=FALSE))
-    tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
-    if(!file.exists(tpplc_path)) {
-      utils::untar(list.files(path=mac_path, full.names=TRUE),
-                   exdir="/tmp")
-    }
-    tpplc_path
+  } else if(Sys.info()['sysname'] == "Linux") {
+    path <- system.file("treeppl-linux", package = "treepplr")
+    file_name <- paste0("treeppl-",substring(tag, 2))
+  } else {#Mac OS have a lot of different name
+    path <- system.file("treeppl-linux", package = "treepplr")
+    file_name <- paste0("treeppl-",substring(tag, 2))
   }
+  # Test if tpplc is already here
+  tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
+  if(!file.exists(tpplc_path)) {
+    utils::untar(list.files(path=path, full.names=TRUE),
+                 exdir="/tmp")
+  }
+  tpplc_path
 }
 
 # Find model and data files for model_name
