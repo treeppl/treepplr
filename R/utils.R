@@ -47,7 +47,7 @@ tp_fp_fetch <- function() {
     0.0
   } else {
     # get repo info
-    repo_info <- gh::gh("GET /repos/treeppl/treepplr/releases")
+    repo_info <- gh::gh("GET /repos/treeppl/treeppl/releases")
     # Check for Linux
     if (Sys.info()["sysname"] == "Linux") {
       # assets[[2]] because releases are in alphabetical order (1 = Mac, 2 = Linux)
@@ -100,7 +100,7 @@ installing_treeppl <- function() {
     path <- system.file("treeppl-linux", package = "treepplr")
     file_name <- paste0("treeppl-",substring(tag, 2))
   } else {#Mac OS have a lot of different name
-    path <- system.file("treeppl-linux", package = "treepplr")
+    path <- system.file("treeppl-mac", package = "treepplr")
     file_name <- paste0("treeppl-",substring(tag, 2))
   }
   # Test if tpplc is already here
@@ -199,7 +199,7 @@ tp_model_names <- function() {
     coin = "coin",
     hostrep3states = "hostrep3states",
     hostrep2states = "hostrep2states",
-    treeinference = "treeinference",
+    tree_inference = "tree_inference",
     crbd = "crbd",
     clads = "clads"
   )
