@@ -5,24 +5,34 @@
 #'
 #' @param treeppl_out a character vector giving the TreePPL json output
 #' produced by [tp_treeppl].
-#' @param n_runs a [base::integer] giving the number of runs (MCMC) or sweeps (SMC).
 #'
-#'
-#' @return A list (n = n_runs) of data frames with the output from inference
-#' in TreePPL.
+#' @return A data frame with the output from inference in TreePPL.
 #' @export
-tp_parse <- function(treeppl_out, n_runs = 1) {
-
-  if (n_runs == 1) {
-    treeppl_out <- list(treeppl_out)
-  }
+tp_parse <- function(treeppl_out) {
 
   result_df <- list()
 
-  for (index in seq_along(treeppl_out)) {
-    result_df <-
-      rbind(result_df, data.frame(samples=unlist(treeppl_out[[1]]$samples),
-                                  log_weight=unlist(treeppl_out[[1]]$weights)))
+  for (i in seq_along(treeppl_out)) {
+
+    samples_c <- unlist(treeppl_out[[i]]$samples)
+    log_weight_c <- unlist(treeppl_out[[i]]$weights)
+
+    if(is.null(names(samples_c))){
+      result_df <- rbind(result_df,
+                         data.frame(run = i,
+                                    samples = samples_c,
+                                    log_weight = log_weight_c,
+                                    norm_const = treeppl_out[[i]]$normConst)
+      )
+    } else {
+      result_df <- rbind(result_df,
+                         data.frame(run = i,
+                                    parameter = names(samples_c),
+                                    samples = samples_c,
+                                    log_weight = log_weight_c,
+                                    norm_const = treeppl_out[[i]]$normConst)
+      )
+    }
   }
 
   return(result_df)
@@ -220,4 +230,24 @@ peel_tree <- function(subtree,
     )
   }
   result
+}
+
+
+#' Check for convergence across multiple SMC sweeps/runs
+#'
+#' @param treeppl_out a character vector giving the TreePPL json output
+#' produced by [tp_treeppl].
+#'
+#' @returns Variance in the normalizing constants across SMC sweeps.
+#' @export
+#'
+#' @examples
+tp_smc_convergence <- function(treeppl_out) {
+
+  output <- tp_parse(treeppl_out)
+  zs <- output %>%
+    slice_head(n = 1, by = run) %>%
+    pull(norm_const)
+
+  return(var(zs))
 }
