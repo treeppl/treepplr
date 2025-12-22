@@ -22,7 +22,8 @@ Imports:
     utils,
     gh,
     curl,
-    cli
+    cli,
+    magrittr
 Suggests:
     devtools,
     ggplot2,
@@ -37,8 +38,7 @@ Suggests:
     rmarkdown,
     pandoc,
     dplyr,
-    rlang,
-    magrittr
+    rlang
 VignetteBuilder: knitr
 Config/Needs/website: rmarkdown
 Remotes: 
