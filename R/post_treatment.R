@@ -241,8 +241,8 @@ tp_smc_convergence <- function(treeppl_out) {
 
   output <- tp_parse(treeppl_out)
   zs <- output %>%
-    slice_head(n = 1, by = run) %>%
-    pull(norm_const)
+    dplyr::slice_head(n = 1, by = run) %>%
+    dplyr::pull(norm_const)
 
   return(var(zs))
 }
