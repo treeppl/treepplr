@@ -23,7 +23,8 @@ Imports:
     gh,
     curl,
     cli,
-    magrittr
+    magrittr,
+    bnpsd
 Suggests:
     devtools,
     ggplot2,
