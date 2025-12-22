@@ -70,7 +70,7 @@ posterior distribution.}
 method}
 }
 \value{
-TreePPL output in JSON format.
+A list of TreePPL output in parsed JSON format.
 }
 \description{
 \code{tp_treeppl} execute TreePPL and return TreePPL output (string JSON format).

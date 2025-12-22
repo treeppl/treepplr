@@ -5,12 +5,12 @@
 #' a TreePPL json str ready to print in a data file for TreePPL use.
 #'
 #' @param phylo_tree an object of class [ape::phylo].
-#' @param age a string that determine the way the age of the node are
+#' @param age a string that determines the way the age of the nodes are
 #' calculated (default "branch-length").
 #'
 #' * "branch-length" : Root's age = NA, branch-length from the parent branch
-#' * "top-down" : Root's age = 0.0, cumulative branch-length from root
-#' * "down-top" : Leaf's age = 0.0, cumulative branch-length from leaf
+#' * "root-to-tip" : Root's age = 0.0, cumulative branch-length from root
+#' * "tip-to-root" : Leaf's age = 0.0, cumulative branch-length from leaf
 #'
 #' @return A TreePPL json str
 #'
@@ -93,8 +93,8 @@ tp_phylo_to_tppl_tree <- function(phylo_tree) {
 #' @param age a string that determine the way the age of the node are
 #' calculated (default "branch-length").
 #'
-#' * "top-down" : Root's age = 0.0, cumulative branch-length from root
-#' * "down-top" : Leaf's age = 0.0, cumulative branch-length from leaf
+#' * "root-to-tip" : Root's age = 0.0, cumulative branch-length from root
+#' * "tip-to-root" : Leaf's age = 0.0, cumulative branch-length from leaf
 #'
 #' @return A tppl_tree
 
@@ -103,7 +103,7 @@ tree_age_cumul <- function(tree, root_index, age = "branch-length") {
   down <- TRUE
   going_left <- c(TRUE, NA)
   i <- root_index
-  if (age == "top-down") {
+  if (age == "root-to-tip") {
     tree[i, "Age"] <- 0.0
     age_cumul[i] <- 0.0
   }
@@ -118,13 +118,13 @@ tree_age_cumul <- function(tree, root_index, age = "branch-length") {
           i <- tree[i, "Right"]
         }
         going_left <- c(TRUE, going_left)
-        if (age == "top-down") {
+        if (age == "root-to-tip") {
           age_cumul[i] <- age_cumul[parent[1]] + tree[i, "Age"]
         }
       } else {
         down <- FALSE
         going_left <- going_left[-1]
-        if (age == "down-top") {
+        if (age == "tip-to-root") {
           age_cumul[i] <- 0.0
         }
       }
@@ -134,7 +134,7 @@ tree_age_cumul <- function(tree, root_index, age = "branch-length") {
       if (going_left[1]) {
         down <- TRUE
         going_left[1] <- FALSE
-        if (age == "down-top") {
+        if (age == "tip-to-root") {
           age_cumul[i] <- age_cumul[tree[i, "Left"]] + tree[tree[i, "Left"], "Age"]
         }
       } else {
@@ -303,81 +303,6 @@ build_newick_node <- function(node, parent_age) {
   }
 }
 
-#' Find the Maximum A Posteriori (MAP) Tree from weighted samples
-#'
-#' @param trees_out The list returned by [treepplr::tp_json_to_phylo]
-#' (containing $trees and $weights)
-#'
-#' @returns
-#' @export
-#'
-#' @examples
-tp_map_tree <- function(trees_out) {
-
-  trees <- trees_out$trees
-  weights <- trees_out$weights
-
-  # Handle Log-Weights (Optional Check)
-  # If weights are negative (log-scale), convert them to probabilities first
-  if (any(weights < 0)) {
-    message("Log-weights detected. converting to relative probabilities...")
-    # Subtract max to avoid underflow/overflow issues
-    weights <- exp(weights - max(weights))
-  }
-
-  # Identify unique topologies
-  trees_ready <- lapply(trees, function(tree) {
-
-    # normalize edge lengths for the tip reordering
-    tree$edge.length <- tree$edge.length/max(tree$edge.length)
-    # Ladderize to fix edge indices
-    tree_lad <- ladderize_tree(tree)
-    # Order tip labels as similarly as possible
-    tree_ord <- bnpsd::tree_reorder(tree_lad, sort(tree_lad$tip.label))
-    # Remove edge lengths to only focus on topology
-    tree_ord$edge.length <- NULL
-    return(tree_ord)
-
-  })
-
-  # This compresses the list into unique tree topologies
-  unique_topologies <- ape::unique.multiPhylo(trees_ready, use.edge.length = FALSE)
-
-  # Map every original tree to a unique topology index
-  #match_indices <- match(trees_ready, unique_topologies)
-  match_indices <- attr(unique_topologies, "old.index")
-
-  # Sum weights for each unique topology
-  # tapply splits the weights by the index and sums them
-  topology_probs <- tapply(weights, match_indices, sum)
-
-  # Identify the Best Topology
-  best_index <- as.numeric(names(which.max(topology_probs)))
-
-  # Calculate posterior probability of this MAP topology
-  map_prob <- max(topology_probs) / sum(topology_probs)
-
-  # Compute Mean Branch Lengths for the MAP Topology
-  # We take all samples that matched the MAP topology...
-  matching_indices <- which(match_indices == best_index)
-  matching_trees   <- trees[matching_indices]
-  matching_weights <- weights[matching_indices]
-
-  # ...and compute a consensus to average their branch lengths.
-  # Ideally, we should do a weighted average of the lengths,
-  # but ape::consensus uses simple mean. For most purposes, this is sufficient.
-  final_map <- map <- phangorn::allCompat(matching_trees, rooted=TRUE) |>
-    phangorn::add_edge_length(matching_trees,
-                              fun = function(x) weighted.mean(x, matching_weights))
-
-  print(paste("MAP Topology found"))
-  print(paste("Posterior Probability:", round(map_prob, 4)))
-  print(paste("Based on the topology of", length(matching_indices),
-              "samples out of", length(trees)))
-
-  return(final_map)
-}
-
 
 
 # Function to ladderize tree and correct tip label sequence
@@ -390,9 +315,9 @@ ladderize_tree <- function(tree, temp_file = "temp", orientation = "left"){
   }else{
     right <- TRUE
   }
-  tree_temp <- ladderize(tree, right = right)
-  write.tree(tree_temp, file = paste0("./", temp_file, ".tre"))
-  tree_lad <- read.tree(paste0("./", temp_file, ".tre"))
+  tree_temp <- ape::ladderize(tree, right = right)
+  ape::write.tree(tree_temp, file = paste0("./", temp_file, ".tre"))
+  tree_lad <- ape::read.tree(paste0("./", temp_file, ".tre"))
   file.remove(paste0("./", temp_file, ".tre"))
   return(tree_lad)
 }
