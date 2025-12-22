@@ -1,3 +1,82 @@
+#' Fetch the latest version of treeppl
+#' @export
+
+tp_fp_fetch <- function() {
+  if (Sys.info()["sysname"] == "Windows") {
+    # no self container for Windows, need to install it manually
+    0.0
+  } else {
+    # get repo info
+    repo_info <- gh::gh("GET /repos/treeppl/treeppl/releases")
+    # Check for Linux
+    if (Sys.info()["sysname"] == "Linux") {
+      # assets[[2]] because releases are in alphabetical order (1 = Mac, 2 = Linux)
+      asset <- repo_info[[1]]$assets[[2]]
+      folder_name <- "treeppl-linux"
+    } else {
+      asset <- repo_info[[1]]$assets[[1]]
+      folder_name <- "treeppl-mac"
+    }
+
+    # online hash
+    online_hash <- asset$digest
+    # local hash
+    file_name <- list.files(path = system.file(folder_name, package = "treepplr"), full.names = TRUE)
+    # download file if file_name is empty
+    if (length(file_name) == 0) {
+      # create destination folder
+      dest_folder <- paste(system.file(package = "treepplr"), folder_name, sep = "/")
+      system(paste("mkdir", dest_folder))
+      # download
+      fn <- paste(dest_folder, asset$name, sep = "/")
+      curl::curl_download(
+        asset$browser_download_url,
+        destfile = fn,
+        quiet = FALSE
+      )
+    } else {
+      local_hash <- paste0("sha256:", cli::hash_file_sha256(file_name))
+      # compare local and online hash and download the file if they differ
+      if (!identical(local_hash, online_hash)) {
+        # remove old file
+        file.remove(file_name)
+        # download
+        fn <- paste(system.file(package = "treepplr"), folder_name, asset$name, sep = "/")
+        curl::curl_download(
+          asset$browser_download_url,
+          destfile = fn,
+          quiet = FALSE
+        )
+      }
+    }
+  }
+  repo_info[[1]]$tag_name
+}
+
+# Platform-dependent treeppl self contain installation
+installing_treeppl <- function() {
+  tag <- tp_fp_fetch()
+  if (Sys.info()['sysname'] == "Windows") {
+    # No self container for Windows, need to install it manually
+    "tpplc"
+  } else if(Sys.info()['sysname'] == "Linux") {
+    path <- system.file("treeppl-linux", package = "treepplr")
+    file_name <- paste0("treeppl-",substring(tag, 2))
+  } else {#Mac OS have a lot of different name
+    path <- system.file("treeppl-mac", package = "treepplr")
+    file_name <- paste0("treeppl-",substring(tag, 2))
+  }
+  # Test if tpplc is already here
+  tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
+  if(!file.exists(tpplc_path)) {
+    utils::untar(list.files(path=path, full.names=TRUE),
+                 exdir="/tmp")
+  }
+  tpplc_path
+}
+
+
+
 #' Temporary directory for running treeppl
 #'
 #' @description
@@ -38,79 +117,27 @@ sep <- function() {
   .Platform$file.sep
 }
 
-#' Fetch the latest version of treeppl
+
+#' Model names supported by treepplr
+#'
+#' @description Provides a list of all model names supported by treepplr.
+#' The names can also be used to find data for these models
+#' (see [treepplr::tp_data]).
+#'
+#' @return A list of model names.
 #' @export
-
-tp_fp_fetch <- function() {
-  if (Sys.info()["sysname"] == "Windows") {
-    # no self container for Windows, need to install it manually
-    0.0
-  } else {
-    # get repo info
-    repo_info <- gh::gh("GET /repos/treeppl/treeppl/releases")
-    # Check for Linux
-    if (Sys.info()["sysname"] == "Linux") {
-      # assets[[2]] because releases are in alphabetical order (1 = Mac, 2 = Linux)
-      asset <- repo_info[[1]]$assets[[2]]
-      folder_name <- "treeppl-linux"
-    } else {
-      asset <- repo_info[[1]]$assets[[1]]
-      folder_name <- "treeppl-mac"
-    }
-
-    # online hash
-    online_hash <- asset$digest
-    # local hash
-    file_name <- list.files(path = system.file(folder_name, package = "treepplr"), full.names = TRUE)
-    # download file if file_name is empty
-    if (length(file_name) == 0) {
-      # download
-      fn <- paste(system.file(folder_name, package = "treepplr"), asset$name, sep = "/")
-      curl::curl_download(
-        asset$browser_download_url,
-        destfile = fn,
-        quiet = FALSE
-      )
-    } else {
-      local_hash <- paste0("sha256:", cli::hash_file_sha256(file_name))
-      # compare local and online hash and download the file if they differ
-      if (!identical(local_hash, online_hash)) {
-        # remove old file
-        file.remove(file_name)
-        # download
-        fn <- paste(system.file(folder_name, package = "treepplr"), asset$name, sep = "/")
-        curl::curl_download(
-          asset$browser_download_url,
-          destfile = fn,
-          quiet = FALSE
-        )
-      }
-    }
-  }
-  repo_info[[1]]$tag_name
+tp_model_names <- function() {
+  list(
+    custom = "custom",
+    coin = "coin",
+    hostrep3states = "hostrep3states",
+    hostrep2states = "hostrep2states",
+    tree_inference = "tree_inference",
+    crbd = "crbd",
+    clads = "clads"
+  )
 }
 
-# Platform-dependent treeppl self contain installation
-installing_treeppl <- function() {
-  tag <- tp_fp_fetch()
-  if (Sys.info()['sysname'] == "Windows") {
-    # No self container for Windows, need to install it manually
-    "tpplc"
-  } else if(Sys.info()['sysname'] == "Linux") {
-    path <- system.file("treeppl-linux", package = "treepplr")
-    file_name <- paste0("treeppl-",substring(tag, 2))
-  } else {#Mac OS have a lot of different name
-    path <- system.file("treeppl-mac", package = "treepplr")
-    file_name <- paste0("treeppl-",substring(tag, 2))
-  }
-  # Test if tpplc is already here
-  tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
-  if(!file.exists(tpplc_path)) {
-    utils::untar(list.files(path=path, full.names=TRUE),
-                 exdir="/tmp")
-  }
-  tpplc_path
-}
 
 # Find model and data files for model_name
 find_file <- function(model_name, exten) {
@@ -185,25 +212,6 @@ stored_files <- function(exten) {
   list
 }
 
-#' Model names supported by treepplr
-#'
-#' @description Provides a list of all model names supported by treepplr.
-#' The names can also be used to find data for these models
-#' (see [treepplr::tp_data]).
-#'
-#' @return A list of model names.
-#' @export
-tp_model_names <- function() {
-  list(
-    custom = "custom",
-    coin = "coin",
-    hostrep3states = "hostrep3states",
-    hostrep2states = "hostrep2states",
-    tree_inference = "tree_inference",
-    crbd = "crbd",
-    clads = "clads"
-  )
-}
 
 #' Create a flat list
 #'
@@ -229,3 +237,6 @@ tp_list <- function(...) {
 
   dotlist
 }
+
+
+

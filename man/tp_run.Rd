@@ -7,7 +7,7 @@
 tp_run(
   model_file_name = "tmp_model_file",
   data_file_name = "tmp_data_file",
-  n_runs = "1"
+  n_runs = 1
 )
 }
 \arguments{
@@ -15,10 +15,10 @@ tp_run(
 
 \item{data_file_name}{a character vector giving a data name.}
 
-\item{n_runs}{a \link[base:integer]{base::integer} giving the number of run (mcmc)/sweap (smc).}
+\item{n_runs}{a \link[base:integer]{base::integer} giving the number of runs (mcmc)/sweaps (smc).}
 }
 \value{
-TreePPL output in JSON format.
+A list of TreePPL output in parsed JSON format.
 }
 \description{
 \code{tp_treeppl} execute TreePPL and return TreePPL output (string JSON format).
@@ -33,8 +33,6 @@ write your model with \link{tp_treeppl}.
 \code{data_file_name} : a character vector giving to \link{tp_treeppl}
 a data name. Use a \link{tp_stored_data} name if you have already write
 your data with \link{tp_treeppl}.
-
-\code{samples} : The number of samples (mcmc) / particules (smc) during inference.
 
 \code{n_runs} : The number of run (mcmc) / sweap (smc) used for the inference.
 }

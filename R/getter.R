@@ -66,10 +66,9 @@ tp_data <- function(data_input) {
   # If path exists, import data from file
   if (!is(res, "try-error") && res) {
     data <- tp_list(jsonlite::fromJSON(data_input))
-    # If path doens't exist
+    # If path doesn't exist
   } else if (assertthat::is.string(data_input)) {
-    res <-
-      try(get(data_input, treepplr::tp_model_names()), silent = TRUE)
+    res <- try(get(data_input, treepplr::tp_model_names()), silent = TRUE)
     # data_input has the name of a known model
     if (!is(res, "try-error")) {
       data <- tp_list(find_file(res, "json"))
