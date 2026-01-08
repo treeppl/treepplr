@@ -1,6 +1,13 @@
 ### The files included in this folder come from the treeppl repository.
 
 
+## Coin
+
+model from https://github.com/treeppl/treeppl/blob/main/models/lang/coin.tppl
+
+data from https://github.com/treeppl/treeppl/blob/main/models/lang/data/testdata_coin.json
+
+
 ## Tree inference
 
 model from https://github.com/treeppl/treeppl/blob/main/models/tree-inference/tree_inference_pruning.tppl
