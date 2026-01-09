@@ -4,13 +4,11 @@
 \alias{tp_parse_host_rep}
 \title{Parse TreePPL json output for host repertoire model}
 \usage{
-tp_parse_host_rep(treeppl_out, n_runs = 1)
+tp_parse_host_rep(treeppl_out)
 }
 \arguments{
 \item{treeppl_out}{a character vector giving the TreePPL json output
 produced by \link{tp_treeppl}.}
-
-\item{n_runs}{a \link[base:integer]{base::integer} giving the number of runs (MCMC) or sweeps (SMC).}
 }
 \value{
 A list (n = n_runs) of data frames with the output from inference

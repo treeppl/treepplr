@@ -7,15 +7,15 @@
 tree_age_cumul(tree, root_index, age = "branch-length")
 }
 \arguments{
-\item{tree}{an tppl_tree create with \link{tp_phylo_2_tppl_tree}.}
+\item{tree}{an tppl_tree create with \link{tp_phylo_to_tppl_tree}.}
 
 \item{root_index}{the index of the root in the tppl_tree.}
 
 \item{age}{a string that determine the way the age of the node are
 calculated (default "branch-length").
 \itemize{
-\item "top-down" : Root's age = 0.0, cumulative branch-length from root
-\item "down-top" : Leaf's age = 0.0, cumulative branch-length from leaf
+\item "root-to-tip" : Root's age = 0.0, cumulative branch-length from root
+\item "tip-to-root" : Leaf's age = 0.0, cumulative branch-length from leaf
 }}
 }
 \value{

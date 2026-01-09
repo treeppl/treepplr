@@ -105,7 +105,7 @@
 #' and manual (sample only at manually defined resampling locations).
 #' Use 'NULL' to ignore.
 #'
-#' @return TreePPL output in JSON format.
+#' @return A list of TreePPL output in parsed JSON format.
 #' @export
 
 tp_treeppl <-
@@ -127,8 +127,11 @@ tp_treeppl <-
            prune = FALSE,
            subsample =  NULL,
            resample = NULL) {
+
     tp_write(model, model_file_name, data, data_file_name)
+
     if (compile_model) {
+
       tp_compile(
         model_file_name,
         samples,
@@ -145,6 +148,7 @@ tp_treeppl <-
         resample
       )
     }
+
     return(tp_run(model_file_name, data_file_name, n_runs))
   }
 
@@ -360,7 +364,7 @@ tp_compile <- function(model_file_name = "tmp_model_file",
 #'
 #' @param model_file_name a character vector giving a model name.
 #' @param data_file_name a character vector giving a data name.
-#' @param n_runs a [base::integer] giving the number of run (mcmc)/sweap (smc).
+#' @param n_runs a [base::integer] giving the number of runs (mcmc)/sweaps (smc).
 #'
 #' @details
 #'
@@ -372,16 +376,17 @@ tp_compile <- function(model_file_name = "tmp_model_file",
 #' a data name. Use a [treepplr::tp_stored_data] name if you have already write
 #' your data with [treepplr::tp_treeppl].
 #'
-#' `samples` : The number of samples (mcmc) / particules (smc) during inference.
-#'
 #' `n_runs` : The number of run (mcmc) / sweap (smc) used for the inference.
 #'
-#' @return TreePPL output in JSON format.
+#' @return A list of TreePPL output in parsed JSON format.
 #' @export
 
 tp_run <- function(model_file_name = "tmp_model_file",
                    data_file_name = "tmp_data_file",
-                   n_runs = "1") {
+                   n_runs = 1) {
+
+  n_runs_string <- paste0("--sweeps ", n_runs, " ")
+
   # if dir_path = NULL return temp_dir, if not return dir
   dir_path <- tp_tempdir()
 
@@ -389,10 +394,13 @@ tp_run <- function(model_file_name = "tmp_model_file",
   # Empty LD_LIBRARY_PATH from R_env for this command specifically
   # due to conflict with internal env from treeppl self container
   command <- paste0("LD_LIBRARY_PATH= MCORE_LIBS= ", dir_path, model_file_name, ".exe ",
-                    dir_path, data_file_name, ".json ", n_runs,
+                    dir_path, data_file_name, ".json ", n_runs_string,
                     paste(">", paste0(dir_path, model_file_name, "_out.json")
                     ))
   system(command)
 
-  return(jsonlite::fromJSON(paste0(dir_path, model_file_name, "_out.json"), simplifyVector = FALSE))
+  json_out <- readLines(paste0(dir_path, model_file_name, "_out.json")) %>%
+    lapply(jsonlite::fromJSON, simplifyVector = FALSE)
+
+  return(json_out)
 }

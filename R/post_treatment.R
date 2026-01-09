@@ -5,28 +5,39 @@
 #'
 #' @param treeppl_out a character vector giving the TreePPL json output
 #' produced by [tp_treeppl].
-#' @param n_runs a [base::integer] giving the number of runs (MCMC) or sweeps (SMC).
 #'
-#'
-#' @return A list (n = n_runs) of data frames with the output from inference
-#' in TreePPL.
+#' @return A data frame with the output from inference in TreePPL.
 #' @export
-tp_parse <- function(treeppl_out, n_runs = 1) {
-
-  if (n_runs == 1) {
-    treeppl_out <- list(treeppl_out)
-  }
+tp_parse <- function(treeppl_out) {
 
   result_df <- list()
 
-  for (index in seq_along(treeppl_out)) {
-    result_df <-
-      rbind(result_df, data.frame(samples=unlist(treeppl_out[[1]]$samples),
-                                  log_weight=unlist(treeppl_out[[1]]$weights)))
+  for (i in seq_along(treeppl_out)) {
+
+    samples_c <- unlist(treeppl_out[[i]]$samples)
+    log_weight_c <- unlist(treeppl_out[[i]]$weights)
+
+    if(is.null(names(samples_c))){
+      result_df <- rbind(result_df,
+                         data.frame(run = i,
+                                    samples = samples_c,
+                                    log_weight = log_weight_c,
+                                    norm_const = treeppl_out[[i]]$normConst)
+      )
+    } else {
+      result_df <- rbind(result_df,
+                         data.frame(run = i,
+                                    parameter = names(samples_c),
+                                    samples = samples_c,
+                                    log_weight = log_weight_c,
+                                    norm_const = treeppl_out[[i]]$normConst)
+      )
+    }
   }
 
   return(result_df)
 }
+
 
 #' Parse TreePPL json output for host repertoire model
 #'
@@ -37,17 +48,11 @@ tp_parse <- function(treeppl_out, n_runs = 1) {
 #' @param treeppl_out a character vector giving the TreePPL json output
 #' produced by [tp_treeppl].
 #'
-#' @param n_runs a [base::integer] giving the number of runs (MCMC) or sweeps (SMC).
-#'
-#'
 #' @return A list (n = n_runs) of data frames with the output from inference
 #' in TreePPL under the host repertoire evolution model.
 #' @export
 
-tp_parse_host_rep <- function(treeppl_out, n_runs = 1) {
-  if (n_runs == 1) {
-    treeppl_out <- list(treeppl_out)
-  }
+tp_parse_host_rep <- function(treeppl_out) {
 
   result_list <- list()
 
@@ -82,7 +87,8 @@ tp_parse_host_rep <- function(treeppl_out, n_runs = 1) {
       "child2_index"
     )
 
-    for (i in seq_along(output_trppl[1][[1]])) {
+    #for (i in seq_along(output_trppl[1][[1]])) {
+    for (i in seq_along(output_trppl$samples)) {
       res <- data.frame(matrix(ncol = nbr_col, nrow = 0))
       colnames(res) <- c(
         "iteration",
@@ -220,4 +226,99 @@ peel_tree <- function(subtree,
     )
   }
   result
+}
+
+
+#' Check for convergence across multiple SMC sweeps/runs
+#'
+#' @param treeppl_out a character vector giving the TreePPL json output
+#' produced by [tp_treeppl].
+#'
+#' @returns Variance in the normalizing constants across SMC sweeps.
+#' @export
+#'
+tp_smc_convergence <- function(treeppl_out) {
+
+  output <- tp_parse(treeppl_out)
+  zs <- output %>%
+    dplyr::slice_head(n = 1, by = run) %>%
+    dplyr::pull(norm_const)
+
+  return(var(zs))
+}
+
+
+
+#' Find the Maximum A Posteriori (MAP) Tree from weighted samples
+#'
+#' @param trees_out The list returned by [treepplr::tp_json_to_phylo]
+#' (containing $trees and $weights)
+#'
+#' @returns The MAP tree as a phylo object
+#' @export
+#'
+tp_map_tree <- function(trees_out) {
+
+  trees <- trees_out$trees
+  weights <- trees_out$weights
+
+  # Handle Log-Weights (Optional Check)
+  # If weights are negative (log-scale), convert them to probabilities first
+  if (any(weights < 0)) {
+    message("Log-weights detected. converting to relative probabilities...")
+    # Subtract max to avoid underflow/overflow issues
+    weights <- exp(weights - max(weights))
+  }
+
+  # Identify unique topologies
+  trees_ready <- lapply(trees, function(tree) {
+
+    # normalize edge lengths for the tip reordering
+    tree$edge.length <- tree$edge.length/max(tree$edge.length)
+    # Ladderize to fix edge indices
+    tree_lad <- ladderize_tree(tree)
+    # Order tip labels as similarly as possible
+    tree_ord <- bnpsd::tree_reorder(tree_lad, sort(tree_lad$tip.label))
+    # Remove edge lengths to only focus on topology
+    tree_ord$edge.length <- NULL
+    return(tree_ord)
+
+  })
+
+  # This compresses the list into unique tree topologies
+  unique_topologies <- ape::unique.multiPhylo(trees_ready, use.edge.length = FALSE)
+
+  # Map every original tree to a unique topology index
+  #match_indices <- match(trees_ready, unique_topologies)
+  match_indices <- attr(unique_topologies, "old.index")
+
+  # Sum weights for each unique topology
+  # tapply splits the weights by the index and sums them
+  topology_probs <- tapply(weights, match_indices, sum)
+
+  # Identify the Best Topology
+  best_index <- as.numeric(names(which.max(topology_probs)))
+
+  # Calculate posterior probability of this MAP topology
+  map_prob <- max(topology_probs) / sum(topology_probs)
+
+  # Compute Mean Branch Lengths for the MAP Topology
+  # We take all samples that matched the MAP topology...
+  matching_indices <- which(match_indices == best_index)
+  matching_trees   <- trees[matching_indices]
+  matching_weights <- weights[matching_indices]
+
+  # ...and compute a consensus to average their branch lengths.
+  # Ideally, we should do a weighted average of the lengths,
+  # but ape::consensus uses simple mean. For most purposes, this is sufficient.
+  final_map <- map <- phangorn::allCompat(matching_trees, rooted=TRUE) |>
+    phangorn::add_edge_length(matching_trees,
+                              fun = function(x) weighted.mean(x, matching_weights))
+
+  print(paste("MAP Topology found"))
+  print(paste("Posterior Probability:", round(map_prob, 4)))
+  print(paste("Based on the topology of", length(matching_indices),
+              "samples out of", length(trees)))
+
+  return(final_map)
 }

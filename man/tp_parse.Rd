@@ -4,17 +4,14 @@
 \alias{tp_parse}
 \title{Parse simple TreePPL json output}
 \usage{
-tp_parse(treeppl_out, n_runs = 1)
+tp_parse(treeppl_out)
 }
 \arguments{
 \item{treeppl_out}{a character vector giving the TreePPL json output
 produced by \link{tp_treeppl}.}
-
-\item{n_runs}{a \link[base:integer]{base::integer} giving the number of runs (MCMC) or sweeps (SMC).}
 }
 \value{
-A list (n = n_runs) of data frames with the output from inference
-in TreePPL.
+A data frame with the output from inference in TreePPL.
 }
 \description{
 \code{tp_parse} takes TreePPL json output and returns a data.frame

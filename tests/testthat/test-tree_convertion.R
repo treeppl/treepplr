@@ -15,7 +15,7 @@ ex_tree <- data.frame(
 )
 
 testthat::test_that("Test-json_1a : tree_age_cumul", {
-  cat("\tTest-json_1a : tree_age_cumul with top-down\n")
+  cat("\tTest-json_1a : tree_age_cumul with root-to-tip\n")
 
   top_down_tree <- data.frame(
     Type = c("Leaf", "Leaf", "Leaf", "Leaf", "Leaf", "Node","Node","Node","Node"),
@@ -25,13 +25,13 @@ testthat::test_that("Test-json_1a : tree_age_cumul", {
     Right = c(NA,NA,NA,NA,NA,8,2,9,5)
   )
 
-  res_tree <- treepplr:::tree_age_cumul(ex_tree, 6, age = "top-down")
+  res_tree <- treepplr:::tree_age_cumul(ex_tree, 6, age = "root-to-tip")
 
   testthat::expect_equal(top_down_tree, res_tree)
 })
 
 testthat::test_that("Test-json_1b : tree_age_cumul", {
-  cat("\tTest-json_1b : tree_age_cumul with down-top\n")
+  cat("\tTest-json_1b : tree_age_cumul with tip-to-root\n")
 
   down_top_tree <- data.frame(
     Type = c("Leaf", "Leaf", "Leaf", "Leaf", "Leaf", "Node","Node","Node","Node"),
@@ -41,17 +41,17 @@ testthat::test_that("Test-json_1b : tree_age_cumul", {
     Right = c(NA,NA,NA,NA,NA,8,2,9,5)
   )
 
-  res_tree <- treepplr:::tree_age_cumul(ex_tree, 6, age = "down-top")
+  res_tree <- treepplr:::tree_age_cumul(ex_tree, 6, age = "tip-to-root")
 
   testthat::expect_equal(down_top_tree, res_tree)
 })
 
-testthat::test_that("Test-json_2 : tp_phylo_2_tppl_tree", {
-  cat("\tTest-json_2 : tp_phylo_2_tppl_tree with phylo\n")
+testthat::test_that("Test-json_2 : tp_phylo_to_tppl_tree", {
+  cat("\tTest-json_2 : tp_phylo_to_tppl_tree with phylo\n")
 
   ex_tree_phylo <- ape::read.tree(text="((1:1,2:1)7:5,(3:4,(4:1.5,5:1.5)9:2.5)8:2)6;")
 
-  res_tree <- treepplr:::tp_phylo_2_tppl_tree(ex_tree_phylo)
+  res_tree <- treepplr:::tp_phylo_to_tppl_tree(ex_tree_phylo)
 
   testthat::expect_equal(6, res_tree[[1]])
   testthat::expect_equal(ex_tree, res_tree[[2]])
