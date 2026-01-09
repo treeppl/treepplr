@@ -9,7 +9,7 @@ format).
 tp_run(
   model_file_name = "tmp_model_file",
   data_file_name = "tmp_data_file",
-  n_runs = "1"
+  n_runs = 1
 )
 ```
 
@@ -26,11 +26,11 @@ tp_run(
 - n_runs:
 
   a [base::integer](https://rdrr.io/r/base/integer.html) giving the
-  number of run (mcmc)/sweap (smc).
+  number of runs (mcmc)/sweaps (smc).
 
 ## Value
 
-TreePPL output in JSON format.
+A list of TreePPL output in parsed JSON format.
 
 ## Details
 
@@ -49,9 +49,6 @@ name. Use a
 [tp_stored_data](http://treeppl.org/treepplr/reference/tp_stored_data.md)
 name if you have already write your data with
 [tp_treeppl](http://treeppl.org/treepplr/reference/tp_treeppl.md).
-
-`samples` : The number of samples (mcmc) / particules (smc) during
-inference.
 
 `n_runs` : The number of run (mcmc) / sweap (smc) used for the
 inference.

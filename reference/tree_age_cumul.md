@@ -14,7 +14,7 @@ tree_age_cumul(tree, root_index, age = "branch-length")
 - tree:
 
   an tppl_tree create with
-  [tp_phylo_2_tppl_tree](http://treeppl.org/treepplr/reference/tp_phylo_2_tppl_tree.md).
+  [tp_phylo_to_tppl_tree](http://treeppl.org/treepplr/reference/tp_phylo_to_tppl_tree.md).
 
 - root_index:
 
@@ -25,9 +25,9 @@ tree_age_cumul(tree, root_index, age = "branch-length")
   a string that determine the way the age of the node are calculated
   (default "branch-length").
 
-  - "top-down" : Root's age = 0.0, cumulative branch-length from root
+  - "root-to-tip" : Root's age = 0.0, cumulative branch-length from root
 
-  - "down-top" : Leaf's age = 0.0, cumulative branch-length from leaf
+  - "tip-to-root" : Leaf's age = 0.0, cumulative branch-length from leaf
 
 ## Value
 

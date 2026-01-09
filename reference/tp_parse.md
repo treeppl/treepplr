@@ -5,7 +5,7 @@
 ## Usage
 
 ``` r
-tp_parse(treeppl_out, n_runs = 1)
+tp_parse(treeppl_out)
 ```
 
 ## Arguments
@@ -15,12 +15,6 @@ tp_parse(treeppl_out, n_runs = 1)
   a character vector giving the TreePPL json output produced by
   [tp_treeppl](http://treeppl.org/treepplr/reference/tp_treeppl.md).
 
-- n_runs:
-
-  a [base::integer](https://rdrr.io/r/base/integer.html) giving the
-  number of runs (MCMC) or sweeps (SMC).
-
 ## Value
 
-A list (n = n_runs) of data frames with the output from inference in
-TreePPL.
+A data frame with the output from inference in TreePPL.

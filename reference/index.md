@@ -2,9 +2,6 @@
 
 ## All functions
 
-- [`tp_TreePPL_json()`](http://treeppl.org/treepplr/reference/tp_TreePPL_json.md)
-  : Convert a tppl_tree to TreePPL json str
-
 - [`tp_check_input()`](http://treeppl.org/treepplr/reference/tp_check_input.md)
   : Check input for inference with TreePPL
 
@@ -20,8 +17,15 @@
 - [`tp_fp_fetch()`](http://treeppl.org/treepplr/reference/tp_fp_fetch.md)
   : Fetch the latest version of treeppl
 
+- [`tp_json_to_phylo()`](http://treeppl.org/treepplr/reference/tp_json_to_phylo.md)
+  : Convert TreePPL multi-line JSON to R phylo/multiPhylo object with
+  associated weights
+
 - [`tp_list()`](http://treeppl.org/treepplr/reference/tp_list.md) :
   Create a flat list
+
+- [`tp_map_tree()`](http://treeppl.org/treepplr/reference/tp_map_tree.md)
+  : Find the Maximum A Posteriori (MAP) Tree from weighted samples
 
 - [`tp_model()`](http://treeppl.org/treepplr/reference/tp_model.md) :
   Import a TreePPL model
@@ -35,14 +39,17 @@
 - [`tp_parse_host_rep()`](http://treeppl.org/treepplr/reference/tp_parse_host_rep.md)
   : Parse TreePPL json output for host repertoire model
 
-- [`tp_phylo_2_TreePPL()`](http://treeppl.org/treepplr/reference/tp_phylo_2_TreePPL.md)
+- [`tp_phylo_to_tpjson()`](http://treeppl.org/treepplr/reference/tp_phylo_to_tpjson.md)
   : Convert phylo obj to TreePPL tree
 
-- [`tp_phylo_2_tppl_tree()`](http://treeppl.org/treepplr/reference/tp_phylo_2_tppl_tree.md)
+- [`tp_phylo_to_tppl_tree()`](http://treeppl.org/treepplr/reference/tp_phylo_to_tppl_tree.md)
   : Convert phylo to a tppl_tree
 
 - [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md) : Run a
   TreePPL program
+
+- [`tp_smc_convergence()`](http://treeppl.org/treepplr/reference/tp_smc_convergence.md)
+  : Check for convergence across multiple SMC sweeps/runs
 
 - [`tp_stored_compiled()`](http://treeppl.org/treepplr/reference/tp_stored_compiled.md)
   :
@@ -67,6 +74,9 @@
 
 - [`tp_treeppl()`](http://treeppl.org/treepplr/reference/tp_treeppl.md)
   : Compile and run a TreePPL program
+
+- [`tp_treeppl_json()`](http://treeppl.org/treepplr/reference/tp_treeppl_json.md)
+  : Convert a tppl_tree to TreePPL json str
 
 - [`tp_write()`](http://treeppl.org/treepplr/reference/tp_write.md) :
 

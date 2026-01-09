@@ -114,7 +114,7 @@ tp_treeppl(
 
 ## Value
 
-TreePPL output in JSON format.
+A list of TreePPL output in parsed JSON format.
 
 ## Details
 
