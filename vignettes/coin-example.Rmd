@@ -19,7 +19,9 @@ knitr::opts_chunk$set(
 
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
-This tutorial describes how to analyze a simple coin-flipping model in *treepplr*. We assume that the probability of obtaining heads with our coin is $p$, and that we have a set of flips informing us about the value of $p$.
+This tutorial describes how to analyze a simple coin-flipping model in *treepplr*.
+
+We assume that the probability of obtaining heads with our coin is $p$, and that we have a set of flips informing us about the value of $p$.
 
 In a Bayesian analysis of this problem, we need to specify a prior probability distribution for the value of $p$. Here, we will assume that $p$ is drawn from a $\mathrm{Beta}(2,2)$ distribution.
 
@@ -35,15 +37,17 @@ library(ggplot2)
 
 ## Load model and data files
 
-Now we can load the coin model script (or, more formally, the probabilistic program describing the coin flipping model) provided with the *treepplr* package using the following command:
+Now we can load the coin model script (the probabilistic program describing the coin flipping model) provided with the *treepplr* package using the following command:
 
 ```{r}
 model <- tp_model("coin")
 ```
 
-You can load any TreePPL model script using the same command, replacing `"coin"` with the file name of your script, including the path if it is not in the working directory. To view the coin model script, simply type
+You can load any TreePPL model script into *treepplr* using the same command, replacing `"coin"` with the file name of your script.
 
-```{r}
+To view the coin model script, simply type
+
+```{r, eval=FALSE}
 cat(model)
 ```
 
@@ -66,21 +70,28 @@ model function coinModel(coinflips: Bool[]) => Real  {
 }
 ```
 
-As you can see, the definition of this function is preceded by the keywords `model function`. All model scripts must have exactly one `model function`.
+The definition of this function is preceded by the keywords `model function`.
+All model scripts must have exactly one `model function`.
 
-The model function takes as input parameter(s) the observed data that we wish to condition on.
+The model function takes as input argument(s) the observed data that we wish to condition on.
+In our case, the data are represented by a sequence (vector or array) of Boolean (`TRUE`/`FALSE`) values.
 
-In our case, the data are represented by a sequence (vector or array) of Boolean (`TRUE`/`FALSE`) variables.
+Note that TreePPL uses type annotation of input variables in the form of `<argument_name>: <data_type>`.
+The square brackets `[]` are used to denote a sequence type, that is, `coinflips: Bool[]` tells us that
+the model function takes a single argument by the name of `coinflips`, and the data type is a sequence of Booleans.
 
-Note that TreePPL uses type annotations of input variables in the form of `<variable_name>: <variable_type>`. The square brackets are used to denote a sequence type, that is, `coinFlips: Bool[]` tells us that the model function takes a single argument by the name of `coinFlips`, and the variable type is a sequence of Booleans.
+The return type of a function is specified using the format `=> <data_type>`.
+Our model function returns the value of `p`.
+In general, the model function should return the model parameters for which we are interested in inferring the posterior distribution.
 
-The return type of a function is specified using the format `=> <return_type>`.
+The model function starts with a few statements that are commented out by having `//` put in front of them.
+The code in these lines can be used to print the value of the `coinflips` argument.
 
-The model function starts with a few statements that are commented out by having `//` put in front of them. The code in these lines can be used to print the value of the `coinFlips` argument if they are uncommented.
+The statement `assume p ~ Beta(2.0,2.0)` specifies the prior probability distribution for the parameter `p` in our model.
+TreePPL provides a number of built-in probability distributions; they all have names starting with a capital letter, like the `Beta` distribution used here.
 
-The statement `assume p ~ Beta(2.0,2.0)` specifies the prior probability distribution for the parameter `p` in our model. TreePPL provides a number of built-in probability distributions; they all have names starting with a capital letter, like the `Beta` distribution used here.
-
-The `assume` statement is followed by a loop over the input data sequence, conditioning the simulation on each observed value (heads/`TRUE` or tails/`FALSE`). Specifically, this is achieved by calling the help function `flip`.
+The `assume` statement is followed by a loop over the input data sequence, conditioning the simulation on each observed value (heads/`TRUE` or tails/`FALSE`).
+Specifically, this is achieved by calling the help function `flip`.
 
 The `flip` function is defined as follows:
 
@@ -90,15 +101,22 @@ function flip(datapoint: Bool, probability: Real) {
 }
 ```
 
-`Bernoulli` is a probability distribution on a binary outcome space, typically represented as a Boolean variable taking the values `TRUE` or `FALSE`. This is the appropriate probability distribution for coin flipping.
+`Bernoulli` is a probability distribution on a binary outcome space, typically represented as a Boolean variable taking the values `TRUE` or `FALSE`.
+This is the appropriate probability distribution for coin flipping.
 
-The single parameter of the `Bernoulli` distribution, called `probability` in the `flip` function, is assumed by convention to be the probability of obtaining the outcome `TRUE`; in our case, this would be the probability of obtaining heads.
+The single parameter of the `Bernoulli` distribution, called `probability` in the `flip` function,
+is assumed by convention to be the probability of obtaining the outcome `TRUE`.
+In our case, this would be the probability of obtaining heads.
 
 The `observe` statement weights the simulation with the likelihood of observing a particlar data point from the Bernoulli distribution.
 
-This completes the TreePPL description of the coin flipping model. All TreePPL model descriptions essentially follow the same format. For a more complete coverage of the TreePPL language, see URL XXXXXXXX.
+This completes the TreePPL description of the coin flipping model.
+All TreePPL model descriptions essentially follow the same format.
+For a more complete coverage of the TreePPL language, see the language overview in the [TreePPL online documentation](https://treeppl.org/docs/).
 
-Now we can start analyzing the model by inferring the value of `p` given some observed sequence of coin flips. To do this, we need to provide the observations in a suitable format. To load the example data provided in the *treepplr* package, use:
+Now we can start analyzing the model by inferring the value of `p` given some observed sequence of coin flips.
+To do this, we need to provide the observations in a suitable format.
+To load the example data provided in the *treepplr* package, use:
 
 ```{r}
 data <- tp_data("coin")
@@ -112,16 +130,34 @@ str(data)
 #>  $ coinflips: logi [1:20] FALSE TRUE TRUE TRUE FALSE TRUE ...
 ```
 
-As you can see, the data are provided as an R list. Each element in the list must be named using one of the argument names expected by the TreePPL model function. The argument can be given in any order in the list but they must all be included. In our case, the model function only takes one argument called `coinFlips`, so the R list only contains one element named `coinFlips`.
+The data are provided as an R list.
+Each element in the list is named using the corresponding argument name expected by the TreePPL model function.
+The arguments can be given in any order in the list.
+In our case, the model function only takes one argument called `coinflips`,
+so the R list only contains one element named `coinflips`.
 
-The TreePPL compiler requires data in JSON format. The conversion from R variables to appropriate JSON code understood by TreePPL is done automatically by *treepplr* for supported data types. For instance, logical vectors (`logi`) in R are converted to sequences of Booleans (`Bool[]`) in TreePPL in our case.
+The TreePPL compiler requires data in JSON format.
+The conversion from R variables to appropriate JSON code understood by TreePPL
+is done automatically by *treepplr* for supported data types.
+For instance, logical vectors in R are converted to sequences of Booleans (`Bool[]`)
+in TreePPL.
 
 
 ## Run TreePPL
 
-Now we can compile and run the TreePPL program, inferring the posterior distribution of `p` conditioned on the input data. This is done using the *tp_treeppl()* function provided by *treepplr*. The function has many optional arguments that allow you to select among the inference methods supported by TreePPL, and setting relevant options for each one of them. For an up-to-date description of available inference strategies supported, see the documentation of the `tp_treeppl` function.
+Now we can compile and run the TreePPL program, inferring the posterior distribution
+of `p` conditioned on the input data.
+This is done using the *tp_treeppl()* function provided by *treepplr*.
+The function has many optional arguments that allow you to select among the inference
+methods supported by TreePPL, and setting relevant options for each one of them.
+For an up-to-date description of available inference strategies supported,
+see the documentation of the `tp_treeppl` function.
 
-Here, we will use the default settings for inference methods. It uses sequential Monte Carlo (SMC), specifically the bootstrap particle filter version. It runs 100 sweeps (100 SMC runs, if you wish), using 100 particles for each sweep.
+Here, we will use the default settings for inference methods.
+It uses sequential Monte Carlo (SMC), specifically the bootstrap particle filter version
+(the `method=smc-bpf` option).
+It runs 100 sweeps (100 SMC runs, if you wish), using 100 particles for each sweep
+(`n_runs=100, samples=100`).
 
 ```{r, eval=FALSE}
 output_list <- tp_treeppl(model = model, data = data, samples = 100, n_runs = 100)
@@ -133,17 +169,22 @@ output_list <- readRDS("rdata/coin/output_coin.rds")
 
 The run should take a few seconds to complete depending on your machine.
 
-In general, the TreePPL inference strategies can be described as nested approaches where the outermost shell defines the character of the inference output. If the outer shell is SMC, as is the case here, the returned object will be a nested R list. Each particle in each sweep will return a weight, and the return value(s) of the model function. Each sweep will co
+In general, the TreePPL inference strategies can be described as nested approaches where
+the outermost shell defines the character of the inference output. If the outer shell is
+SMC, as is the case here, the returned object will be a nested R list.
 
-Each entry in the bottam layer of the list will correspond to a sweep. Each sweep will contain the normalizing constant estimated in that sweep, each of the returned values from the model function (one value for each bootstrap particle), and the corresponding weights of these returned values (particles).
+Each entry in the outermost layer of the list will correspond to a sweep.
+Each sweep will contain three values: the normalizing constant estimated in that sweep,
+each of the returned values from the model function (one value for each SMC particle),
+and the corresponding likelihood weights of the returned values.
 
 ## Plot the posterior distribution
 
-Just as we compare different MCMC runs/chains to test for convergence, in SMC we
-run several sweeps and then compare their normalizing constants to test if they
-converged to the same posterior distribution. A popular argument from the SMC
+In SMC we can assess the quality of the inference by running several sweeps
+and comparing their normalizing constants to test if they generated similar
+estimates of the posterior distribution. A popular argument from the SMC
 literature suggests that the SMC estimate is accurate if the variance of the 
-of the normalizing constants across sweeps is lower than 1. 
+estimates of the normalizing constant across sweeps is lower than 1. 
 
 To check the variance of the normalizing constant, use the *tp_smc_convergence()* function.
 
@@ -151,9 +192,14 @@ To check the variance of the normalizing constant, use the *tp_smc_convergence()
 tp_smc_convergence(output_list)
 ```
 
-It seems that our run provides a quite accurate estimate of the posterior distribution, as the variance is much smaller than 1.0.
+It seems that our run provides a quite accurate estimate of the posterior distribution,
+as the variance is much smaller than 1.0.
 
-It is also easy to plot the sampled values. The *tp_parse()* function helps us convert the results returned by TreePPL into an R list of appropriately weighted values, taking both the particle weights and normalizing constants (the sweep weights) into account. Note that both the particle weights and normalizing constants are given in log units.
+It is also easy to plot the sampled values.
+The *tp_parse()* function helps us convert the results returned by TreePPL into an R list
+of appropriately weighted values, taking both the particle weights and normalizing constants
+(the sweep weights, if you wish) into account. Note that both the particle weights and
+normalizing constants are given in log units.
 
 ```{r, fig.height=5, fig.width=5}
 output <-  tp_parse(output_list) %>% 
