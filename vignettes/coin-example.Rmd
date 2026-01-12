@@ -21,13 +21,14 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 This tutorial describes how to analyze a simple coin-flipping model in *treepplr*.
 
-We assume that the probability of obtaining heads with our coin is $p$, and that we have a set of flips informing us about the value of $p$.
+We assume that the probability of obtaining heads with our coin is `p`, and that we have a set of flips informing us about the value of `p`.
 
-In a Bayesian analysis of this problem, we need to specify a prior probability distribution for the value of $p$. Here, we will assume that $p$ is drawn from a $\mathrm{Beta}(2,2)$ distribution.
+In a Bayesian analysis of this problem, we need to specify a prior probability distribution for the value of `p`.
+Here, we will assume that `p` is drawn from a `Beta}(2,2)` distribution.
 
 ## Load the required R packages
 
-Let us first load the required R packages, as follows:
+First load the required R packages:
 
 ```{r setup}
 library(treepplr)
@@ -37,13 +38,15 @@ library(ggplot2)
 
 ## Load model and data files
 
-Now we can load the coin model script (the probabilistic program describing the coin flipping model) provided with the *treepplr* package using the following command:
+Now we can load the coin model script (the probabilistic program describing
+the coin flipping model) provided with the *treepplr* package using the following command:
 
 ```{r}
 model <- tp_model("coin")
 ```
 
-You can load any TreePPL model script into *treepplr* using the same command, replacing `"coin"` with the file name of your script.
+You can load any TreePPL model script into *treepplr* using the same command,
+replacing `"coin"` with the file name of your script.
 
 To view the coin model script, simply type
 
@@ -71,7 +74,7 @@ model function coinModel(coinflips: Bool[]) => Real  {
 ```
 
 The definition of this function is preceded by the keywords `model function`.
-All model scripts must have exactly one `model function`.
+All model scripts must have exactly one model function.
 
 The model function takes as input argument(s) the observed data that we wish to condition on.
 In our case, the data are represented by a sequence (vector or array) of Boolean (`TRUE`/`FALSE`) values.
@@ -101,14 +104,16 @@ function flip(datapoint: Bool, probability: Real) {
 }
 ```
 
-`Bernoulli` is a probability distribution on a binary outcome space, typically represented as a Boolean variable taking the values `TRUE` or `FALSE`.
+`Bernoulli` is a probability distribution on a binary outcome space,
+represented as a Boolean variable taking the values `TRUE` or `FALSE`.
 This is the appropriate probability distribution for coin flipping.
 
 The single parameter of the `Bernoulli` distribution, called `probability` in the `flip` function,
 is assumed by convention to be the probability of obtaining the outcome `TRUE`.
 In our case, this would be the probability of obtaining heads.
 
-The `observe` statement weights the simulation with the likelihood of observing a particlar data point from the Bernoulli distribution.
+The `observe` statement weights the simulation with the likelihood of observing
+a particlar data point from the Bernoulli distribution.
 
 This completes the TreePPL description of the coin flipping model.
 All TreePPL model descriptions essentially follow the same format.
