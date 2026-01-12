@@ -19,3 +19,11 @@ You can install treepplr like so:
 
 devtools::install_github("treeppl/treepplr")
 ```
+
+This will only install the R package. The TreePPL compiler will not be downloaded and installed until you run your first analysis, and the TreePPL compiler is called.  During the download, you will see a message like this
+
+```
+[xx%] Downloaded xxxxxx bytes...
+```
+
+In subsequent analyses, the TreePPL compiler will be called directly, skipping this step.
