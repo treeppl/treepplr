@@ -60,17 +60,21 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>treepplr is the R Interface to <a href="treeppl.org">TreePPL</a>, a probabilistic programming language for phylogenetics.</p>
-<p>treepplr converts data to a format readable by TreePPL, reads the TreePPL output, and connects to downstream analyses in model-specific packages, such as the <a href="github.com/maribraga/evolnets">evolnets</a> package for the host repertoire evolution model.</p>
-<p>See the package’s documentation <a href="treeppl.org/treepplr">here</a>.</p>
+<p>treepplr is the R Interface to <a href="https://treeppl.org" class="external-link">TreePPL</a>, a probabilistic programming language for phylogenetics.</p>
+<p>treepplr converts data to a format readable by TreePPL, reads the TreePPL output, and connects to downstream analyses in model-specific packages, such as the <a href="https://github.com/maribraga/evolnets" class="external-link">evolnets</a> package for the host repertoire evolution model.</p>
+<p>See the package’s documentation <a href="https://treeppl.org/treepplr" class="external-link">here</a>. There you will find all package functions under <a href="https://treeppl.org/treepplr/reference/index.html" class="external-link">Reference</a>, and basic examples of running various models under <a href="https://treeppl.org/treepplr/articles/index.html" class="external-link">Articles</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install treepplr like so:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="co"># library(devtools)</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/" class="external-link">"devtools"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span> <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"treeppl/treepplr"</span><span class="op">)</span></span></code></pre></div>
 </div>
