@@ -131,8 +131,6 @@ We can look at the structure of the input data using
 
 ```{r}
 str(data)
-#> List of 1
-#>  $ coinflips: logi [1:20] FALSE TRUE TRUE TRUE FALSE TRUE ...
 ```
 
 The data are provided as an R list.
@@ -177,11 +175,10 @@ The run should take a few seconds to complete depending on your machine.
 In general, the TreePPL inference strategies can be described as nested approaches where
 the outermost shell defines the character of the inference output. If the outer shell is
 SMC, as is the case here, the returned object will be a nested R list.
-
-Each entry in the outermost layer of the list will correspond to a sweep.
+Each entry in the outermost list layer will correspond to a sweep.
 Each sweep will contain three values: the normalizing constant estimated in that sweep,
-each of the returned values from the model function (one value for each SMC particle),
-and the corresponding likelihood weights of the returned values.
+each of the returned values from the model function (one returned value for each SMC particle),
+and the likelihood weight of each returned value (one weight for each particle).
 
 ## Plot the posterior distribution
 
