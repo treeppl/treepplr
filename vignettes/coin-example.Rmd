@@ -19,12 +19,12 @@ knitr::opts_chunk$set(
 
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
-This tutorial describes how to analyze a simple coin-flipping model in *treepplr*.
+This tutorial describes how to analyze a simple coin-flipping model using *treepplr*.
 
 We assume that the probability of obtaining heads with our coin is `p`, and that we have a set of flips informing us about the value of `p`.
 
 In a Bayesian analysis of this problem, we need to specify a prior probability distribution for the value of `p`.
-Here, we will assume that `p` is drawn from a `Beta}(2,2)` distribution.
+Here, we will assume that `p` is drawn from a `Beta(2,2)` distribution.
 
 ## Load the required R packages
 
