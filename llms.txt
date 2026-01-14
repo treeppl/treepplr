@@ -31,6 +31,16 @@ if(!require("devtools", quietly = TRUE)) {
 devtools::install_github("treeppl/treepplr")
 ```
 
+This will only install the R package. The TreePPL compiler will not be
+downloaded and installed until you run your first analysis, and the
+TreePPL compiler is called. During the download, you will see a message
+like this
+
+    [xx%] Downloaded xxxxxx bytes...
+
+In subsequent analyses, the TreePPL compiler will be called directly,
+skipping this step.
+
 # Package index
 
 ## All functions
@@ -123,8 +133,7 @@ devtools::install_github("treeppl/treepplr")
 
 ### All vignettes
 
-- [Coin flipping
-  example](http://treeppl.org/treepplr/articles/coin-example.md):
+- [Coin flipping](http://treeppl.org/treepplr/articles/coin-example.md):
 - [Constant rate birth (CRB)
   model](http://treeppl.org/treepplr/articles/constant-rate-birth.md):
 - [Host repertoire model

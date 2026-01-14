@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Coin flipping example • treepplr</title>
+<title>Coin flipping • treepplr</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Coin flipping example">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Coin flipping">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -33,7 +33,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/coin-example.html">Coin flipping example</a></li>
+<li><a class="dropdown-item" href="../articles/coin-example.html">Coin flipping</a></li>
     <li><a class="dropdown-item" href="../articles/constant-rate-birth.html">Constant rate birth (CRB) model</a></li>
     <li><a class="dropdown-item" href="../articles/hostrep-example.html">Host repertoire model example</a></li>
     <li><a class="dropdown-item" href="../articles/tree_inference.html">Tree inference</a></li>
@@ -58,7 +58,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Coin flipping example</h1>
+      <h1>Coin flipping</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/treeppl/treepplr/blob/main/vignettes/coin-example.Rmd" class="external-link"><code>vignettes/coin-example.Rmd</code></a></small>
@@ -67,50 +67,182 @@
 
     
     
+<p>This tutorial describes how to analyze a simple coin-flipping model
+using <em>treepplr</em>.</p>
+<p>We assume that the probability of obtaining heads with our coin is
+<code>p</code>, and that we have a set of flips informing us about the
+value of <code>p</code>.</p>
+<p>In a Bayesian analysis of this problem, we need to specify a prior
+probability distribution for the value of <code>p</code>. Here, we will
+assume that <code>p</code> is drawn from a <code>Beta(2,2)</code>
+distribution.</p>
+<div class="section level2">
+<h2 id="load-the-required-r-packages">Load the required R packages<a class="anchor" aria-label="anchor" href="#load-the-required-r-packages"></a>
+</h2>
+<p>First load the required R packages:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/treeppl/treepplr" class="external-link">treepplr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="section level2">
 <h2 id="load-model-and-data-files">Load model and data files<a class="anchor" aria-label="anchor" href="#load-model-and-data-files"></a>
 </h2>
-<p>Load the coin model and example data available within
-<em>treepplr.</em></p>
+<p>Now we can load the coin model script (the probabilistic program
+describing the coin flipping model) provided with the <em>treepplr</em>
+package using the following command:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_model.html">tp_model</a></span><span class="op">(</span><span class="st">"coin"</span><span class="op">)</span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_data.html">tp_data</a></span><span class="op">(</span><span class="st">"coin"</span><span class="op">)</span></span></code></pre></div>
-<p>The data in this example is a sequence of coin flip results.
-<em>treeppl</em> can only read data in JSON format, that’s why all
-example data are in this format.</p>
+<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_model.html">tp_model</a></span><span class="op">(</span><span class="st">"coin"</span><span class="op">)</span></span></code></pre></div>
+<p>You can load any TreePPL model script into <em>treepplr</em> using
+the same command, replacing <code>"coin"</code> with the file name of
+your script.</p>
+<p>To view the coin model script, simply type</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<p>which will print the script.</p>
+<p>The main part of the model is defined in a function called
+<code>coinModel</code>:</p>
+<pre><code>model function coinModel(coinflips: Bool[]) =&gt; Real  {
+  // Uncomment if you want to test the input
+  //printLn("Input:");
+  //let coinStr = apply(bool2string, coinflips);
+  //printLn(join(coinStr));
+  assume p ~ Beta(2.0, 2.0); // prior
+  let n = length(coinflips);
+  for i in 1 to n {
+    flip(coinflips[i], p); // likelihood
+  }
+  return(p); // posterior
+}</code></pre>
+<p>The definition of this function is preceded by the keywords
+<code>model function</code>. All model scripts must have exactly one
+model function.</p>
+<p>The model function takes as input argument(s) the observed data that
+we wish to condition on. In our case, the data are represented by a
+sequence (vector or array) of Boolean
+(<code>TRUE</code>/<code>FALSE</code>) values.</p>
+<p>Note that TreePPL uses type annotation of input variables in the form
+of <code>&lt;argument_name&gt;: &lt;data_type&gt;</code>. The square
+brackets <code>[]</code> are used to denote a sequence type, that is,
+<code>coinflips: Bool[]</code> tells us that the model function takes a
+single argument by the name of <code>coinflips</code>, and the data type
+is a sequence of Booleans.</p>
+<p>The return type of a function is specified using the format
+<code>=&gt; &lt;data_type&gt;</code>. Our model function returns the
+value of <code>p</code>. In general, the model function should return
+the model parameters for which we are interested in inferring the
+posterior distribution.</p>
+<p>The model function starts with a few statements that are commented
+out by having <code>//</code> put in front of them. The code in these
+lines can be used to print the value of the <code>coinflips</code>
+argument.</p>
+<p>The statement <code>assume p ~ Beta(2.0,2.0)</code> specifies the
+prior probability distribution for the parameter <code>p</code> in our
+model. TreePPL provides a number of built-in probability distributions;
+they all have names starting with a capital letter, like the
+<code>Beta</code> distribution used here.</p>
+<p>The <code>assume</code> statement is followed by a loop over the
+input data sequence, conditioning the simulation on each observed value
+(heads/<code>TRUE</code> or tails/<code>FALSE</code>). Specifically,
+this is achieved by calling the help function <code>flip</code>.</p>
+<p>The <code>flip</code> function is defined as follows:</p>
+<pre><code>function flip(datapoint: Bool, probability: Real) {
+  observe datapoint ~ Bernoulli(probability);
+}</code></pre>
+<p><code>Bernoulli</code> is a probability distribution on a binary
+outcome space, represented as a Boolean variable taking the values
+<code>TRUE</code> or <code>FALSE</code>. This is the appropriate
+probability distribution for coin flipping.</p>
+<p>The single parameter of the <code>Bernoulli</code> distribution,
+called <code>probability</code> in the <code>flip</code> function, is
+assumed by convention to be the probability of obtaining the outcome
+<code>TRUE</code>. In our case, this would be the probability of
+obtaining heads.</p>
+<p>The <code>observe</code> statement weights the simulation with the
+likelihood of observing a particlar data point from the Bernoulli
+distribution.</p>
+<p>This completes the TreePPL description of the coin flipping model.
+All TreePPL model descriptions essentially follow the same format. For a
+more complete coverage of the TreePPL language, see the language
+overview in the <a href="https://treeppl.org/docs/" class="external-link">TreePPL online
+documentation</a>.</p>
+<p>Now we can start analyzing the model by inferring the value of
+<code>p</code> given some observed sequence of coin flips. To do this,
+we need to provide the observations in a suitable format. To load the
+example data provided in the <em>treepplr</em> package, use:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_data.html">tp_data</a></span><span class="op">(</span><span class="st">"coin"</span><span class="op">)</span></span></code></pre></div>
+<p>We can look at the structure of the input data using</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 1</span></span>
 <span><span class="co">#&gt;  $ coinflips: logi [1:20] FALSE TRUE TRUE TRUE FALSE TRUE ...</span></span></code></pre></div>
+<p>The data are provided as an R list. Each element in the list is named
+using the corresponding argument name expected by the TreePPL model
+function. The arguments can be given in any order in the list. In our
+case, the model function only takes one argument called
+<code>coinflips</code>, so the R list only contains one element named
+<code>coinflips</code>.</p>
+<p>The TreePPL compiler requires data in JSON format. The conversion
+from R variables to appropriate JSON code understood by TreePPL is done
+automatically by <em>treepplr</em> for supported data types. For
+instance, logical vectors in R are converted to sequences of Booleans
+(<code>Bool[]</code>) in TreePPL.</p>
 </div>
 <div class="section level2">
 <h2 id="run-treeppl">Run TreePPL<a class="anchor" aria-label="anchor" href="#run-treeppl"></a>
 </h2>
-<p>Now we can compile and run the TreePPL program. The function
-<em>tp_treeppl()</em> has many optional arguments to change the
-inference method used. Here, we will use the default settings for
-inference methods, run 100 sweeps and 100 particles within each
-sweep.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>Now we can compile and run the TreePPL program, inferring the
+posterior distribution of <code>p</code> conditioned on the input data.
+This is done using the <em>tp_treeppl()</em> function provided by
+<em>treepplr</em>. The function has many optional arguments that allow
+you to select among the inference methods supported by TreePPL, and
+setting relevant options for each one of them. For an up-to-date
+description of available inference strategies supported, see the
+documentation of the <code>tp_treeppl</code> function.</p>
+<p>Here, we will use the default settings for inference methods. It uses
+sequential Monte Carlo (SMC), specifically the bootstrap particle filter
+version (the <code>method=smc-bpf</code> option). It runs 100 sweeps
+(100 SMC runs, if you wish), using 100 particles for each sweep
+(<code>n_runs=100, samples=100</code>).</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_treeppl.html">tp_treeppl</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model</span>, data <span class="op">=</span> <span class="va">data</span>, samples <span class="op">=</span> <span class="fl">100</span>, n_runs <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+<p>The run should take a few seconds to complete depending on your
+machine.</p>
+<p>In general, the TreePPL inference strategies can be described as
+nested approaches where the outermost shell defines the character of the
+inference output. If the outer shell is SMC, as is the case here, the
+returned object will be a nested R list. Each entry in the outermost
+list layer will correspond to a sweep. Each sweep will contain three
+values: the normalizing constant estimated in that sweep, each of the
+returned values from the model function (one returned value for each SMC
+particle), and the likelihood weight of each returned value (one weight
+for each particle).</p>
 </div>
 <div class="section level2">
 <h2 id="plot-the-posterior-distribution">Plot the posterior distribution<a class="anchor" aria-label="anchor" href="#plot-the-posterior-distribution"></a>
 </h2>
-<p>Just as we compare different MCMC runs/chains to test for
-convergence, in SMC we tun several sweeps and then compare their
-normalizing constants to test if they converged to the same posterior
-distribution. The criterion for convergence is that the variance of the
-normalizing constants across all sweeps is lower than 1.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>In SMC we can assess the quality of the inference by running several
+sweeps and comparing their normalizing constants to test if they
+generated similar estimates of the posterior distribution. A popular
+argument from the SMC literature suggests that the SMC estimate is
+accurate if the variance of the estimates of the normalizing constant
+across sweeps is lower than 1.</p>
+<p>To check the variance of the normalizing constant, use the
+<em>tp_smc_convergence()</em> function.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tp_smc_convergence.html">tp_smc_convergence</a></span><span class="op">(</span><span class="va">output_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.01126985</span></span>
-<span></span>
-<span><span class="va">output</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/tp_parse.html">tp_parse</a></span><span class="op">(</span><span class="va">output_list</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="co">#&gt; [1] 0.01126985</span></span></code></pre></div>
+<p>It seems that our run provides a quite accurate estimate of the
+posterior distribution, as the variance is much smaller than 1.0.</p>
+<p>It is also easy to plot the sampled values. The <em>tp_parse()</em>
+function helps us convert the results returned by TreePPL into an R list
+of appropriately weighted values, taking both the particle weights and
+normalizing constants (the sweep weights, if you wish) into account.
+Note that both the particle weights and normalizing constants are given
+in log units.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/tp_parse.html">tp_parse</a></span><span class="op">(</span><span class="va">output_list</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>total_lweight <span class="op">=</span> <span class="va">log_weight</span> <span class="op">+</span> <span class="va">norm_const</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>norm_weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">total_lweight</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">total_lweight</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -119,7 +251,7 @@ normalizing constants across all sweeps is lower than 1.</p>
 <span>                 col <span class="op">=</span> <span class="st">"white"</span>, fill <span class="op">=</span> <span class="st">"lightblue"</span>, binwidth<span class="op">=</span><span class="fl">0.01</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="coin-example_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="480"></p>
+<p><img src="coin-example_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="480"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
