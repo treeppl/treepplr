@@ -236,5 +236,74 @@ stored_files <- function(exten) {
 
 
 
+# Read alignment in FASTA or NEXUS (for tree inference)
+read_aln <- function(file) {
+  # define the encoding
+  # NB: everything that is not ACTG will be replace with gap ("-") within the function
+  base_code <- c(
+    "A" = 0,
+    "C" = 1,
+    "G" = 2,
+    "T" = 3,
+    "-" = 4
+  )
+
+  # Print an error message if the input is not in fasta or nexus
+  if (!grepl("\\.(fasta|fas|nexus|nex)$", file, ignore.case = TRUE)) {
+    stop("Please, provide an input file in fasta or nexus format")
+  }
+
+  # If the input is a FASTA file
+  else if (grepl("\\.(fasta|fas)$", file, ignore.case = TRUE)) {
+    raw <- readLines(file, warn = FALSE)
+    raw <- raw[nzchar(raw)] # remove empty lines, if any
+    #nm <- gsub(">", "", raw[grepl(">", raw)]) # sequence names
+    sq <- raw[!grepl(">", raw)] # sequences
+    # sequence matrix
+    sq_list <- strsplit(sq, "")
+    sq_mat <- do.call(rbind, sq_list)
+    sq_mat <- toupper(sq_mat)
+    sq_mat[] <- gsub("[^ACGT]", "-", sq_mat, ignore.case = TRUE) # replace everything that is not ACTG with "-"
+    # numerical matrix
+    num_mat <- matrix(
+      base_code[sq_mat],
+      nrow = nrow(sq_mat),
+      ncol = ncol(sq_mat)
+      #dimnames = list(nm, NULL)
+    )
+    # final list
+    res <- list(data = num_mat)
+    return(res)
+
+    # If the input is a NEXUS file
+  } else if (grepl("\\.(nexus|nex)$", file, ignore.case = TRUE)) {
+    # nexus matrix block
+    raw <- readLines(file, warn = FALSE)
+    raw <- raw[nzchar(raw)] # remove empty lines, if any
+    start <- grep("^[[:space:]]*matrix[[:space:]]*$", tolower(raw))
+    end <- grep(";", raw)
+    end <- end[end > start][1]
+    mat <- raw[(start + 1):(end - 1)] # extract contents
+    mat <- trimws(mat)
+    mat <- mat[nzchar(mat)] # remove empty entries
+    #nm <- sub("\\s+.*$", "", mat) # sequence names (split on the 1st white space)
+    sq <- sub("^\\S+\\s+", "", mat) # sequences
+    # sequence matrix
+    sq_list <- strsplit(sq, "")
+    sq_mat <- do.call(rbind, sq_list)
+    sq_mat <- toupper(sq_mat)
+    sq_mat[] <- gsub("[^ACGT]", "-", sq_mat, ignore.case = TRUE) # replace everything that is not ACTG with "-"
+    # numerical matrix
+    num_mat <- matrix(
+      base_code[sq_mat],
+      nrow = nrow(sq_mat),
+      ncol = ncol(sq_mat)
+      #dimnames = list(nm, NULL)
+    )
+    # final list
+    res <- list(data = num_mat)
+    return(res)
+  }
+}
 
 

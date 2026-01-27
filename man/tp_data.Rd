@@ -7,12 +7,14 @@
 tp_data(data_input)
 }
 \arguments{
-\item{data_input}{One of tree options:
+\item{data_input}{One of the following options:
 \itemize{
 \item A list (or structured list) containing TreePPL data, OR
 \item A string with the name of a model supported by treepplr
-(see \code{\link[=tp_model_library]{tp_model_library()}}), OR
-\item The full path to the file in TreePPL JSON format containing the data.
+(see \code{\link[=tp_model_names]{tp_model_names()}}), OR
+\item A list (or structured list) containing TreePPL data, OR
+\item The full path of a multiple sequence alignment in fasta (.fasta, .fas) or nexus (.nexus, .nex) format;
+currently supported for \code{tree_inference} only, (see \code{\link[=tp_model_names]{tp_model_names()}}).
 }}
 
 \item{dir}{The directory where you want to save the data file in JSON format.
@@ -22,5 +24,19 @@ Default is \code{\link[base:tempfile]{base::tempdir()}}.}
 The path for the data file that will be used by \link{tp_run}.
 }
 \description{
-Prepare data input for \code{\link[=tp_run]{tp_run()}}.
+\code{tp_data} takes data and prepares it to be used by
+\code{\link[=tp_treeppl]{tp_treeppl()}}.
+}
+\examples{
+\donttest{
+# Example using a model name supported by TreePPL
+input <- tp_data("tree_inference")
+input
+
+# Example using an internal FASTA file (same input data as before, but in fasta format)
+fasta_file <- system.file("extdata", "tree_inference.fasta", package = "treepplr")
+input <- tp_data(fasta_file)
+input
+}
+
 }
