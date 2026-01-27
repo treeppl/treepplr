@@ -52,35 +52,55 @@ tp_model <- function(model_input) {
 #' `tp_data` takes data and prepares it to be used by
 #' [treepplr::tp_treeppl()].
 #'
-#' @param data_input One of tree options:
+#' @param data_input One of the following options:
 #'   * The full path of the JSON file that contains the data, OR
 #'   * A string with the name of a model supported by treepplr
 #' (see [treepplr::tp_model_names()]), OR
-#'   * A list (or structured list) containing TreePPL data.
+#'   * A list (or structured list) containing TreePPL data, OR
+#'   * The full path of a multiple sequence alignment in fasta (.fasta, .fas) or nexus (.nexus, .nex) format;
+#'   currently supported for `tree_inference` only, (see [treepplr::tp_model_names()]).
 #'
 #' @return a list, see [treepplr::tp_check_input()] for further details.
 #' @export
+#' @examples
+#' \donttest{
+#' # Example using a model name supported by TreePPL
+#' input <- tp_data("tree_inference")
+#' input
+#'
+#' # Example using an internal FASTA file (same input data as before, but in fasta format)
+#' fasta_file <- system.file("extdata", "tree_inference.fasta", package = "treepplr")
+#' input <- tp_data(fasta_file)
+#' input
+#'}
 #'
 tp_data <- function(data_input) {
-  res <- try(file.exists(data_input), silent = TRUE)
-  # If path exists, import data from file
-  if (!is(res, "try-error") && res) {
-    data <- tp_list(jsonlite::fromJSON(data_input))
-    # If path doesn't exist
-  } else if (assertthat::is.string(data_input)) {
-    res <- try(get(data_input, treepplr::tp_model_names()), silent = TRUE)
-    # data_input has the name of a known model
-    if (!is(res, "try-error")) {
-      data <- tp_list(find_file(res, "json"))
-    }
-    # OR data_input is a list (or a structured list)
-  } else if (is.list(data_input)) {
-    data <- tp_list(data_input)
-  }
-
-  if (is(data, "list")) {
+  # IF data_input is an alignment in fasta or nexus format
+  if (grepl("\\.(fasta|fas|nexus|nex)$", data_input, ignore.case = TRUE)) {
+    data <- read_aln(data_input)
     data
   } else {
-    stop("Unknow R type (not a valid path, known data model, or list)")
+    res <- try(file.exists(data_input), silent = TRUE)
+    # If path exists, import data from file
+    if (!is(res, "try-error") && res) {
+      data <- tp_list(jsonlite::fromJSON(data_input))
+      # If path doesn't exist
+    } else if (assertthat::is.string(data_input)) {
+      res <- try(get(data_input, treepplr::tp_model_names()), silent = TRUE)
+      # data_input has the name of a known model
+      if (!is(res, "try-error")) {
+        data <- tp_list(find_file(res, "json"))
+      }
+      # OR data_input is a list (or a structured list)
+    } else if (is.list(data_input)) {
+      data <- tp_list(data_input)
+    }
+
+    if (is(data, "list")) {
+      data
+    } else {
+      stop("Unknow R type (not a valid path, known data model, or list)")
+    }
   }
 }
+
