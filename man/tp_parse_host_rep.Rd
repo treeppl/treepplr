@@ -8,7 +8,7 @@ tp_parse_host_rep(treeppl_out)
 }
 \arguments{
 \item{treeppl_out}{a character vector giving the TreePPL json output
-produced by \link{tp_treeppl}.}
+produced by \link{tp_run}.}
 }
 \value{
 A list (n = n_runs) of data frames with the output from inference

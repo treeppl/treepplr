@@ -1,6 +1,27 @@
-#' Fetch the latest version of treeppl
-#' @export
+# Platform-dependent treeppl self-contained installation
+installing_treeppl <- function() {
+  tag <- tp_fp_fetch()
+  if (Sys.info()['sysname'] == "Windows") {
+    # No self container for Windows, need to install it manually
+    "tpplc"
+  } else if(Sys.info()['sysname'] == "Linux") {
+    path <- system.file("treeppl-linux", package = "treepplr")
+    file_name <- paste0("treeppl-",substring(tag, 2))
+  } else {#Mac OS have a lot of different name
+    path <- system.file("treeppl-mac", package = "treepplr")
+    file_name <- paste0("treeppl-",substring(tag, 2))
+  }
+  # Test if tpplc is already here
+  tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
+  if(!file.exists(tpplc_path)) {
+    utils::untar(list.files(path=path, full.names=TRUE),
+                 exdir="/tmp")
+  }
+  tpplc_path
+}
 
+
+# Fetch the latest version of treeppl
 tp_fp_fetch <- function() {
   if (Sys.info()["sysname"] == "Windows") {
     # no self container for Windows, need to install it manually
@@ -53,28 +74,6 @@ tp_fp_fetch <- function() {
   repo_info[[1]]$tag_name
 }
 
-# Platform-dependent treeppl self contain installation
-installing_treeppl <- function() {
-  tag <- tp_fp_fetch()
-  if (Sys.info()['sysname'] == "Windows") {
-    # No self container for Windows, need to install it manually
-    "tpplc"
-  } else if(Sys.info()['sysname'] == "Linux") {
-    path <- system.file("treeppl-linux", package = "treepplr")
-    file_name <- paste0("treeppl-",substring(tag, 2))
-  } else {#Mac OS have a lot of different name
-    path <- system.file("treeppl-mac", package = "treepplr")
-    file_name <- paste0("treeppl-",substring(tag, 2))
-  }
-  # Test if tpplc is already here
-  tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
-  if(!file.exists(tpplc_path)) {
-    utils::untar(list.files(path=path, full.names=TRUE),
-                 exdir="/tmp")
-  }
-  tpplc_path
-}
-
 
 
 #' Temporary directory for running treeppl
@@ -118,47 +117,41 @@ sep <- function() {
 }
 
 
+
+#### Code below needs updating - Stenio is on it ####
+
+
 #' Model names supported by treepplr
 #'
-#' @description Provides a list of all model names supported by treepplr.
-#' The names can also be used to find data for these models
-#' (see [treepplr::tp_data]).
+#' @description Provides a list of all models in the TreePPL model library.
 #'
 #' @return A list of model names.
 #' @export
-tp_model_names <- function() {
-  list(
-    custom = "custom",
-    coin = "coin",
-    hostrep3states = "hostrep3states",
-    hostrep2states = "hostrep2states",
-    tree_inference = "tree_inference",
-    crbd = "crbd",
-    clads = "clads"
-  )
+tp_model_library <- function() {
+
+
 }
 
 
-# Find model and data files for model_name
-find_file <- function(model_name, exten) {
-  if (exten == "tppl") {
-    readr::read_file(paste0(
-      system.file("extdata", package = "treepplr"),
-      sep(),
-      model_name,
-      ".",
-      exten
-    ))
-  } else if (exten == "json") {
-    jsonlite::fromJSON(paste0(
-      system.file("extdata", package = "treepplr"),
-      sep(),
-      model_name,
-      ".",
-      exten
-    ))
-  }
+# Find model for model_name
+tp_find_model <- function(model_name) {
+
+  #### get treeppl version instead of hard coding it ####
+  res = system(paste0("find /tmp/treeppl-0.2 -name ", model_name, ".tppl"),
+         intern = T)
 }
+
+# Find data for model_name
+tp_find_data <- function(model_name) {
+
+  #### get treeppl version instead of hard coding it ####
+  system(paste0("find /tmp/treeppl-0.2 -name testdata_", model_name, ".json"),
+         intern = T)
+}
+
+
+
+#### Do we need these? ####
 
 #' Model file names stored by user in [base::tempdir] using
 #' [treepplr::tp_write]
@@ -213,30 +206,8 @@ stored_files <- function(exten) {
 }
 
 
-#' Create a flat list
-#'
-#' @description
-#' `tp_list` takes a variable number of arguments and returns a list.
-#'
-#' @param ... Variadic arguments (see details).
-#'
-#' @details
-#' This function takes a variable number of arguments, so that users can pass as
-#' arguments either independent lists, or a single structured
-#' list of list (name_arg = value_arg).
-#'
-#' @return A list.
-#' @export
-#'
-tp_list <- function(...) {
-  dotlist <- list(...)
 
-  if (length(dotlist) == 1L && is.list(dotlist[[1]])) {
-    dotlist <- dotlist[[1]]
-  }
 
-  dotlist
-}
 
 
 

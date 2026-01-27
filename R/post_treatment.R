@@ -4,7 +4,7 @@
 #' `tp_parse` takes TreePPL json output and returns a data.frame
 #'
 #' @param treeppl_out a character vector giving the TreePPL json output
-#' produced by [tp_treeppl].
+#' produced by [tp_run].
 #'
 #' @return A data frame with the output from inference in TreePPL.
 #' @export
@@ -46,7 +46,7 @@ tp_parse <- function(treeppl_out) {
 #' model of host repertoire evolution and returns a data.frame
 #'
 #' @param treeppl_out a character vector giving the TreePPL json output
-#' produced by [tp_treeppl].
+#' produced by [tp_run].
 #'
 #' @return A list (n = n_runs) of data frames with the output from inference
 #' in TreePPL under the host repertoire evolution model.
@@ -232,7 +232,7 @@ peel_tree <- function(subtree,
 #' Check for convergence across multiple SMC sweeps/runs
 #'
 #' @param treeppl_out a character vector giving the TreePPL json output
-#' produced by [tp_treeppl].
+#' produced by [tp_run].
 #'
 #' @returns Variance in the normalizing constants across SMC sweeps.
 #' @export

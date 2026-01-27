@@ -1,3 +1,119 @@
+
+#' List expected input variables for a model
+#'
+#' @param model
+#'
+#' @returns The expected input data for a given TreePPL model.
+#' @export
+#'
+tp_expected_input <- function(model) {
+
+  #### under development here and in treeppl ####
+
+}
+
+
+
+#' Import data for TreePPL program
+#'
+#' @description
+#' Prepare data input for [treepplr::tp_run()].
+#'
+#' @param data_input One of tree options:
+#'   * A list (or structured list) containing TreePPL data, OR
+#'   * A string with the name of a model supported by treepplr
+#' (see [treepplr::tp_model_library()]), OR
+#'   * The full path to the file in TreePPL JSON format containing the data.
+#' @param dir The directory where you want to save the data file in JSON format.
+#' Default is [base::tempdir()].
+#'
+#' @return The path for the data file that will be used by [treepplr::tp_run].
+#' @export
+#'
+tp_data <- function(data_input) {
+
+  if (assertthat::is.string(data_input)) {
+
+    res <- try(file.exists(data_input), silent = TRUE)
+
+    # If path exists, import data from file
+    if (!is(res, "try-error") && res) {
+      data_path <- data_input
+      names(data_path) <- "data"
+
+      # If path doesn't exist
+    } else {
+      res_lib <- tp_find_data(data_input)
+
+      # model_input has the name of a known model
+      if (length(res_lib) != 0) {
+        data_path <- res_lib
+        names(data_path) <- paste0("testdata_",data_input)
+
+      } else {
+        stop("Invalid input string.")
+      }
+    }
+
+    # OR data_input is a list (or a structured list)
+  } else if (is.list(data_input)) {
+    # flatten the list
+    data_list <- tp_list(data_input)
+    # write json with input data
+    if (!is.null(data)) {
+      data_path <- tp_write_data(data_list)
+      names(data_path) <- "data"
+    }
+
+  } else {
+    stop("Unknow R type (not a valid path, known data model, or list")
+  }
+
+  return(data_path)
+
+}
+
+
+tp_write_data <- function(data_list, data_file_name = "tmp_data_file") {
+
+  input_json <- jsonlite::toJSON(data_list, auto_unbox=TRUE)
+  path <- paste0(tp_tempdir(), data_file_name, ".json")
+  cat(data, file = path)
+
+  return(path)
+
+}
+
+
+#' Create a flat list
+#'
+#' @description
+#' `tp_list` takes a variable number of arguments and returns a list.
+#'
+#' @param ... Variadic arguments (see details).
+#'
+#' @details
+#' This function takes a variable number of arguments, so that users can pass as
+#' arguments either independent lists, or a single structured
+#' list of list (name_arg = value_arg).
+#'
+#' @return A list.
+tp_list <- function(...) {
+  dotlist <- list(...)
+
+  if (length(dotlist) == 1L && is.list(dotlist[[1]])) {
+    dotlist <- dotlist[[1]]
+  }
+
+  dotlist
+}
+
+
+
+# UTILS: Data conversion
+
+## Phylogenetic trees
+
 #' Convert phylo obj to TreePPL tree
 #'
 #' @description
@@ -15,7 +131,6 @@
 #' @return A TreePPL json str
 #'
 #' @export
-
 tp_phylo_to_tpjson <- function(phylo_tree, age = "") {
 
   name <- "tree"
@@ -41,8 +156,6 @@ tp_phylo_to_tpjson <- function(phylo_tree, age = "") {
 #' @param phylo_tree an object of class [ape::phylo].
 #'
 #' @return A pair (root index, tppl_tree)
-#'
-
 tp_phylo_to_tppl_tree <- function(phylo_tree) {
   name <- deparse(substitute(phylo_tree))
 
@@ -304,7 +417,6 @@ build_newick_node <- function(node, parent_age) {
 }
 
 
-
 # Function to ladderize tree and correct tip label sequence
 ladderize_tree <- function(tree, temp_file = "temp", orientation = "left"){
   if(file.exists(paste0("./", temp_file))){
@@ -321,4 +433,8 @@ ladderize_tree <- function(tree, temp_file = "temp", orientation = "left"){
   file.remove(paste0("./", temp_file, ".tre"))
   return(tree_lad)
 }
+
+
+## Sequence data
+
 

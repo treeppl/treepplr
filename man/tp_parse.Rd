@@ -8,7 +8,7 @@ tp_parse(treeppl_out)
 }
 \arguments{
 \item{treeppl_out}{a character vector giving the TreePPL json output
-produced by \link{tp_treeppl}.}
+produced by \link{tp_run}.}
 }
 \value{
 A data frame with the output from inference in TreePPL.
