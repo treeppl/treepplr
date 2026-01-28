@@ -7,12 +7,14 @@
 tp_data(data_input)
 }
 \arguments{
-\item{data_input}{One of tree options:
+\item{data_input}{One of the following options:
 \itemize{
 \item The full path of the JSON file that contains the data, OR
 \item A string with the name of a model supported by treepplr
 (see \code{\link[=tp_model_names]{tp_model_names()}}), OR
-\item A list (or structured list) containing TreePPL data.
+\item A list (or structured list) containing TreePPL data, OR
+\item The full path of a multiple sequence alignment in fasta (.fasta, .fas) or nexus (.nexus, .nex) format;
+currently supported for \code{tree_inference} only, (see \code{\link[=tp_model_names]{tp_model_names()}}).
 }}
 }
 \value{
@@ -21,4 +23,17 @@ a list, see \code{\link[=tp_check_input]{tp_check_input()}} for further details.
 \description{
 \code{tp_data} takes data and prepares it to be used by
 \code{\link[=tp_treeppl]{tp_treeppl()}}.
+}
+\examples{
+\donttest{
+# Example using a model name supported by TreePPL
+input <- tp_data("tree_inference")
+input
+
+# Example using an internal FASTA file (same input data as before, but in fasta format)
+fasta_file <- system.file("extdata", "tree_inference.fasta", package = "treepplr")
+input <- tp_data(fasta_file)
+input
+}
+
 }
