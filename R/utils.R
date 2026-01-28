@@ -129,6 +129,25 @@ sep <- function() {
 #' @export
 tp_model_library <- function() {
 
+  # take whatever treeppl version is in the tmp
+  fd <- list.files("/tmp", pattern = "treeppl", full.names = TRUE)
+  # make sure you get the most recent version if you have more than one treeppl folder in the tmp
+  fd <- sort(fd, decreasing = TRUE)[1]
+  # go to the right treeppl folder, whatever it is called
+  fd <- list.files(fd, pattern = "treeppl", full.names = TRUE)
+  # add the rest of the path
+  fd <- paste0(fd, "/lib/mcore/treeppl/models/")
+  # model names
+  mn <- list.files(fd, full.names = TRUE, recursive = TRUE, pattern = "\\.tppl$")
+  # results in a data frame
+  rs <- data.frame(
+    "category" = sub(".*models//([^/]+)/.*", "\\1", mn),
+    "model_name" = sub(".*/([^/]+)\\.tppl$", "\\1", mn)
+  )
+  # order by category then by model name
+  rs <- rs[order(rs$category, rs$model_name, decreasing = FALSE), ]
+  rownames(rs) <- NULL
+  rs
 
 }
 
@@ -136,16 +155,24 @@ tp_model_library <- function() {
 # Find model for model_name
 tp_find_model <- function(model_name) {
 
-  #### get treeppl version instead of hard coding it ####
-  res = system(paste0("find /tmp/treeppl-0.2 -name ", model_name, ".tppl"),
+  # take whatever treeppl version is in the tmp
+  version <- list.files("/tmp", pattern = "treeppl", full.names = FALSE)
+  # make sure you get the most recent version if you have more than one treeppl folder in the tmp
+  version <- sort(version, decreasing = TRUE)[1]
+
+  res = system(paste0("find /tmp/", version," -name ", model_name, ".tppl"),
          intern = T)
 }
 
 # Find data for model_name
 tp_find_data <- function(model_name) {
 
-  #### get treeppl version instead of hard coding it ####
-  system(paste0("find /tmp/treeppl-0.2 -name testdata_", model_name, ".json"),
+  # take whatever treeppl version is in the tmp
+  version <- list.files("/tmp", pattern = "treeppl", full.names = FALSE)
+  # make sure you get the most recent version if you have more than one treeppl folder in the tmp
+  version <- sort(version, decreasing = TRUE)[1]
+
+  system(paste0("find /tmp/", version ," -name testdata_", model_name, ".json"),
          intern = T)
 }
 
