@@ -21,7 +21,6 @@ tp_expected_input <- function(model) {
 #'
 #' @param data_input One of the following options:
 #'   * A list (or structured list) containing TreePPL data, OR
-#'   * The full path to the file in TreePPL JSON format containing the data, OR
 #'   * The full path of a multiple sequence alignment in fasta (.fasta, .fas)
 #'   or nexus (.nexus, .nex) format, OR
 #'   * For test data, a string with the name of a model supported by treepplr
@@ -56,41 +55,32 @@ tp_data <- function(data_input) {
 
     } else {
 
-      res <- try(file.exists(data_input), silent = TRUE)
+      res_lib <- tp_find_data(data_input)
 
-      # If path exists, import data from file
-      if (!is(res, "try-error") && res) {
-        data_path <- data_input
-        names(data_path) <- "data"
+      # model_input has the name of a known model
+      if (length(res_lib) != 0) {
+        data_path <- res_lib
+        names(data_path) <- paste0("testdata_",data_input)
 
-        # If path doesn't exist
       } else {
-        res_lib <- tp_find_data(data_input)
-
-        # model_input has the name of a known model
-        if (length(res_lib) != 0) {
-          data_path <- res_lib
-          names(data_path) <- paste0("testdata_",data_input)
-
-        } else {
-          stop("Invalid input string.")
-        }
+        stop("Invalid input string.")
       }
     }
 
-      # OR data_input is a list (or a structured list)
-    } else if (is.list(data_input)) {
-      # flatten the list
-      data_list <- tp_list(data_input)
-      # write json with input data
-      data_path <- tp_write_data(data_list)
-      names(data_path) <- "data"
+    # OR data_input is a list (or a structured list)
+  } else if (is.list(data_input)) {
 
-    } else {
-      stop("Unknow R type (not a valid path, known data model, or list")
-    }
+    # flatten the list
+    data_list <- tp_list(data_input)
+    # write json with input data
+    data_path <- tp_write_data(data_list)
+    names(data_path) <- "data"
 
-    return(data_path)
+  } else {
+    stop("Unknow R type (not a valid path, known data model, or list")
+  }
+
+  return(data_path)
 
 }
 

@@ -20,8 +20,8 @@ tp_run_options <- function(...) {
 #'
 #' @param compiled_model a [base::character] with the full path to the compiled model
 #' outputted by [treepplr::tp_compile].
-#' @param data a [base::character] with the full path to the data file in JSON format
-#' outputted by [treepplr::tp_data].
+#' @param data a [base::character] with the full path to the data file in TreePPL
+#' JSON format (as outputted by [treepplr::tp_data]).
 #' @param n_runs When using MCMC, a [base::integer] giving the number of runs to be done.
 #' @param n_sweeps When using SMC, a [base::integer] giving the number of SMC sweeps to be done.
 #' @param dir a [base::character] with the full path to the directory where you
