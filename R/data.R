@@ -19,57 +19,78 @@ tp_expected_input <- function(model) {
 #' @description
 #' Prepare data input for [treepplr::tp_run()].
 #'
-#' @param data_input One of tree options:
+#' @param data_input One of the following options:
 #'   * A list (or structured list) containing TreePPL data, OR
-#'   * A string with the name of a model supported by treepplr
-#' (see [treepplr::tp_model_library()]), OR
-#'   * The full path to the file in TreePPL JSON format containing the data.
+#'   * The full path to the file in TreePPL JSON format containing the data, OR
+#'   * The full path of a multiple sequence alignment in fasta (.fasta, .fas)
+#'   or nexus (.nexus, .nex) format, OR
+#'   * For test data, a string with the name of a model supported by treepplr
+#' (see [treepplr::tp_model_library()]).
+#'
 #' @param dir The directory where you want to save the data file in JSON format.
 #' Default is [base::tempdir()].
 #'
-#' @return The path for the data file that will be used by [treepplr::tp_run].
+#' @return The path for the data file that will be used by [treepplr::tp_run()].
 #' @export
+#' @examples
+#' \donttest{
+#' # Example using a model name supported by TreePPL
+#' input <- tp_data("tree_inference")
+#' input
+#'
+#' # Example using an internal FASTA file (same input data as before, but in fasta format)
+#' fasta_file <- system.file("extdata", "tree_inference.fasta", package = "treepplr")
+#' input <- tp_data(fasta_file)
+#' input
+#'}
 #'
 tp_data <- function(data_input) {
 
   if (assertthat::is.string(data_input)) {
 
-    res <- try(file.exists(data_input), silent = TRUE)
-
-    # If path exists, import data from file
-    if (!is(res, "try-error") && res) {
-      data_path <- data_input
+    if (grepl("\\.(fasta|fas|nexus|nex)$", data_input, ignore.case = TRUE)) {
+      data <- read_aln(data_input)
+      data_list <- tp_list(list(data))
+      data_path <- tp_write_data(data_list)
       names(data_path) <- "data"
 
-      # If path doesn't exist
     } else {
-      res_lib <- tp_find_data(data_input)
 
-      # model_input has the name of a known model
-      if (length(res_lib) != 0) {
-        data_path <- res_lib
-        names(data_path) <- paste0("testdata_",data_input)
+      res <- try(file.exists(data_input), silent = TRUE)
 
+      # If path exists, import data from file
+      if (!is(res, "try-error") && res) {
+        data_path <- data_input
+        names(data_path) <- "data"
+
+        # If path doesn't exist
       } else {
-        stop("Invalid input string.")
+        res_lib <- tp_find_data(data_input)
+
+        # model_input has the name of a known model
+        if (length(res_lib) != 0) {
+          data_path <- res_lib
+          names(data_path) <- paste0("testdata_",data_input)
+
+        } else {
+          stop("Invalid input string.")
+        }
       }
     }
 
-    # OR data_input is a list (or a structured list)
-  } else if (is.list(data_input)) {
-    # flatten the list
-    data_list <- tp_list(data_input)
-    # write json with input data
-    if (!is.null(data)) {
+      # OR data_input is a list (or a structured list)
+    } else if (is.list(data_input)) {
+      # flatten the list
+      data_list <- tp_list(data_input)
+      # write json with input data
       data_path <- tp_write_data(data_list)
       names(data_path) <- "data"
+
+    } else {
+      stop("Unknow R type (not a valid path, known data model, or list")
     }
 
-  } else {
-    stop("Unknow R type (not a valid path, known data model, or list")
-  }
-
-  return(data_path)
+    return(data_path)
 
 }
 
