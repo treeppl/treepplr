@@ -1,14 +1,59 @@
-#' Parse simple TreePPL json output
+#' Parse simple TreePPL json SMC output
 #'
 #' @description
-#' `tp_parse` takes TreePPL json output and returns a data.frame
+#' `tp_parse_smc` takes TreePPL json SMC output and returns a data.frame
 #'
 #' @param treeppl_out a character vector giving the TreePPL json output
-#' produced by [tp_run].
+#' produced by [tp_run] using an SMC method.
 #'
 #' @return A data frame with the output from inference in TreePPL.
 #' @export
-tp_parse <- function(treeppl_out) {
+tp_parse_smc <- function(treeppl_out) {
+
+  result_df <- list()
+
+  for (i in seq_along(treeppl_out)) {
+
+    samples_c <- unlist(treeppl_out[[i]]$samples)
+    log_weight_c <- unlist(treeppl_out[[i]]$weights)
+
+    if(is.null(names(samples_c))){
+      result_df <- rbind(result_df,
+                         data.frame(run = i,
+                                    samples = samples_c,
+                                    log_weight = log_weight_c,
+                                    norm_const = treeppl_out[[i]]$normConst)
+      )
+    } else {
+      result_df <- rbind(result_df,
+                         data.frame(run = i,
+                                    parameter = names(samples_c),
+                                    samples = samples_c,
+                                    log_weight = log_weight_c,
+                                    norm_const = treeppl_out[[i]]$normConst)
+      )
+    }
+  }
+
+  result_df <- result_df |>
+    dplyr::mutate(total_lweight = .data$log_weight + .data$norm_const) |>
+    dplyr::mutate(norm_weight = exp(.data$total_lweight - max(.data$total_lweight))) |>
+    dplyr::select(-"total_lweight")
+
+  return(result_df)
+}
+
+#' Parse simple TreePPL json MCMC output
+#'
+#' @description
+#' `tp_parse_mcmc` takes TreePPL json MCMC output and returns a data.frame
+#'
+#' @param treeppl_out a character vector giving the TreePPL json output
+#' produced by [tp_run] using an MCMC method.
+#'
+#' @return A data frame with the output from inference in TreePPL.
+#' @export
+tp_parse_mcmc <- function(treeppl_out) {
 
   result_df <- list()
 
@@ -239,7 +284,7 @@ peel_tree <- function(subtree,
 #'
 tp_smc_convergence <- function(treeppl_out) {
 
-  output <- tp_parse(treeppl_out)
+  output <- tp_parse_smc(treeppl_out)
   zs <- output |>
     dplyr::slice_head(n = 1, by = .data$run) |>
     dplyr::pull(.data$norm_const)

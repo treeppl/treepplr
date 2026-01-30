@@ -120,7 +120,7 @@ tp_compile <- function(model,
 #'   * A string containing the entire TreePPL code.
 #'
 #' @return The path to the TreePPL model file
-#'
+#' @export
 tp_model <- function(model_input) {
 
   if (!assertthat::is.string(model_input)){
