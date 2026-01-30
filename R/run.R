@@ -98,7 +98,7 @@ tp_run <- function(compiled_model,
 
   # simple parsing
   #### change this? ####
-  json_out <- readLines(output_path) %>%
+  json_out <- readLines(output_path) |>
     lapply(jsonlite::fromJSON, simplifyVector = FALSE)
 
   return(json_out)

@@ -25,8 +25,8 @@ Imports:
     gh,
     curl,
     cli,
-    magrittr,
-    bnpsd
+    bnpsd,
+    rlang
 Suggests:
     devtools,
     ggplot2,
@@ -40,8 +40,7 @@ Suggests:
     treeio (>= 1.32.0),
     rmarkdown,
     pandoc,
-    dplyr,
-    rlang
+    dplyr
 VignetteBuilder: knitr
 Config/Needs/website: rmarkdown
 Remotes: 

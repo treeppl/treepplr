@@ -240,9 +240,9 @@ peel_tree <- function(subtree,
 tp_smc_convergence <- function(treeppl_out) {
 
   output <- tp_parse(treeppl_out)
-  zs <- output %>%
-    dplyr::slice_head(n = 1, by = run) %>%
-    dplyr::pull(norm_const)
+  zs <- output |>
+    dplyr::slice_head(n = 1, by = .data$run) |>
+    dplyr::pull(.data$norm_const)
 
   return(var(zs))
 }
