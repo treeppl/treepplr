@@ -10,22 +10,20 @@ tp_data(data_input)
 \item{data_input}{One of the following options:
 \itemize{
 \item A list (or structured list) containing TreePPL data, OR
-\item A string with the name of a model supported by treepplr
-(see \code{\link[=tp_model_names]{tp_model_names()}}), OR
-\item A list (or structured list) containing TreePPL data, OR
-\item The full path of a multiple sequence alignment in fasta (.fasta, .fas) or nexus (.nexus, .nex) format;
-currently supported for \code{tree_inference} only, (see \code{\link[=tp_model_names]{tp_model_names()}}).
+\item The full path of a multiple sequence alignment in fasta (.fasta, .fas)
+or nexus (.nexus, .nex) format, OR
+\item For test data, a string with the name of a model supported by treepplr
+(see \code{\link[=tp_model_library]{tp_model_library()}}).
 }}
 
 \item{dir}{The directory where you want to save the data file in JSON format.
 Default is \code{\link[base:tempfile]{base::tempdir()}}.}
 }
 \value{
-The path for the data file that will be used by \link{tp_run}.
+The path for the data file that will be used by \code{\link[=tp_run]{tp_run()}}.
 }
 \description{
-\code{tp_data} takes data and prepares it to be used by
-\code{\link[=tp_treeppl]{tp_treeppl()}}.
+Prepare data input for \code{\link[=tp_run]{tp_run()}}.
 }
 \examples{
 \donttest{
