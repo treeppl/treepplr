@@ -131,17 +131,22 @@ tp_model <- function(model_input) {
   # If path exists, it's all good
   if (!is(res, "try-error") && res) {
     model_path <- model_input
-    names(model_path) <- "custom_model"
+    # name the model
+    if (is.null(names(model_path))){
+      names(model_path) <- "custom_model"
+    }
 
     # If path doesn't exist
   } else {
-    res_lib <- tp_find_model(model_input)
 
+    # It can be a model in the library
+    if (nchar(model_input) < 50) {
+    res_lib <- tp_find_model(model_input)
     # model_input has the name of a known model
     if (length(res_lib) != 0) {
       model_path <- res_lib
       names(model_path) <- model_input
-
+    }
       # OR model_input contains the model
       #### (needs to be verified as an appropriate model later) ####
     } else {
