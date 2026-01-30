@@ -43,7 +43,7 @@ the models within the [TreePPL github repository](https://github.com/treeppl/tre
 model_lib <- tp_model_library()
 ```
 
-To use one of these models you just need it's name in `model_lib$model_name` 
+To use one of these models you just need it's name in `model_lib$model_name`.
 
 If you want to use your own custom model, you will need to write it in TreePPL 
 language and pass it to an R object that contains either the full path to the 
@@ -118,6 +118,20 @@ to the compiled executable and choose how many independent runs you want to do.
 
 ```{r}
 output <- tp_run(compiled_model = exe_path, data = data_path, n_runs = 4)
+```
+
+Then you can parse your output to produce a data frame and check for convergence.
+
+```{r}
+# If using SMC
+output_df_smc <- tp_parse_smc(output)
+
+tp_smc_convergence(output_df_smc)
+```
+
+```{r}
+# If using MCMC
+output_df_mcmc <- tp_parse_mcmc(output)
 ```
 
 

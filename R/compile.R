@@ -1,7 +1,6 @@
 #' Options that can be passed to TreePPL compiler
 #'
 #' @returns A string with the output from the compiler's help <tpplc --help>
-#' @export
 #'
 tp_compile_options <- function(...) {
 

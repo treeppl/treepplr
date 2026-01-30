@@ -1,21 +1,27 @@
 # Platform-dependent treeppl self-contained installation
 installing_treeppl <- function() {
-  tag <- tp_fp_fetch()
-  if (Sys.info()['sysname'] == "Windows") {
-    # No self container for Windows, need to install it manually
-    "tpplc"
-  } else if(Sys.info()['sysname'] == "Linux") {
-    path <- system.file("treeppl-linux", package = "treepplr")
-    file_name <- paste0("treeppl-",substring(tag, 2))
-  } else {#Mac OS have a lot of different name
-    path <- system.file("treeppl-mac", package = "treepplr")
-    file_name <- paste0("treeppl-",substring(tag, 2))
-  }
-  # Test if tpplc is already here
-  tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
-  if(!file.exists(tpplc_path)) {
-    utils::untar(list.files(path=path, full.names=TRUE),
-                 exdir="/tmp")
+
+  if (Sys.getenv("TPPLC") != "") {
+    tpplc_path <- Sys.getenv("TPPLC")
+  } else{
+
+    tag <- tp_fp_fetch()
+    if (Sys.info()['sysname'] == "Windows") {
+      # No self container for Windows, need to install it manually
+      "tpplc"
+    } else if(Sys.info()['sysname'] == "Linux") {
+      path <- system.file("treeppl-linux", package = "treepplr")
+      file_name <- paste0("treeppl-",substring(tag, 2))
+    } else {#Mac OS have a lot of different name
+      path <- system.file("treeppl-mac", package = "treepplr")
+      file_name <- paste0("treeppl-",substring(tag, 2))
+    }
+    # Test if tpplc is already here
+    tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
+    if(!file.exists(tpplc_path)) {
+      utils::untar(list.files(path=path, full.names=TRUE),
+                   exdir="/tmp")
+    }
   }
   tpplc_path
 }

@@ -18,8 +18,8 @@ tp_run(
 \item{compiled_model}{a \link[base:character]{base::character} with the full path to the compiled model
 outputted by \link{tp_compile}.}
 
-\item{data}{a \link[base:character]{base::character} with the full path to the data file in JSON format
-outputted by \link{tp_data}.}
+\item{data}{a \link[base:character]{base::character} with the full path to the data file in TreePPL
+JSON format (as outputted by \link{tp_data}).}
 
 \item{n_runs}{When using MCMC, a \link[base:integer]{base::integer} giving the number of runs to be done.}
 

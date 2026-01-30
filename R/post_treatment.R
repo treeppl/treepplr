@@ -19,14 +19,14 @@ tp_parse_smc <- function(treeppl_out) {
 
     if(is.null(names(samples_c))){
       result_df <- rbind(result_df,
-                         data.frame(run = i,
+                         data.frame(sweep = i,
                                     samples = samples_c,
                                     log_weight = log_weight_c,
                                     norm_const = treeppl_out[[i]]$normConst)
       )
     } else {
       result_df <- rbind(result_df,
-                         data.frame(run = i,
+                         data.frame(sweep = i,
                                     parameter = names(samples_c),
                                     samples = samples_c,
                                     log_weight = log_weight_c,
@@ -60,22 +60,17 @@ tp_parse_mcmc <- function(treeppl_out) {
   for (i in seq_along(treeppl_out)) {
 
     samples_c <- unlist(treeppl_out[[i]]$samples)
-    log_weight_c <- unlist(treeppl_out[[i]]$weights)
 
     if(is.null(names(samples_c))){
       result_df <- rbind(result_df,
                          data.frame(run = i,
-                                    samples = samples_c,
-                                    log_weight = log_weight_c,
-                                    norm_const = treeppl_out[[i]]$normConst)
+                                    samples = samples_c)
       )
     } else {
       result_df <- rbind(result_df,
                          data.frame(run = i,
                                     parameter = names(samples_c),
-                                    samples = samples_c,
-                                    log_weight = log_weight_c,
-                                    norm_const = treeppl_out[[i]]$normConst)
+                                    samples = samples_c)
       )
     }
   }
@@ -274,24 +269,36 @@ peel_tree <- function(subtree,
 }
 
 
-#' Check for convergence across multiple SMC sweeps/runs
+#' Check for convergence across multiple SMC sweeps.
 #'
-#' @param treeppl_out a character vector giving the TreePPL json output
-#' produced by [tp_run].
+#' @param treeppl_out a data frame outputted by [tp_parse_smc()].
 #'
 #' @returns Variance in the normalizing constants across SMC sweeps.
 #' @export
 #'
 tp_smc_convergence <- function(treeppl_out) {
 
-  output <- tp_parse_smc(treeppl_out)
-  zs <- output |>
-    dplyr::slice_head(n = 1, by = .data$run) |>
+  zs <- treeppl_out |>
+    dplyr::slice_head(n = 1, by = .data$sweep) |>
     dplyr::pull(.data$norm_const)
 
-  return(var(zs))
+  return(stats::var(zs))
 }
 
+
+#' Check for convergence across multiple MCMC runs.
+#'
+#' @param treeppl_out a data frame outputted by [tp_parse_mcmc()].
+#'
+#' @returns Gelman and Rubin's convergence diagnostic
+#'
+tp_mcmc_convergence <- function(treeppl_out) {
+
+  # create coda::mcmc objects for each run
+  # list(mcmc objects)
+  #coda::gelman.diag
+
+}
 
 
 #' Find the Maximum A Posteriori (MAP) Tree from weighted samples
