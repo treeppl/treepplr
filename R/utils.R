@@ -123,10 +123,6 @@ sep <- function() {
 }
 
 
-
-#### Code below needs updating - Stenio is on it ####
-
-
 #' Model names supported by treepplr
 #'
 #' @description Provides a list of all models in the TreePPL model library.
