@@ -136,13 +136,16 @@ tp_model_library <- function() {
   # go to the right treeppl folder, whatever it is called
   fd <- list.files(fd, pattern = "treeppl", full.names = TRUE)
   # add the rest of the path
-  fd <- paste0(fd, "/lib/mcore/treeppl/models/")
+  fd <- paste0(fd, "/lib/mcore/treeppl/models")
   # model names
   mn <- list.files(fd, full.names = TRUE, recursive = TRUE, pattern = "\\.tppl$")
+  subcategory <- grepl(".*models/([^/]+)/([^/]+)/([^/]+)\\.tppl$", mn)
+  no_sub <- mn[!subcategory]
+
   # results in a data frame
   rs <- data.frame(
-    "category" = sub(".*models//([^/]+)/.*", "\\1", mn),
-    "model_name" = sub(".*/([^/]+)\\.tppl$", "\\1", mn)
+    "category" = sub(".*models/([^/]+)/.*", "\\1", no_sub),
+    "model_name" = sub(".*/([^/]+)\\.tppl$", "\\1", no_sub)
   )
   # order by category then by model name
   rs <- rs[order(rs$category, rs$model_name, decreasing = FALSE), ]
@@ -180,199 +183,58 @@ tp_find_data <- function(model_name) {
 
 #### Do we need these? ####
 
-#' Model file names stored by user in [base::tempdir] using
-#' [treepplr::tp_write]
+#' #' Model file names stored by user in [base::tempdir] using
+#' #' [treepplr::tp_write]
+#' #'
+#' #' @description Provides a list of all the model file names currently
+#' #' stored in [base::tempdir]. To verify if there is a
+#' #' matching data file, see [treepplr::tp_stored_data].
+#' #'
+#' #' @return A list of model file names.
+#' #' @export
 #'
-#' @description Provides a list of all the model file names currently
-#' stored in [base::tempdir]. To verify if there is a
-#' matching data file, see [treepplr::tp_stored_data].
+#' tp_stored_model <- function() {
+#'   stored_files("tppl")
+#' }
 #'
-#' @return A list of model file names.
-#' @export
-
-tp_stored_model <- function() {
-  stored_files("tppl")
-}
-
-#' Data file names stored by user in [base::tempdir] using
-#' [treepplr::tp_write]
+#' #' Data file names stored by user in [base::tempdir] using
+#' #' [treepplr::tp_write]
+#' #'
+#' #' @description Provides a list of all the data file names currently
+#' #' stored in [base::tempdir]. To verify if there is a
+#' #' matching model file, see [treepplr::tp_stored_model].
+#' #'
+#' #' @return A list of data file names.
+#' #' @export
 #'
-#' @description Provides a list of all the data file names currently
-#' stored in [base::tempdir]. To verify if there is a
-#' matching model file, see [treepplr::tp_stored_model].
+#' tp_stored_data <- function() {
+#'   res <- stored_files("json")
+#'   list_na <- stringr::str_extract(res, "^((?!_out).)*$")
+#'   list <- list_na[!is.na(list_na)]
+#'   list
+#' }
 #'
-#' @return A list of data file names.
-#' @export
-
-tp_stored_data <- function() {
-  res <- stored_files("json")
-  list_na <- stringr::str_extract(res, "^((?!_out).)*$")
-  list <- list_na[!is.na(list_na)]
-  list
-}
-
-#' List of compiled models in [base::tempdir]
+#' #' List of compiled models in [base::tempdir]
+#' #'
+#' #' @description Provides a list of all the compiled model file names currently
+#' #' stored in [base::tempdir].
+#' #'
+#' #' @return A list of compiled model file names.
+#' #' @export
 #'
-#' @description Provides a list of all the compiled model file names currently
-#' stored in [base::tempdir].
+#' tp_stored_compiled <- function() {
+#'   stored_files("exe")
+#' }
 #'
-#' @return A list of compiled model file names.
-#' @export
-
-tp_stored_compiled <- function() {
-  stored_files("exe")
-}
-
-#Provides file names already provided by user, stored in [base::tempdir]
-stored_files <- function(exten) {
-  tmp <- list.files(tp_tempdir())
-  list_na <-
-    stringr::str_extract(tmp, paste0(".*(?=\\.", exten, ")"))
-  list <- stringr::str_sort(list_na[!is.na(list_na)])
-  list
-}
+#' #Provides file names already provided by user, stored in [base::tempdir]
+#' stored_files <- function(exten) {
+#'   tmp <- list.files(tp_tempdir())
+#'   list_na <-
+#'     stringr::str_extract(tmp, paste0(".*(?=\\.", exten, ")"))
+#'   list <- stringr::str_sort(list_na[!is.na(list_na)])
+#'   list
+#' }
+#'
 
 
-
-
-
-# Read alignment in FASTA or NEXUS (for tree inference)
-read_aln <- function(file) {
-  # define the encoding
-  # NB: everything that is not ACTG will be replace with gap ("-") within the function
-  base_code <- c(
-    "A" = 0,
-    "C" = 1,
-    "G" = 2,
-    "T" = 3,
-    "-" = 4
-  )
-
-  # Print an error message if the input is not in fasta or nexus
-  if (!grepl("\\.(fasta|fas|nexus|nex)$", file, ignore.case = TRUE)) {
-    stop("Please, provide an input file in fasta or nexus format")
-  }
-
-  # If the input is a FASTA file
-  else if (grepl("\\.(fasta|fas)$", file, ignore.case = TRUE)) {
-    raw <- readLines(file, warn = FALSE)
-    raw <- raw[nzchar(raw)] # remove empty lines, if any
-    #nm <- gsub(">", "", raw[grepl(">", raw)]) # sequence names
-    sq <- raw[!grepl(">", raw)] # sequences
-    # sequence matrix
-    sq_list <- strsplit(sq, "")
-    sq_mat <- do.call(rbind, sq_list)
-    sq_mat <- toupper(sq_mat)
-    sq_mat[] <- gsub("[^ACGT]", "-", sq_mat, ignore.case = TRUE) # replace everything that is not ACTG with "-"
-    # numerical matrix
-    num_mat <- matrix(
-      base_code[sq_mat],
-      nrow = nrow(sq_mat),
-      ncol = ncol(sq_mat)
-      #dimnames = list(nm, NULL)
-    )
-    # final list
-    res <- list(data = num_mat)
-    return(res)
-
-    # If the input is a NEXUS file
-  } else if (grepl("\\.(nexus|nex)$", file, ignore.case = TRUE)) {
-    # nexus matrix block
-    raw <- readLines(file, warn = FALSE)
-    raw <- raw[nzchar(raw)] # remove empty lines, if any
-    start <- grep("^[[:space:]]*matrix[[:space:]]*$", tolower(raw))
-    end <- grep(";", raw)
-    end <- end[end > start][1]
-    mat <- raw[(start + 1):(end - 1)] # extract contents
-    mat <- trimws(mat)
-    mat <- mat[nzchar(mat)] # remove empty entries
-    #nm <- sub("\\s+.*$", "", mat) # sequence names (split on the 1st white space)
-    sq <- sub("^\\S+\\s+", "", mat) # sequences
-    # sequence matrix
-    sq_list <- strsplit(sq, "")
-    sq_mat <- do.call(rbind, sq_list)
-    sq_mat <- toupper(sq_mat)
-    sq_mat[] <- gsub("[^ACGT]", "-", sq_mat, ignore.case = TRUE) # replace everything that is not ACTG with "-"
-    # numerical matrix
-    num_mat <- matrix(
-      base_code[sq_mat],
-      nrow = nrow(sq_mat),
-      ncol = ncol(sq_mat)
-      #dimnames = list(nm, NULL)
-    )
-    # final list
-    res <- list(data = num_mat)
-    return(res)
-  }
-}
-
-# Read alignment in FASTA or NEXUS (for tree inference)
-read_aln <- function(file) {
-  # define the encoding
-  # NB: everything that is not ACTG will be replace with gap ("-") within the function
-  base_code <- c(
-    "A" = 0,
-    "C" = 1,
-    "G" = 2,
-    "T" = 3,
-    "-" = 4
-  )
-
-  # Print an error message if the input is not in fasta or nexus
-  if (!grepl("\\.(fasta|fas|nexus|nex)$", file, ignore.case = TRUE)) {
-    stop("Please, provide an input file in fasta or nexus format")
-  }
-
-  # If the input is a FASTA file
-  else if (grepl("\\.(fasta|fas)$", file, ignore.case = TRUE)) {
-    raw <- readLines(file, warn = FALSE)
-    raw <- raw[nzchar(raw)] # remove empty lines, if any
-    #nm <- gsub(">", "", raw[grepl(">", raw)]) # sequence names
-    sq <- raw[!grepl(">", raw)] # sequences
-    # sequence matrix
-    sq_list <- strsplit(sq, "")
-    sq_mat <- do.call(rbind, sq_list)
-    sq_mat <- toupper(sq_mat)
-    sq_mat[] <- gsub("[^ACGT]", "-", sq_mat, ignore.case = TRUE) # replace everything that is not ACTG with "-"
-    # numerical matrix
-    num_mat <- matrix(
-      base_code[sq_mat],
-      nrow = nrow(sq_mat),
-      ncol = ncol(sq_mat)
-      #dimnames = list(nm, NULL)
-    )
-    # final list
-    res <- list(data = num_mat)
-    return(res)
-
-    # If the input is a NEXUS file
-  } else if (grepl("\\.(nexus|nex)$", file, ignore.case = TRUE)) {
-    # nexus matrix block
-    raw <- readLines(file, warn = FALSE)
-    raw <- raw[nzchar(raw)] # remove empty lines, if any
-    start <- grep("^[[:space:]]*matrix[[:space:]]*$", tolower(raw))
-    end <- grep(";", raw)
-    end <- end[end > start][1]
-    mat <- raw[(start + 1):(end - 1)] # extract contents
-    mat <- trimws(mat)
-    mat <- mat[nzchar(mat)] # remove empty entries
-    #nm <- sub("\\s+.*$", "", mat) # sequence names (split on the 1st white space)
-    sq <- sub("^\\S+\\s+", "", mat) # sequences
-    # sequence matrix
-    sq_list <- strsplit(sq, "")
-    sq_mat <- do.call(rbind, sq_list)
-    sq_mat <- toupper(sq_mat)
-    sq_mat[] <- gsub("[^ACGT]", "-", sq_mat, ignore.case = TRUE) # replace everything that is not ACTG with "-"
-    # numerical matrix
-    num_mat <- matrix(
-      base_code[sq_mat],
-      nrow = nrow(sq_mat),
-      ncol = ncol(sq_mat)
-      #dimnames = list(nm, NULL)
-    )
-    # final list
-    res <- list(data = num_mat)
-    return(res)
-  }
-}
 
