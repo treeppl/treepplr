@@ -16,3 +16,6 @@ A data frame with the output from inference in TreePPL.
 \description{
 \code{tp_parse_smc} takes TreePPL json SMC output and returns a data.frame
 }
+\details{
+Particles with -Inf weight are removed.
+}

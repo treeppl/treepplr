@@ -6,6 +6,10 @@
 #' @param treeppl_out a character vector giving the TreePPL json output
 #' produced by [tp_run] using an SMC method.
 #'
+#' @details
+#' Particles with -Inf weight are removed.
+#'
+#'
 #' @return A data frame with the output from inference in TreePPL.
 #' @export
 tp_parse_smc <- function(treeppl_out) {
@@ -14,32 +18,46 @@ tp_parse_smc <- function(treeppl_out) {
 
   for (i in seq_along(treeppl_out)) {
 
-    samples_c <- unlist(treeppl_out[[i]]$samples)
-    log_weight_c <- unlist(treeppl_out[[i]]$weights)
-
-    if(is.null(names(samples_c))){
-      result_df <- rbind(result_df,
-                         data.frame(sweep = i,
-                                    samples = samples_c,
-                                    log_weight = log_weight_c,
-                                    norm_const = treeppl_out[[i]]$normConst)
-      )
+    # remove sweeps with nan norm const
+    if (treeppl_out[[i]]$normConst == "nan"){
+      print("Removing sweep without normalizing constant")
     } else {
-      result_df <- rbind(result_df,
-                         data.frame(sweep = i,
-                                    parameter = names(samples_c),
-                                    samples = samples_c,
-                                    log_weight = log_weight_c,
-                                    norm_const = treeppl_out[[i]]$normConst)
-      )
+
+      samples_c <- unlist(treeppl_out[[i]]$samples)
+      log_weight_c <- unlist(treeppl_out[[i]]$weights)
+
+      if(is.null(names(samples_c))){
+        result_df <- rbind(result_df,
+                           data.frame(sweep = i,
+                                      samples = samples_c,
+                                      log_weight = log_weight_c,
+                                      norm_constant = treeppl_out[[i]]$normConst)
+        )
+      } else {
+        result_df <- rbind(result_df,
+                           data.frame(sweep = i,
+                                      parameter = names(samples_c),
+                                      samples = samples_c,
+                                      log_weight = log_weight_c,
+                                      norm_constant = treeppl_out[[i]]$normConst)
+        )
+      }
     }
   }
 
-  result_df <- result_df |>
-    dplyr::mutate(total_lweight = .data$log_weight + .data$norm_const) |>
-    dplyr::mutate(norm_weight = exp(.data$total_lweight - max(.data$total_lweight))) |>
-    dplyr::select(-"total_lweight")
+  # check if all sweeps were removed
+  if (length(result_df) == 0) {
+    stop("All sweeps failed")
+  } else{
 
+    result_df <- result_df |>
+      # remove particles with -Inf weight
+      dplyr::mutate(log_weight = as.numeric(log_weight)) |>
+      dplyr::filter(!is.infinite(log_weight)) |>
+      dplyr::mutate(total_lweight = .data$log_weight + .data$norm_constant) |>
+      dplyr::mutate(norm_weight = exp(.data$total_lweight - max(.data$total_lweight))) |>
+      dplyr::select(-"total_lweight")
+  }
   return(result_df)
 }
 
@@ -280,7 +298,7 @@ tp_smc_convergence <- function(treeppl_out) {
 
   zs <- treeppl_out |>
     dplyr::slice_head(n = 1, by = .data$sweep) |>
-    dplyr::pull(.data$norm_const)
+    dplyr::pull(.data$norm_constant)
 
   return(stats::var(zs))
 }
