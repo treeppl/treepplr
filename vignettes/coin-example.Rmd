@@ -43,7 +43,7 @@ can find all available models and some information about them [here](https://tre
 
 If you want to look at the TreePPL code here in R, you can use the following functions:
 
-```{r}
+```{r, eval = FALSE}
 model_path <- tp_model("coin")
 ```
 
@@ -139,15 +139,20 @@ Now we can start analyzing the model by inferring the value of `p` given some ob
 To do this, we need to provide the observations in a suitable format.
 To load the example data provided in the *treepplr* package, use:
 
-```{r}
+```{r, eval=FALSE}
 data <- tp_data(data_input = "coin")
 ```
 
 We can look at the structure of the input data using:
 
-```{r}
+```{r, eval=FALSE}
 jsonlite::fromJSON(data)
 ```
+
+````
+$coinflips
+ [1]  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE
+````
 
 
 The TreePPL compiler requires data in JSON format.
