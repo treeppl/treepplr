@@ -1,0 +1,47 @@
+---
+title: "Constant-rate Birth Death example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{crbd-example}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+```{r setup}
+library(treepplr)
+```
+
+```{r, eval = FALSE}
+exe_path <- tp_compile("crbd", "smc-apf", particles = 5000)
+data_path <- tp_data("crbd")
+
+output_list <- tp_run(exe_path, data_path, n_sweeps = 4)
+```
+
+```{r, echo = FALSE}
+output_list <- readRDS("rdata/crbd/output_crbd.rds")
+```
+
+
+```{r}
+output <- tp_parse_smc(output_list)
+
+tp_smc_convergence(output)
+```
+
+
+
+ 

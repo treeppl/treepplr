@@ -2,17 +2,16 @@
 % Please edit documentation in R/post_treatment.R
 \name{tp_smc_convergence}
 \alias{tp_smc_convergence}
-\title{Check for convergence across multiple SMC sweeps/runs}
+\title{Check for convergence across multiple SMC sweeps.}
 \usage{
 tp_smc_convergence(treeppl_out)
 }
 \arguments{
-\item{treeppl_out}{a character vector giving the TreePPL json output
-produced by \link{tp_treeppl}.}
+\item{treeppl_out}{a data frame outputted by \code{\link[=tp_parse_smc]{tp_parse_smc()}}.}
 }
 \value{
 Variance in the normalizing constants across SMC sweeps.
 }
 \description{
-Check for convergence across multiple SMC sweeps/runs
+Check for convergence across multiple SMC sweeps.
 }
