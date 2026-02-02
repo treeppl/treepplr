@@ -7,7 +7,7 @@
 tp_expected_input(model)
 }
 \arguments{
-\item{model}{}
+\item{model}{A TreePPL model}
 }
 \value{
 The expected input data for a given TreePPL model.

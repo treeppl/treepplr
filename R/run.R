@@ -3,7 +3,7 @@
 #' @returns A string with the output from the executable's help
 #' @export
 #'
-tp_run_options <- function(...) {
+tp_run_options <- function() {
 
   #### under development here and in treeppl ####
 

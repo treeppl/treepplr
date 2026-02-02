@@ -1,7 +1,7 @@
 
 #' List expected input variables for a model
 #'
-#' @param model
+#' @param model A TreePPL model
 #'
 #' @returns The expected input data for a given TreePPL model.
 #' @export
@@ -20,16 +20,23 @@ tp_expected_input <- function(model) {
 #' Prepare data input for [treepplr::tp_run()].
 #'
 #' @param data_input One of the following options:
-#'   * A list (or structured list) containing TreePPL data, OR
+#'   * A named list (or structured list) containing TreePPL data, OR
 #'   * The full path of a multiple sequence alignment in fasta (.fasta, .fas)
 #'   or nexus (.nexus, .nex) format, OR
 #'   * For test data, a string with the name of a model supported by treepplr
 #' (see [treepplr::tp_model_library()]).
-#'
+#' @param data_file_name An optional name for the file created. Ignored if `data_input`
+#' is the name of a model from the TreePPL library.
 #' @param dir The directory where you want to save the data file in JSON format.
-#' Default is [base::tempdir()].
+#' Default is [base::tempdir()]. Ignored if `data_input` is the name of a model
+#' from the TreePPL library.
 #'
 #' @return The path for the data file that will be used by [treepplr::tp_run()].
+#'
+#' @details
+#' `data_input`: The name of each list element has to match the name of a model
+#' input, which is defined in the TreePPL model code.
+#'
 #' @export
 #' @examples
 #' \donttest{
@@ -43,15 +50,16 @@ tp_expected_input <- function(model) {
 #' input
 #'}
 #'
-tp_data <- function(data_input) {
+tp_data <- function(data_input, data_file_name = "tmp_data_file", dir = tp_tempdir()) {
+
+  #### TODO data inputs have to be named as it is expected in the model ####
 
   if (assertthat::is.string(data_input)) {
 
     if (grepl("\\.(fasta|fas|nexus|nex)$", data_input, ignore.case = TRUE)) {
       data <- read_aln(data_input)
       data_list <- tp_list(list(data))
-      data_path <- tp_write_data(data_list)
-      names(data_path) <- "data"
+      data_path <- tp_write_data(data_list, data_file_name, dir)
 
     } else {
 
@@ -60,7 +68,6 @@ tp_data <- function(data_input) {
       # model_input has the name of a known model
       if (length(res_lib) != 0) {
         data_path <- res_lib
-        names(data_path) <- paste0("testdata_",data_input)
 
       } else {
         stop("Invalid input string.")
@@ -73,8 +80,7 @@ tp_data <- function(data_input) {
     # flatten the list
     data_list <- tp_list(data_input)
     # write json with input data
-    data_path <- tp_write_data(data_list)
-    names(data_path) <- "data"
+    data_path <- tp_write_data(data_list, data_file_name, dir)
 
   } else {
     stop("Unknow R type (not a valid path, known data model, or list")
@@ -85,11 +91,21 @@ tp_data <- function(data_input) {
 }
 
 
-tp_write_data <- function(data_list, data_file_name = "tmp_data_file") {
+#' Write data to file
+#'
+#' @param data_list A named list of data input
+#' @param data_file_name An optional name for the file created
+#' @param dir The directory where you want to save the data file in JSON format.
+#' Default is [base::tempdir()].
+#'
+#' @returns The path to the created file
+#'
+#' @export
+tp_write_data <- function(data_list, data_file_name = "tmp_data_file", dir = tp_tempdir()) {
 
   input_json <- jsonlite::toJSON(data_list, auto_unbox=TRUE)
-  path <- paste0(tp_tempdir(), data_file_name, ".json")
-  cat(data, file = path)
+  path <- paste0(dir, data_file_name, ".json")
+  write(input_json, file = path)
 
   return(path)
 
@@ -464,7 +480,7 @@ rec_tree_list <- function(tree, row_index) {
 #'
 #' @param json_out One of two options:
 #'   * A list of TreePPL output in parsed JSON format (output from
-#'   [treepplr::tp_treeppl()]), OR
+#'   [treepplr::tp_run()]), OR
 #'   * The full path of the json file containing the TreePPL output.
 #'
 #' @return A list with two elements:

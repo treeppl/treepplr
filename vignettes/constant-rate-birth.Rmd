@@ -1,5 +1,5 @@
 ---
-title: "Constant rate birth (CRB) model"
+title: "Constant rate birth-death (CRBD) model"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Constant-Rate-Birth}

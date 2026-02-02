@@ -4,7 +4,7 @@
 \alias{tp_run_options}
 \title{Options that can be passed to a TreePPL program}
 \usage{
-tp_run_options(...)
+tp_run_options()
 }
 \value{
 A string with the output from the executable's help

@@ -2,7 +2,7 @@
 #'
 #' @returns A string with the output from the compiler's help <tpplc --help>
 #'
-tp_compile_options <- function(...) {
+tp_compile_options <- function() {
 
   #### under development ####
 
@@ -159,7 +159,15 @@ tp_model <- function(model_input) {
 
 
 
-# Write out a custom model to tp_tempdir()
+
+#' Write out a custom model to tp_tempdir()
+#'
+#' @param model A string containing the entire TreePPL code.
+#' @param model_file_name An optional name to the file created
+#'
+#' @returns The path to the file created
+#' @export
+#'
 tp_write_model <- function(model, model_file_name = "tmp_model_file") {
 
   path <- paste0(tp_tempdir(), model_file_name, ".tppl")

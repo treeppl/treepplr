@@ -4,7 +4,7 @@
 \alias{tp_compile_options}
 \title{Options that can be passed to TreePPL compiler}
 \usage{
-tp_compile_options(...)
+tp_compile_options()
 }
 \value{
 A string with the output from the compiler's help <tpplc --help>

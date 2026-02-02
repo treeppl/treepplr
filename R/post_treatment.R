@@ -52,8 +52,8 @@ tp_parse_smc <- function(treeppl_out) {
 
     result_df <- result_df |>
       # remove particles with -Inf weight
-      dplyr::mutate(log_weight = as.numeric(log_weight)) |>
-      dplyr::filter(!is.infinite(log_weight)) |>
+      dplyr::mutate(log_weight = as.numeric(.data$log_weight)) |>
+      dplyr::filter(!is.infinite(.data$log_weight)) |>
       dplyr::mutate(total_lweight = .data$log_weight + .data$norm_constant) |>
       dplyr::mutate(norm_weight = exp(.data$total_lweight - max(.data$total_lweight))) |>
       dplyr::select(-"total_lweight")
@@ -383,7 +383,7 @@ tp_map_tree <- function(trees_out) {
   # but ape::consensus uses simple mean. For most purposes, this is sufficient.
   final_map <- map <- phangorn::allCompat(matching_trees, rooted=TRUE) |>
     phangorn::add_edge_length(matching_trees,
-                              fun = function(x) weighted.mean(x, matching_weights))
+                              fun = function(x) stats::weighted.mean(x, matching_weights))
 
   print(paste("MAP Topology found"))
   print(paste("Posterior Probability:", round(map_prob, 4)))

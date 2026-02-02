@@ -4,26 +4,34 @@
 \alias{tp_data}
 \title{Import data for TreePPL program}
 \usage{
-tp_data(data_input)
+tp_data(data_input, data_file_name = "tmp_data_file", dir = tp_tempdir())
 }
 \arguments{
 \item{data_input}{One of the following options:
 \itemize{
-\item A list (or structured list) containing TreePPL data, OR
+\item A named list (or structured list) containing TreePPL data, OR
 \item The full path of a multiple sequence alignment in fasta (.fasta, .fas)
 or nexus (.nexus, .nex) format, OR
 \item For test data, a string with the name of a model supported by treepplr
 (see \code{\link[=tp_model_library]{tp_model_library()}}).
 }}
 
+\item{data_file_name}{An optional name for the file created. Ignored if \code{data_input}
+is the name of a model from the TreePPL library.}
+
 \item{dir}{The directory where you want to save the data file in JSON format.
-Default is \code{\link[base:tempfile]{base::tempdir()}}.}
+Default is \code{\link[base:tempfile]{base::tempdir()}}. Ignored if \code{data_input} is the name of a model
+from the TreePPL library.}
 }
 \value{
 The path for the data file that will be used by \code{\link[=tp_run]{tp_run()}}.
 }
 \description{
 Prepare data input for \code{\link[=tp_run]{tp_run()}}.
+}
+\details{
+\code{data_input}: The name of each list element has to match the name of a model
+input, which is defined in the TreePPL model code.
 }
 \examples{
 \donttest{

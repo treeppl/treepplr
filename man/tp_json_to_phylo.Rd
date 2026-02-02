@@ -11,7 +11,7 @@ tp_json_to_phylo(json_out)
 \item{json_out}{One of two options:
 \itemize{
 \item A list of TreePPL output in parsed JSON format (output from
-\code{\link[=tp_treeppl]{tp_treeppl()}}), OR
+\code{\link[=tp_run]{tp_run()}}), OR
 \item The full path of the json file containing the TreePPL output.
 }}
 }

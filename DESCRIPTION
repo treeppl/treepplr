@@ -17,16 +17,15 @@ Depends:
 Imports: 
     assertthat,
     methods,
-    readr,
     jsonlite,
-    stringr,
     tidytree,
     utils,
     gh,
     curl,
     cli,
     bnpsd,
-    rlang
+    rlang,
+    phangorn
 Suggests:
     devtools,
     ggplot2,
