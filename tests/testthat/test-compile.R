@@ -68,7 +68,7 @@ test_that("Test-compile_3b : tp_write content", {
   cat("\tTest-compile_3b : tp_write\n")
 
   content_right <- "bla bla bla"
-  path <- treepplr::tp_write_model(content)
+  path <- treepplr::tp_write_model(content_right)
 
   content <- readLines(path, warn = FALSE)
   expect_equal(content_right, content)
