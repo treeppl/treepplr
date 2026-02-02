@@ -34,7 +34,7 @@ Prepare data input for \code{\link[=tp_run]{tp_run()}}.
 input, which is defined in the TreePPL model code.
 }
 \examples{
-\donttest{
+\dontrun{
 # Example using a model name supported by TreePPL
 input <- tp_data("tree_inference")
 input

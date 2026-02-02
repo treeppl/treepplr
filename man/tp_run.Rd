@@ -40,6 +40,7 @@ A list of TreePPL output in parsed JSON format.
 Run TreePPL and return output.
 }
 \examples{
+\dontrun{
 # When using SMC
 # compile model and create SMC inference machinery
 exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 2000)
@@ -60,4 +61,5 @@ data_path <- tp_data(data_input = "coin")
 
 # run TreePPL
 result <- tp_run(exe_path, data_path, n_runs = 2)
+}
 }
