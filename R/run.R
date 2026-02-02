@@ -35,6 +35,7 @@ tp_run_options <- function() {
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # When using SMC
 #' # compile model and create SMC inference machinery
 #' exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 2000)
@@ -55,6 +56,7 @@ tp_run_options <- function() {
 #'
 #' # run TreePPL
 #' result <- tp_run(exe_path, data_path, n_runs = 2)
+#' }
 
 tp_run <- function(compiled_model,
                    data,

@@ -129,7 +129,7 @@ see `tp_compile_options()`.
 Now let's compile the model to en executable that also contains the necessary machinery
 to run the chosen inference method. 
 
-```{r}
+```{r, eval = FALSE}
 exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 1000)
 ```
 
@@ -205,7 +205,7 @@ of appropriately weighted values, taking both the particle weights and normalizi
 normalizing constants are given in log units.
 
 ```{r}
-output <-  tp_parse_smc(output_list)
+output <- tp_parse_smc(output_list)
 
 tp_smc_convergence(output)
 ```
