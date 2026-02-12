@@ -141,7 +141,7 @@ output_df_mcmc <- tp_parse_mcmc(output)
 ## Post-processing
 
 Different models produce different outputs and thus require different post-processing.
-See the model-specific tutorials for ways to process your TreePPL.
+See the model-specific tutorials for ways to process your TreePPL output.
 
 
 
