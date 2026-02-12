@@ -1,36 +1,94 @@
-#' Parse simple TreePPL json output
+#' Parse simple TreePPL json SMC output
 #'
 #' @description
-#' `tp_parse` takes TreePPL json output and returns a data.frame
+#' `tp_parse_smc` takes TreePPL json SMC output and returns a data.frame
 #'
 #' @param treeppl_out a character vector giving the TreePPL json output
-#' produced by [tp_treeppl].
+#' produced by [tp_run] using an SMC method.
+#'
+#' @details
+#' Particles with -Inf weight are removed.
+#'
 #'
 #' @return A data frame with the output from inference in TreePPL.
 #' @export
-tp_parse <- function(treeppl_out) {
+tp_parse_smc <- function(treeppl_out) {
+
+  result_df <- list()
+
+  for (i in seq_along(treeppl_out)) {
+
+    # remove sweeps with nan norm const
+    if (treeppl_out[[i]]$normConst == "nan"){
+      print("Removing sweep without normalizing constant")
+    } else {
+
+      samples_c <- unlist(treeppl_out[[i]]$samples)
+      log_weight_c <- unlist(treeppl_out[[i]]$weights)
+
+      if(is.null(names(samples_c))){
+        result_df <- rbind(result_df,
+                           data.frame(sweep = i,
+                                      samples = samples_c,
+                                      log_weight = log_weight_c,
+                                      norm_constant = treeppl_out[[i]]$normConst)
+        )
+      } else {
+        result_df <- rbind(result_df,
+                           data.frame(sweep = i,
+                                      parameter = names(samples_c),
+                                      samples = samples_c,
+                                      log_weight = log_weight_c,
+                                      norm_constant = treeppl_out[[i]]$normConst)
+        )
+      }
+    }
+  }
+
+  # check if all sweeps were removed
+  if (length(result_df) == 0) {
+    stop("All sweeps failed")
+  } else{
+
+    result_df <- result_df |>
+      # remove particles with -Inf weight
+      dplyr::mutate(log_weight = as.numeric(.data$log_weight)) |>
+      dplyr::filter(!is.infinite(.data$log_weight)) |>
+      dplyr::mutate(total_lweight = .data$log_weight + .data$norm_constant) |>
+      dplyr::mutate(norm_weight = exp(.data$total_lweight - max(.data$total_lweight))) |>
+      dplyr::select(-"total_lweight")
+  }
+  return(result_df)
+}
+
+#' Parse simple TreePPL json MCMC output
+#'
+#' @description
+#' `tp_parse_mcmc` takes TreePPL json MCMC output and returns a data.frame
+#'
+#' @param treeppl_out a character vector giving the TreePPL json output
+#' produced by [tp_run] using an MCMC method.
+#'
+#' @return A data frame with the output from inference in TreePPL.
+#' @export
+tp_parse_mcmc <- function(treeppl_out) {
 
   result_df <- list()
 
   for (i in seq_along(treeppl_out)) {
 
     samples_c <- unlist(treeppl_out[[i]]$samples)
-    log_weight_c <- unlist(treeppl_out[[i]]$weights)
 
     if(is.null(names(samples_c))){
       result_df <- rbind(result_df,
                          data.frame(run = i,
-                                    samples = samples_c,
-                                    log_weight = log_weight_c,
-                                    norm_const = treeppl_out[[i]]$normConst)
+                                    samples = samples_c)
       )
     } else {
       result_df <- rbind(result_df,
                          data.frame(run = i,
                                     parameter = names(samples_c),
-                                    samples = samples_c,
-                                    log_weight = log_weight_c,
-                                    norm_const = treeppl_out[[i]]$normConst)
+                                    samples = samples_c)
       )
     }
   }
@@ -46,7 +104,7 @@ tp_parse <- function(treeppl_out) {
 #' model of host repertoire evolution and returns a data.frame
 #'
 #' @param treeppl_out a character vector giving the TreePPL json output
-#' produced by [tp_treeppl].
+#' produced by [tp_run].
 #'
 #' @return A list (n = n_runs) of data frames with the output from inference
 #' in TreePPL under the host repertoire evolution model.
@@ -229,24 +287,36 @@ peel_tree <- function(subtree,
 }
 
 
-#' Check for convergence across multiple SMC sweeps/runs
+#' Check for convergence across multiple SMC sweeps.
 #'
-#' @param treeppl_out a character vector giving the TreePPL json output
-#' produced by [tp_treeppl].
+#' @param treeppl_out a data frame outputted by [tp_parse_smc()].
 #'
 #' @returns Variance in the normalizing constants across SMC sweeps.
 #' @export
 #'
 tp_smc_convergence <- function(treeppl_out) {
 
-  output <- tp_parse(treeppl_out)
-  zs <- output %>%
-    dplyr::slice_head(n = 1, by = run) %>%
-    dplyr::pull(norm_const)
+  zs <- treeppl_out |>
+    dplyr::slice_head(n = 1, by = .data$sweep) |>
+    dplyr::pull(.data$norm_constant)
 
-  return(var(zs))
+  return(stats::var(zs))
 }
 
+
+#' Check for convergence across multiple MCMC runs.
+#'
+#' @param treeppl_out a data frame outputted by [tp_parse_mcmc()].
+#'
+#' @returns Gelman and Rubin's convergence diagnostic
+#'
+tp_mcmc_convergence <- function(treeppl_out) {
+
+  # create coda::mcmc objects for each run
+  # list(mcmc objects)
+  #coda::gelman.diag
+
+}
 
 
 #' Find the Maximum A Posteriori (MAP) Tree from weighted samples
@@ -313,7 +383,7 @@ tp_map_tree <- function(trees_out) {
   # but ape::consensus uses simple mean. For most purposes, this is sufficient.
   final_map <- map <- phangorn::allCompat(matching_trees, rooted=TRUE) |>
     phangorn::add_edge_length(matching_trees,
-                              fun = function(x) weighted.mean(x, matching_weights))
+                              fun = function(x) stats::weighted.mean(x, matching_weights))
 
   print(paste("MAP Topology found"))
   print(paste("Posterior Probability:", round(map_prob, 4)))

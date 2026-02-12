@@ -1,0 +1,31 @@
+#NEXUS
+
+BEGIN DATA;
+DIMENSIONS  NTAX=4 NCHAR=15;
+FORMAT DATATYPE=DNA GAP=- MISSING=?;
+MATRIX
+
+seq1   ccagtaaaatccttg
+seq2   ccagacaaatcacca
+seq3   aaccagcaaagatta
+seq4   aaccatacaaggtca
+;
+
+END;
+
+BEGIN ASSUMPTIONS;
+EXSET * UNTITLED  = ;
+END;
+
+BEGIN CODONS;
+CODONPOSSET * CodonPositions =
+ N:,
+ 1: 1-13\3,
+ 2: 2-14\3,
+ 3: 3-15\3;
+CODESET  * UNTITLED = Universal: all ;
+END;
+
+BEGIN SETS;
+END;
+

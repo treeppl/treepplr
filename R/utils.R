@@ -1,6 +1,33 @@
-#' Fetch the latest version of treeppl
-#' @export
+# Platform-dependent treeppl self-contained installation
+installing_treeppl <- function() {
 
+  if (Sys.getenv("TPPLC") != "") {
+    tpplc_path <- Sys.getenv("TPPLC")
+  } else{
+
+    tag <- tp_fp_fetch()
+    if (Sys.info()['sysname'] == "Windows") {
+      # No self container for Windows, need to install it manually
+      "tpplc"
+    } else if(Sys.info()['sysname'] == "Linux") {
+      path <- system.file("treeppl-linux", package = "treepplr")
+      file_name <- paste0("treeppl-",substring(tag, 2))
+    } else {#Mac OS have a lot of different name
+      path <- system.file("treeppl-mac", package = "treepplr")
+      file_name <- paste0("treeppl-",substring(tag, 2))
+    }
+    # Test if tpplc is already here
+    tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
+    if(!file.exists(tpplc_path)) {
+      utils::untar(list.files(path=path, full.names=TRUE),
+                   exdir="/tmp")
+    }
+  }
+  tpplc_path
+}
+
+
+# Fetch the latest version of treeppl
 tp_fp_fetch <- function() {
   if (Sys.info()["sysname"] == "Windows") {
     # no self container for Windows, need to install it manually
@@ -53,28 +80,6 @@ tp_fp_fetch <- function() {
   repo_info[[1]]$tag_name
 }
 
-# Platform-dependent treeppl self contain installation
-installing_treeppl <- function() {
-  tag <- tp_fp_fetch()
-  if (Sys.info()['sysname'] == "Windows") {
-    # No self container for Windows, need to install it manually
-    "tpplc"
-  } else if(Sys.info()['sysname'] == "Linux") {
-    path <- system.file("treeppl-linux", package = "treepplr")
-    file_name <- paste0("treeppl-",substring(tag, 2))
-  } else {#Mac OS have a lot of different name
-    path <- system.file("treeppl-mac", package = "treepplr")
-    file_name <- paste0("treeppl-",substring(tag, 2))
-  }
-  # Test if tpplc is already here
-  tpplc_path <- paste0("/tmp/",file_name,"/tpplc")
-  if(!file.exists(tpplc_path)) {
-    utils::untar(list.files(path=path, full.names=TRUE),
-                 exdir="/tmp")
-  }
-  tpplc_path
-}
-
 
 
 #' Temporary directory for running treeppl
@@ -120,123 +125,59 @@ sep <- function() {
 
 #' Model names supported by treepplr
 #'
-#' @description Provides a list of all model names supported by treepplr.
-#' The names can also be used to find data for these models
-#' (see [treepplr::tp_data]).
+#' @description Provides a list of all models in the TreePPL model library.
 #'
 #' @return A list of model names.
 #' @export
-tp_model_names <- function() {
-  list(
-    custom = "custom",
-    coin = "coin",
-    hostrep3states = "hostrep3states",
-    hostrep2states = "hostrep2states",
-    tree_inference = "tree_inference",
-    crbd = "crbd",
-    clads = "clads"
+tp_model_library <- function() {
+
+  # take whatever treeppl version is in the tmp
+  fd <- list.files("/tmp", pattern = "treeppl", full.names = TRUE)
+  # make sure you get the most recent version if you have more than one treeppl folder in the tmp
+  fd <- sort(fd, decreasing = TRUE)[1]
+  # go to the right treeppl folder, whatever it is called
+  fd <- list.files(fd, pattern = "treeppl", full.names = TRUE)
+  # add the rest of the path
+  fd <- paste0(fd, "/lib/mcore/treeppl/models")
+  # model names
+  mn <- list.files(fd, full.names = TRUE, recursive = TRUE, pattern = "\\.tppl$")
+  subcategory <- grepl(".*models/([^/]+)/([^/]+)/([^/]+)\\.tppl$", mn)
+  no_sub <- mn[!subcategory]
+
+  # results in a data frame
+  rs <- data.frame(
+    "category" = sub(".*models/([^/]+)/.*", "\\1", no_sub),
+    "model_name" = sub(".*/([^/]+)\\.tppl$", "\\1", no_sub)
   )
+  # order by category then by model name
+  rs <- rs[order(rs$category, rs$model_name, decreasing = FALSE), ]
+  rownames(rs) <- NULL
+  rs
+
 }
 
 
-# Find model and data files for model_name
-find_file <- function(model_name, exten) {
-  if (exten == "tppl") {
-    readr::read_file(paste0(
-      system.file("extdata", package = "treepplr"),
-      sep(),
-      model_name,
-      ".",
-      exten
-    ))
-  } else if (exten == "json") {
-    jsonlite::fromJSON(paste0(
-      system.file("extdata", package = "treepplr"),
-      sep(),
-      model_name,
-      ".",
-      exten
-    ))
-  }
+# Find model for model_name
+tp_find_model <- function(model_name) {
+
+  # take whatever treeppl version is in the tmp
+  version <- list.files("/tmp", pattern = "treeppl", full.names = FALSE)
+  # make sure you get the most recent version if you have more than one treeppl folder in the tmp
+  version <- sort(version, decreasing = TRUE)[1]
+
+  res <- system(paste0("find /tmp/", version," -name ", model_name, ".tppl"),
+         intern = T, ignore.stderr = TRUE)
 }
 
-#' Model file names stored by user in [base::tempdir] using
-#' [treepplr::tp_write]
-#'
-#' @description Provides a list of all the model file names currently
-#' stored in [base::tempdir]. To verify if there is a
-#' matching data file, see [treepplr::tp_stored_data].
-#'
-#' @return A list of model file names.
-#' @export
+# Find data for model_name
+tp_find_data <- function(model_name) {
 
-tp_stored_model <- function() {
-  stored_files("tppl")
+  # take whatever treeppl version is in the tmp
+  version <- list.files("/tmp", pattern = "treeppl", full.names = FALSE)
+  # make sure you get the most recent version if you have more than one treeppl folder in the tmp
+  version <- sort(version, decreasing = TRUE)[1]
+
+  system(paste0("find /tmp/", version ," -name testdata_", model_name, ".json"),
+         intern = T)
 }
-
-#' Data file names stored by user in [base::tempdir] using
-#' [treepplr::tp_write]
-#'
-#' @description Provides a list of all the data file names currently
-#' stored in [base::tempdir]. To verify if there is a
-#' matching model file, see [treepplr::tp_stored_model].
-#'
-#' @return A list of data file names.
-#' @export
-
-tp_stored_data <- function() {
-  res <- stored_files("json")
-  list_na <- stringr::str_extract(res, "^((?!_out).)*$")
-  list <- list_na[!is.na(list_na)]
-  list
-}
-
-#' List of compiled models in [base::tempdir]
-#'
-#' @description Provides a list of all the compiled model file names currently
-#' stored in [base::tempdir].
-#'
-#' @return A list of compiled model file names.
-#' @export
-
-tp_stored_compiled <- function() {
-  stored_files("exe")
-}
-
-#Provides file names already provided by user, stored in [base::tempdir]
-stored_files <- function(exten) {
-  tmp <- list.files(tp_tempdir())
-  list_na <-
-    stringr::str_extract(tmp, paste0(".*(?=\\.", exten, ")"))
-  list <- stringr::str_sort(list_na[!is.na(list_na)])
-  list
-}
-
-
-#' Create a flat list
-#'
-#' @description
-#' `tp_list` takes a variable number of arguments and returns a list.
-#'
-#' @param ... Variadic arguments (see details).
-#'
-#' @details
-#' This function takes a variable number of arguments, so that users can pass as
-#' arguments either independent lists, or a single structured
-#' list of list (name_arg = value_arg).
-#'
-#' @return A list.
-#' @export
-#'
-tp_list <- function(...) {
-  dotlist <- list(...)
-
-  if (length(dotlist) == 1L && is.list(dotlist[[1]])) {
-    dotlist <- dotlist[[1]]
-  }
-
-  dotlist
-}
-
-
 

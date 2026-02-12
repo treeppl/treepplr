@@ -17,16 +17,15 @@ Depends:
 Imports: 
     assertthat,
     methods,
-    readr,
     jsonlite,
-    stringr,
     tidytree,
     utils,
     gh,
     curl,
     cli,
-    magrittr,
-    bnpsd
+    bnpsd,
+    rlang,
+    phangorn
 Suggests:
     devtools,
     ggplot2,
@@ -40,8 +39,7 @@ Suggests:
     treeio (>= 1.32.0),
     rmarkdown,
     pandoc,
-    dplyr,
-    rlang
+    dplyr
 VignetteBuilder: knitr
 Config/Needs/website: rmarkdown
 Remotes: 

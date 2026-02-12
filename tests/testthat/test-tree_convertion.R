@@ -57,7 +57,7 @@ testthat::test_that("Test-json_2 : tp_phylo_to_tppl_tree", {
   testthat::expect_equal(ex_tree, res_tree[[2]])
 })
 
-ressources <- readRDS(paste0(system.file("extdata", package = "treepplr"),
+resources <- readRDS(paste0(system.file("extdata", package = "treepplr"),
                              treepplr:::sep(), "Alcedinidae_tre.rds"))
 
 ref <- jsonlite::fromJSON(paste0(system.file("extdata", package = "treepplr"),
