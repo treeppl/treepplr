@@ -129,7 +129,7 @@ tp_model <- function(model_input) {
   res <- try(file.exists(model_input), silent = TRUE)
 
   # If path exists, it's all good
-  if (!is(res, "try-error") && res) {
+  if (!is(res,"try-error") && res) {
     model_path <- model_input
     # name the model
     if (is.null(names(model_path))){
@@ -138,15 +138,12 @@ tp_model <- function(model_input) {
 
     # If path doesn't exist
   } else {
-
-    # It can be a model in the library
-    if (nchar(model_input) < 50) {
-    res_lib <- tp_find_model(model_input)
+    # It can be a model name in the library
+    res_lib <- try(tp_find_model(model_input), silent = TRUE)
     # model_input has the name of a known model
-    if (length(res_lib) != 0) {
+    if (!is(res_lib,"try-error") && length(res_lib) != 0) {
       model_path <- res_lib
       names(model_path) <- model_input
-    }
       # OR model_input contains the model
       #### (needs to be verified as an appropriate model later) ####
     } else {

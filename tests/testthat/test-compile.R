@@ -37,17 +37,23 @@ test_that("Test-compile_2a : tp_model model name", {
   version <- list.files("/tmp", pattern = "treeppl", full.names = FALSE)
   version <- sort(version, decreasing = TRUE)[1]
 
-  model_right <- paste0("/tmp/treeppl-0.2/y5b8qlyn9qgk61jxcdzq6gmv65-", version,"/lib/mcore/treeppl/models/lang/coin.tppl")
+  model_right = system(paste0("find /tmp/", version," -name coin.tppl"),
+               intern = T)
+
   names(model_right) <- "coin"
 
   expect_equal(model, model_right)
 })
 
 
-test_that("Test-compile_2b : tp_model model string ", {
+test_that("Test-compile_2b : tp_model model path ", {
   cat("\tTest-compile_2b : tp_model\n")
 
-  model_right <- paste0(temp_dir, "tmp_model_file.tppl")
+  version <- list.files("/tmp", pattern = "treeppl", full.names = FALSE)
+  version <- sort(version, decreasing = TRUE)[1]
+
+  model_right = system(paste0("find /tmp/", version," -name coin.tppl"),
+                       intern = T)
   model <- treepplr::tp_model(model_right)
   names(model_right) <- "custom_model"
 
@@ -58,7 +64,7 @@ test_that("Test-compile_2b : tp_model model string ", {
 test_that("Test-compile_3a : tp_write path", {
   cat("\tTest-compile_3a : tp_write\n")
 
-  path <- treepplr::tp_write_model("bla bla bla")
+  path <- treepplr::tp_write_model("T : bla bla bla")
   expect_true(file.exists(path))
 
 })
@@ -67,10 +73,22 @@ test_that("Test-compile_3a : tp_write path", {
 test_that("Test-compile_3b : tp_write content", {
   cat("\tTest-compile_3b : tp_write\n")
 
-  content_right <- "bla bla bla"
+  content_right <- "M : bla bla bla"
   path <- treepplr::tp_write_model(content_right)
 
   content <- readLines(path, warn = FALSE)
   expect_equal(content_right, content)
 
+})
+
+
+test_that("Test-compile_4 : tp_model model string ", {
+  cat("\tTest-compile_4 : tp_model\n")
+
+  model_string <- "S : bla bla bla"
+  model <- treepplr::tp_model(model_string)
+  model_right <- paste0(temp_dir, "tmp_model_file.tppl")
+  names(model_right) <- "custom_model"
+
+  expect_equal(model, model_right)
 })

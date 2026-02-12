@@ -165,8 +165,8 @@ tp_find_model <- function(model_name) {
   # make sure you get the most recent version if you have more than one treeppl folder in the tmp
   version <- sort(version, decreasing = TRUE)[1]
 
-  res = system(paste0("find /tmp/", version," -name ", model_name, ".tppl"),
-         intern = T)
+  res <- system(paste0("find /tmp/", version," -name ", model_name, ".tppl"),
+         intern = T, ignore.stderr = TRUE)
 }
 
 # Find data for model_name

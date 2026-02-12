@@ -11,7 +11,8 @@ test_that("Test-data_1a : tp_data name", {
   version <- list.files("/tmp", pattern = "treeppl", full.names = FALSE)
   version <- sort(version, decreasing = TRUE)[1]
 
-  data_right <- paste0("/tmp/treeppl-0.2/y5b8qlyn9qgk61jxcdzq6gmv65-", version,"/lib/mcore/treeppl/models/lang/data/testdata_coin.json")
+  data_right <- system(paste0("find /tmp/", version," -name testdata_coin.json"),
+                       intern = T)
 
   data <- treepplr::tp_data("coin")
 
