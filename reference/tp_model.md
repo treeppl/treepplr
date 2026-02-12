@@ -1,7 +1,7 @@
 # Import a TreePPL model
 
 `tp_model` takes TreePPL code and prepares it to be used by
-[`tp_treeppl()`](http://treeppl.org/treepplr/reference/tp_treeppl.md).
+[`tp_compile()`](http://treeppl.org/treepplr/reference/tp_compile.md).
 
 ## Usage
 
@@ -18,14 +18,11 @@ tp_model(model_input)
   - The full path of the model file that contains the TreePPL code, OR
 
   - A string with the name of a model supported by treepplr (see
-    [`tp_model_names()`](http://treeppl.org/treepplr/reference/tp_model_names.md)),
+    [`tp_model_library()`](http://treeppl.org/treepplr/reference/tp_model_library.md)),
     OR
 
   - A string containing the entire TreePPL code.
 
 ## Value
 
-A TreePPL model (S3). A structured list with the string containing the
-TreePPL model and a class
-([`tp_model_names()`](http://treeppl.org/treepplr/reference/tp_model_names.md)
-or "custom")
+The path to the TreePPL model file

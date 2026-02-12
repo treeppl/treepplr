@@ -16,8 +16,7 @@ tp_json_to_phylo(json_out)
   One of two options:
 
   - A list of TreePPL output in parsed JSON format (output from
-    [`tp_treeppl()`](http://treeppl.org/treepplr/reference/tp_treeppl.md)),
-    OR
+    [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md)), OR
 
   - The full path of the json file containing the TreePPL output.
 

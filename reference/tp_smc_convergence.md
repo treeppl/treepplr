@@ -1,6 +1,6 @@
-# Check for convergence across multiple SMC sweeps/runs
+# Check for convergence across multiple SMC sweeps.
 
-Check for convergence across multiple SMC sweeps/runs
+Check for convergence across multiple SMC sweeps.
 
 ## Usage
 
@@ -12,8 +12,8 @@ tp_smc_convergence(treeppl_out)
 
 - treeppl_out:
 
-  a character vector giving the TreePPL json output produced by
-  [tp_treeppl](http://treeppl.org/treepplr/reference/tp_treeppl.md).
+  a data frame outputted by
+  [`tp_parse_smc()`](http://treeppl.org/treepplr/reference/tp_parse_smc.md).
 
 ## Value
 

@@ -15,13 +15,12 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/treepplr.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/coin-example.html">Coin flipping</a></li>
-    <li><a class="dropdown-item" href="../articles/constant-rate-birth.html">Constant rate birth (CRB) model</a></li>
-    <li><a class="dropdown-item" href="../articles/hostrep-example.html">Host repertoire model example</a></li>
-    <li><a class="dropdown-item" href="../articles/tree_inference.html">Tree inference</a></li>
+    <li><a class="dropdown-item" href="../articles/crbd-example.html">Constant-rate Birth Death example</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -49,17 +48,17 @@
 
       <dl><dt>
 
-          <code><a href="tp_check_input.html">tp_check_input()</a></code>
-
-        </dt>
-        <dd>Check input for inference with TreePPL</dd>
-
-        <dt>
-
           <code><a href="tp_compile.html">tp_compile()</a></code>
 
         </dt>
-        <dd>Compile for <code><a href="../reference/tp_run.html">tp_run()</a></code></dd>
+        <dd>Compile a TreePPL model and create inference machinery</dd>
+
+        <dt>
+
+          <code><a href="tp_compile_options.html">tp_compile_options()</a></code>
+
+        </dt>
+        <dd>Options that can be passed to TreePPL compiler</dd>
 
         <dt>
 
@@ -70,10 +69,10 @@
 
         <dt>
 
-          <code><a href="tp_fp_fetch.html">tp_fp_fetch()</a></code>
+          <code><a href="tp_expected_input.html">tp_expected_input()</a></code>
 
         </dt>
-        <dd>Fetch the latest version of treeppl</dd>
+        <dd>List expected input variables for a model</dd>
 
         <dt>
 
@@ -98,6 +97,13 @@
 
         <dt>
 
+          <code><a href="tp_mcmc_convergence.html">tp_mcmc_convergence()</a></code>
+
+        </dt>
+        <dd>Check for convergence across multiple MCMC runs.</dd>
+
+        <dt>
+
           <code><a href="tp_model.html">tp_model()</a></code>
 
         </dt>
@@ -105,17 +111,10 @@
 
         <dt>
 
-          <code><a href="tp_model_names.html">tp_model_names()</a></code>
+          <code><a href="tp_model_library.html">tp_model_library()</a></code>
 
         </dt>
         <dd>Model names supported by treepplr</dd>
-
-        <dt>
-
-          <code><a href="tp_parse.html">tp_parse()</a></code>
-
-        </dt>
-        <dd>Parse simple TreePPL json output</dd>
 
         <dt>
 
@@ -123,6 +122,20 @@
 
         </dt>
         <dd>Parse TreePPL json output for host repertoire model</dd>
+
+        <dt>
+
+          <code><a href="tp_parse_mcmc.html">tp_parse_mcmc()</a></code>
+
+        </dt>
+        <dd>Parse simple TreePPL json MCMC output</dd>
+
+        <dt>
+
+          <code><a href="tp_parse_smc.html">tp_parse_smc()</a></code>
+
+        </dt>
+        <dd>Parse simple TreePPL json SMC output</dd>
 
         <dt>
 
@@ -147,31 +160,17 @@
 
         <dt>
 
+          <code><a href="tp_run_options.html">tp_run_options()</a></code>
+
+        </dt>
+        <dd>Options that can be passed to a TreePPL program</dd>
+
+        <dt>
+
           <code><a href="tp_smc_convergence.html">tp_smc_convergence()</a></code>
 
         </dt>
-        <dd>Check for convergence across multiple SMC sweeps/runs</dd>
-
-        <dt>
-
-          <code><a href="tp_stored_compiled.html">tp_stored_compiled()</a></code>
-
-        </dt>
-        <dd>List of compiled models in <a href="https://rdrr.io/r/base/tempfile.html" class="external-link">base::tempdir</a></dd>
-
-        <dt>
-
-          <code><a href="tp_stored_data.html">tp_stored_data()</a></code>
-
-        </dt>
-        <dd>Data file names stored by user in <a href="https://rdrr.io/r/base/tempfile.html" class="external-link">base::tempdir</a> using tp_write</dd>
-
-        <dt>
-
-          <code><a href="tp_stored_model.html">tp_stored_model()</a></code>
-
-        </dt>
-        <dd>Model file names stored by user in <a href="https://rdrr.io/r/base/tempfile.html" class="external-link">base::tempdir</a> using tp_write</dd>
+        <dd>Check for convergence across multiple SMC sweeps.</dd>
 
         <dt>
 
@@ -182,13 +181,6 @@
 
         <dt>
 
-          <code><a href="tp_treeppl.html">tp_treeppl()</a></code>
-
-        </dt>
-        <dd>Compile and run a TreePPL program</dd>
-
-        <dt>
-
           <code><a href="tp_treeppl_json.html">tp_treeppl_json()</a></code>
 
         </dt>
@@ -196,10 +188,17 @@
 
         <dt>
 
-          <code><a href="tp_write.html">tp_write()</a></code>
+          <code><a href="tp_write_data.html">tp_write_data()</a></code>
 
         </dt>
-        <dd>Prepare input for <code><a href="../reference/tp_compile.html">tp_compile()</a></code></dd>
+        <dd>Write data to file</dd>
+
+        <dt>
+
+          <code><a href="tp_write_model.html">tp_write_model()</a></code>
+
+        </dt>
+        <dd>Write out a custom model to tp_tempdir()</dd>
 
         <dt>
 

@@ -14,7 +14,7 @@ tp_parse_host_rep(treeppl_out)
 - treeppl_out:
 
   a character vector giving the TreePPL json output produced by
-  [tp_treeppl](http://treeppl.org/treepplr/reference/tp_treeppl.md).
+  [tp_run](http://treeppl.org/treepplr/reference/tp_run.md).
 
 ## Value
 

@@ -20,26 +20,22 @@ library(dplyr)
 library(ggplot2)
 ```
 
-## Load model and data files
+## Understanding the coin model
 
-Now we can load the coin model script (the probabilistic program
-describing the coin flipping model) provided with the *treepplr* package
-using the following command:
+The coin model is one of the most basic models in the TreePPL model
+library. You can find all available models and some information about
+them [here](https://treeppl.org/docs/model-library).
 
-``` r
-model <- tp_model("coin")
-```
-
-You can load any TreePPL model script into *treepplr* using the same
-command, replacing `"coin"` with the file name of your script.
-
-To view the coin model script, simply type
+If you want to look at the TreePPL code here in R, you can use the
+following functions:
 
 ``` r
-cat(model)
+model_path <- tp_model("coin")
 ```
 
-which will print the script.
+``` r
+readr::read_file(model_path)
+```
 
 The main part of the model is defined in a function called `coinModel`:
 
@@ -113,28 +109,47 @@ more complete coverage of the TreePPL language, see the language
 overview in the [TreePPL online
 documentation](https://treeppl.org/docs/).
 
+## Model compilation and inference strategy
+
+TreePPL offers a variety of inference methods. Different methods work
+best for different models. Here, we will use sequential Monte Carlo
+(SMC), specifically the bootstrap particle filter version (the
+`method=smc-bpf` option).
+
+The function
+[`tp_compile()`](http://treeppl.org/treepplr/reference/tp_compile.md)
+has many optional arguments that allow you to select among the inference
+methods supported by TreePPL, and setting relevant options for each one
+of them. For an up-to-date description of available inference strategies
+supported, see
+[`tp_compile_options()`](http://treeppl.org/treepplr/reference/tp_compile_options.md).
+
+Now let’s compile the model to en executable that also contains the
+necessary machinery to run the chosen inference method.
+
+``` r
+exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 1000)
+```
+
+## Data
+
 Now we can start analyzing the model by inferring the value of `p` given
 some observed sequence of coin flips. To do this, we need to provide the
 observations in a suitable format. To load the example data provided in
 the *treepplr* package, use:
 
 ``` r
-data <- tp_data("coin")
+data <- tp_data(data_input = "coin")
 ```
 
-We can look at the structure of the input data using
+We can look at the structure of the input data using:
 
 ``` r
-str(data)
-#> List of 1
-#>  $ coinflips: logi [1:20] FALSE TRUE TRUE TRUE FALSE TRUE ...
+jsonlite::fromJSON(data)
 ```
 
-The data are provided as an R list. Each element in the list is named
-using the corresponding argument name expected by the TreePPL model
-function. The arguments can be given in any order in the list. In our
-case, the model function only takes one argument called `coinflips`, so
-the R list only contains one element named `coinflips`.
+    $coinflips
+     [1]  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE
 
 The TreePPL compiler requires data in JSON format. The conversion from R
 variables to appropriate JSON code understood by TreePPL is done
@@ -142,24 +157,22 @@ automatically by *treepplr* for supported data types. For instance,
 logical vectors in R are converted to sequences of Booleans (`Bool[]`)
 in TreePPL.
 
+In R, the data are collected in a list. Each element in the list is
+named using the corresponding argument name expected by the TreePPL
+model function. The arguments can be given in any order in the list. In
+our case, the model function only takes one argument called `coinflips`,
+so the R list only contains one element named `coinflips`.
+
 ## Run TreePPL
 
-Now we can compile and run the TreePPL program, inferring the posterior
-distribution of `p` conditioned on the input data. This is done using
-the *tp_treeppl()* function provided by *treepplr*. The function has
-many optional arguments that allow you to select among the inference
-methods supported by TreePPL, and setting relevant options for each one
-of them. For an up-to-date description of available inference strategies
-supported, see the documentation of the `tp_treeppl` function.
+Now we can run the TreePPL program, inferring the posterior distribution
+of `p` conditioned on the input data. This is done using the `tp_run`
+function.
 
-Here, we will use the default settings for inference methods. It uses
-sequential Monte Carlo (SMC), specifically the bootstrap particle filter
-version (the `method=smc-bpf` option). It runs 100 sweeps (100 SMC runs,
-if you wish), using 100 particles for each sweep
-(`n_runs=100, samples=100`).
+Let’s run 10 sweeps (10 SMC runs, if you wish).
 
 ``` r
-output_list <- tp_treeppl(model = model, data = data, samples = 100, n_runs = 100)
+output_list <- tp_run(compiled_model = exe_path, data = data, n_sweeps = 10)
 ```
 
 The run should take a few seconds to complete depending on your machine.
@@ -184,28 +197,28 @@ accurate if the variance of the estimates of the normalizing constant
 across sweeps is lower than 1.
 
 To check the variance of the normalizing constant, use the
-*tp_smc_convergence()* function.
-
-``` r
-tp_smc_convergence(output_list)
-#> [1] 0.01126985
-```
-
-It seems that our run provides a quite accurate estimate of the
-posterior distribution, as the variance is much smaller than 1.0.
-
-It is also easy to plot the sampled values. The *tp_parse()* function
-helps us convert the results returned by TreePPL into an R list of
-appropriately weighted values, taking both the particle weights and
+[`tp_smc_convergence()`](http://treeppl.org/treepplr/reference/tp_smc_convergence.md)
+function. But first, we’ll use the
+[`tp_parse_smc()`](http://treeppl.org/treepplr/reference/tp_parse_smc.md)
+function to convert the results returned by TreePPL into an R data frame
+of appropriately weighted values, taking both the particle weights and
 normalizing constants (the sweep weights, if you wish) into account.
 Note that both the particle weights and normalizing constants are given
 in log units.
 
 ``` r
-output <-  tp_parse(output_list) %>% 
-  dplyr::mutate(total_lweight = log_weight + norm_const) %>% 
-  dplyr::mutate(norm_weight = exp(total_lweight - max(.$total_lweight)))
+output <- tp_parse_smc(output_list)
 
+tp_smc_convergence(output)
+#> [1] 0.000693138
+```
+
+It seems that our run provides a quite accurate estimate of the
+posterior distribution, as the variance is much smaller than 1.0.
+
+It is also easy to plot the sampled values.
+
+``` r
 ggplot2::ggplot(output, ggplot2::aes(samples, weight = norm_weight)) +
   ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
                  col = "white", fill = "lightblue", binwidth=0.01) +
@@ -213,4 +226,4 @@ ggplot2::ggplot(output, ggplot2::aes(samples, weight = norm_weight)) +
   ggplot2::theme_bw()
 ```
 
-![](coin-example_files/figure-html/unnamed-chunk-9-1.png)
+![](coin-example_files/figure-html/unnamed-chunk-10-1.png)
