@@ -209,6 +209,16 @@ prep_temp <- function() {
 
 # Prepare TreePPL in temp every time the package is loaded
 .onLoad <- function(libname, pkgname) {
-  prep_temp()
+  if (Sys.info()["sysname"] == "Windows") {
+    "tpplc"
+  } else if (Sys.info()["sysname"] == "Linux") {
+    path_sc <- system.file("treeppl-linux", package = "treepplr")
+  } else {
+    path_sc <- system.file("treeppl-mac", package = "treepplr")
+  }
+
+  if (path_sc == "") {
+    prep_temp()
+    }
 }
 
