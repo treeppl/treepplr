@@ -181,3 +181,34 @@ tp_find_data <- function(model_name) {
          intern = T)
 }
 
+
+# Prepare TreePPL in temp
+prep_temp <- function() {
+  if (Sys.info()["sysname"] == "Windows") {
+    "tpplc"
+  } else if (Sys.info()["sysname"] == "Linux") {
+    path_sc <- system.file("treeppl-linux", package = "treepplr")
+  } else {
+    path_sc <- system.file("treeppl-mac", package = "treepplr")
+  }
+
+  # check if treeppl is in the tmp and untar to tmp if it isn't
+  ft <- list.files("/tmp", full.names = TRUE)
+  ff <- ft[grepl("treeppl-", ft)]
+
+  if (length(ff) == 0) {
+    utils::untar(
+      list.files(
+        path = path_sc,
+        full.names = TRUE
+      ),
+      exdir = "/tmp"
+    )
+  }
+}
+
+# Prepare TreePPL in temp every time the package is loaded
+.onLoad <- function(libname, pkgname) {
+  prep_temp()
+}
+
