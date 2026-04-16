@@ -4,10 +4,13 @@
 \alias{tp_installing_treeppl}
 \title{Platform-dependent treeppl self-contained installation}
 \usage{
-tp_installing_treeppl(download = TRUE)
+tp_installing_treeppl(download = TRUE, keep_previous = FALSE)
 }
 \arguments{
 \item{download}{Will download the associate tpplc version in the dir next
+to your local treepplr installation if not present.}
+
+\item{keep_previous}{Will download the associate tpplc version in the dir next
 to your local treepplr installation if not present.}
 }
 \value{

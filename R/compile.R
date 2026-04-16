@@ -3,8 +3,10 @@
 #' @returns A data frame with the output from the compiler's help <tpplc --help>
 #'
 #' @examples
+#' \dontrun{
 #' a <- tp_compile_options()
 #' view(a)
+#' }
 #'
 tp_compile_options <- function() {
 
