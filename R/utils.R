@@ -166,6 +166,18 @@ tp_model_library <- function() {
 }
 
 
+# Function to find the path of model and data files based on a model name and extension
+tp_find <- function(model_name, ext) {
+  # path to the model library
+  fd <- list.files("/tmp", pattern = paste0("treeppl-", TPPLC_VERSION), full.names = TRUE)
+  fd <- list.files(fd, pattern = "treeppl", full.names = TRUE)
+  fd <- paste0(fd, "/lib/mcore/treeppl/models")
+  # path to the required model
+  fd <- list.files(path = fd, pattern = paste0(model_name, ext), recursive = TRUE, full.names = TRUE)
+  return(fd)
+}
+
+
 # Find model for model_name
 tp_find_model <- function(model_name) {
   tp_find(model_name, ".tppl")
@@ -175,16 +187,3 @@ tp_find_model <- function(model_name) {
 tp_find_data <- function(model_name) {
   tp_find(model_name, ".json")
 }
-
-tp_find <- function(model_name, ext) {
-  # make sure you get the appropriate version if you have more than one treeppl folder in the tmp
-  version <- list.files("/tmp",
-                   pattern = paste0("treeppl-", TPPLC_VERSION),
-                   full.names = TRUE)
-
-  res <- list.files(version,
-                    full.names = TRUE,
-                    recursive = TRUE,
-                    pattern = paste0(model_name, ext))
-}
-

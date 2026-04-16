@@ -2,6 +2,10 @@
 #'
 #' @returns A data frame with the output from the compiler's help <tpplc --help>
 #'
+#' @examples
+#' a <- tp_compile_options()
+#' view(a)
+#'
 tp_compile_options <- function() {
 
   tpplc_path <- tp_installing_treeppl()
