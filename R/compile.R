@@ -2,18 +2,12 @@
 #'
 #' @returns A data frame with the output from the compiler's help <tpplc --help>
 #'
-#' @examples
-#' \dontrun{
-#' a <- tp_compile_options()
-#' view(a)
-#' }
-#'
 tp_compile_options <- function() {
 
   tpplc_path <- tp_installing_treeppl()
   # treeppl options
   cmd_opt <- system2(command = tpplc_path, args = "--help",
-                     env= "LD_LIBRARY_PATH= MCORE_LIBS=", stdout = TRUE)
+                     env= "LD_LIBRARY_PATH= ", stdout = TRUE)
 
   # Preparing the output #
 
@@ -126,7 +120,7 @@ tp_compile <- function(model,
   # Compile program
   # Empty LD_LIBRARY_PATH from R_env for this command specifically
   # due to conflict with internal env from treeppl self-contained
-  system(paste0("LD_LIBRARY_PATH= MCORE_LIBS= ", command))
+  system(paste0("LD_LIBRARY_PATH= ", command))
 
   return(output_path)
 }

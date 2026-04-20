@@ -90,7 +90,7 @@ tp_run <- function(compiled_model,
 
   # Empty LD_LIBRARY_PATH from R_env for this command specifically
   # due to conflict with internal env from treeppl self container
-  command <- paste("LD_LIBRARY_PATH= MCORE_LIBS=",
+  command <- paste("LD_LIBRARY_PATH= ",
                    compiled_model,
                    data,
                    #n_string,
