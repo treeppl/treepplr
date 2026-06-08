@@ -113,7 +113,7 @@ compiled_model_Template <-
       ######################
       get_exe = function(options) {
         str_options <- options_to_string(options)
-        exe <- exe_list[[paste(path,str_options)]]
+        exe <- exe_list[[str_options]]
         if (is.null(exe)) {
           exe <- compilation(path, str_options)
           exe_list[[str_options]] <<- exe
