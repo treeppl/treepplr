@@ -131,7 +131,6 @@ sep <- function() {
   .Platform$file.sep
 }
 
-
 #' Model names supported by treepplr
 #'
 #' @description Provides a list of all models in the TreePPL model library.
@@ -162,21 +161,26 @@ tp_model_library <- function() {
   rs <- rs[order(rs$category, rs$model_name, decreasing = FALSE), ]
   rownames(rs) <- NULL
   rs
-
 }
-
 
 # Function to find the path of model and data files based on a model name and extension
 tp_find <- function(model_name, ext) {
   # path to the model library
-  fd <- list.files("/tmp", pattern = paste0("treeppl-", TPPLC_VERSION), full.names = TRUE)
-  fd <- list.files(fd, pattern = "treeppl", full.names = TRUE)
-  fd <- paste0(fd, "/lib/mcore/treeppl/models")
-  # path to the required model
-  fd <- list.files(path = fd, pattern = paste0(model_name, ext), recursive = TRUE, full.names = TRUE)
+  version <- unlist(strsplit(Sys.getenv("MCORE_LIBS"), "treeppl="))[2]
+  if (!is.na(version)) {
+    version <- list.files(version, pattern = "lib", full.names = TRUE)
+    version <- list.files(version, pattern = "models", full.names = TRUE)
+    # path to the required model
+    fd <- list.files(path = version, pattern = paste0(model_name, ext), recursive = TRUE, full.names = TRUE)
+  } else {
+    fd <- list.files("/tmp", pattern = paste0("treeppl-", TPPLC_VERSION), full.names = TRUE)
+    fd <- list.files(fd, pattern = "treeppl", full.names = TRUE)
+    fd <- paste0(fd, "/lib/mcore/treeppl/models")
+    # path to the required model
+    fd <- list.files(path = fd, pattern = paste0(model_name, ext), recursive = TRUE, full.names = TRUE)
+  }
   return(fd)
 }
-
 
 # Find model for model_name
 tp_find_model <- function(model_name) {
@@ -186,4 +190,28 @@ tp_find_model <- function(model_name) {
 # Find data for model_name
 tp_find_data <- function(model_name) {
   tp_find(model_name, ".json")
+}
+
+#' Create a flat list
+#'
+#' @description
+#' `tp_list` takes a variable number of arguments and returns a list.
+#'
+#' @param ... Variadic arguments (see details).
+#'
+#' @details
+#' This function takes a variable number of arguments, so that users can pass as
+#' arguments either independent lists, or a single structured
+#' list of list (name_arg = value_arg).
+#'
+#' @return A list.
+#' @export
+tp_list <- function(...) {
+  dotlist <- list(...)
+
+  if (length(dotlist) == 1L && is.list(dotlist[[1]])) {
+    dotlist <- dotlist[[1]]
+  }
+
+  dotlist
 }

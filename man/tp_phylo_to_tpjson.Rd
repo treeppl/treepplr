@@ -7,7 +7,7 @@
 tp_phylo_to_tpjson(phylo_tree, age = "")
 }
 \arguments{
-\item{phylo_tree}{an object of class \link[ape:read.tree]{ape::phylo}.}
+\item{phylo_tree}{an object of class \link[ape:phylo]{ape::phylo}.}
 
 \item{age}{a string that determines the way the age of the nodes are
 calculated (default "branch-length").

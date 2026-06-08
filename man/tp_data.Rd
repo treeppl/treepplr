@@ -20,7 +20,7 @@ or nexus (.nexus, .nex) format, OR
 is the name of a model from the TreePPL library.}
 
 \item{dir}{The directory where you want to save the data file in JSON format.
-Default is \code{\link[base:tempfile]{base::tempdir()}}. Ignored if \code{data_input} is the name of a model
+Default is \code{\link[base:tempdir]{base::tempdir()}}. Ignored if \code{data_input} is the name of a model
 from the TreePPL library.}
 }
 \value{

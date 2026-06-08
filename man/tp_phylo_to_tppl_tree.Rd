@@ -7,7 +7,7 @@
 tp_phylo_to_tppl_tree(phylo_tree)
 }
 \arguments{
-\item{phylo_tree}{an object of class \link[ape:read.tree]{ape::phylo}.}
+\item{phylo_tree}{an object of class \link[ape:phylo]{ape::phylo}.}
 }
 \value{
 A pair (root index, tppl_tree)

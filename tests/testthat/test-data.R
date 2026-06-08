@@ -12,43 +12,41 @@ test_that("Test-data_1a : tp_data name", {
                         pattern = paste0("treeppl-", TPPLC_VERSION),
                         full.names = TRUE)
 
-  data_right <- system(paste0("find ", version," -name testdata_coin.json"),
-                       intern = T)
+  data_right <- system(paste0("find ", version, " -name testdata_coin.json"), intern = T)
 
   data <- treepplr::tp_data("coin")
 
   expect_equal(data, data_right)
-
 })
-
 
 test_that("Test-data_1b : tp_data content", {
   cat("\tTest-data_1b \n")
 
   data_right <-
-    tp_list(coinflips =
-      c(
-        TRUE,
-        TRUE,
-        TRUE,
-        FALSE,
-        TRUE,
-        FALSE,
-        FALSE,
-        TRUE,
-        TRUE,
-        FALSE,
-        FALSE,
-        FALSE,
-        TRUE,
-        FALSE,
-        TRUE,
-        FALSE,
-        FALSE,
-        TRUE,
-        FALSE,
-        FALSE
-      )
+    tp_list(
+      coinflips =
+        c(
+          TRUE,
+          TRUE,
+          TRUE,
+          FALSE,
+          TRUE,
+          FALSE,
+          FALSE,
+          TRUE,
+          TRUE,
+          FALSE,
+          FALSE,
+          FALSE,
+          TRUE,
+          FALSE,
+          TRUE,
+          FALSE,
+          FALSE,
+          TRUE,
+          FALSE,
+          FALSE
+        )
     )
 
   path <- treepplr::tp_data("coin")

@@ -1,18 +1,3 @@
-#' Options that can be passed to a TreePPL program
-#'
-#' @returns A string with the output from the executable's help
-#' @export
-#'
-tp_run_options <- function() {
-
-  #### under development here and in treeppl ####
-
-  # text from treeppl executable --help
-  return()
-
-}
-
-
 #' Run a TreePPL program
 #'
 #' @description
@@ -22,8 +7,6 @@ tp_run_options <- function() {
 #' outputted by [treepplr::tp_compile].
 #' @param data a [base::character] with the full path to the data file in TreePPL
 #' JSON format (as outputted by [treepplr::tp_data]).
-#' @param n_runs When using MCMC, a [base::integer] giving the number of runs to be done.
-#' @param n_sweeps When using SMC, a [base::integer] giving the number of SMC sweeps to be done.
 #' @param dir a [base::character] with the full path to the directory where you
 #' want to save the output. Default is [base::tempdir()].
 #' @param out_file_name a [base::character] with the name of the output file in
@@ -44,7 +27,7 @@ tp_run_options <- function() {
 #' data_path <- tp_data(data_input = "coin")
 #'
 #' # run TreePPL
-#' result <- tp_run(exe_path, data_path, n_sweeps = 2)
+#' result <- tp_run(exe_path, data_path, sweeps = 2)
 #'
 #'
 #' # When using MCMC
@@ -60,27 +43,10 @@ tp_run_options <- function() {
 
 tp_run <- function(compiled_model,
                    data,
-                   n_runs = 1,
-                   n_sweeps = 1,
                    dir = NULL,
                    out_file_name = "out",
                    ...) {
-
-  if(is.null(n_runs) & is.null(n_sweeps)){
-    stop("At least one of n_runs and n_sweeps needs to be passed")
-  }
-
-  #n_string <- ""
-  #if(!is.null(n_runs)){
-    #### change to --iterations when it's fixed in treeppl ####
-    #n_string <- paste0(n_string, "--sweeps ", n_runs, " ")
-  #}
-
-  #if(!is.null(n_sweeps)){
-    #n_string <- paste0(n_string, "--sweeps ", n_sweeps, " ")
-  #}
-
-  if(is.null(dir)){
+  if (is.null(dir)) {
     dir_path <- tp_tempdir()
   } else {
     dir_path <- dir
@@ -88,14 +54,28 @@ tp_run <- function(compiled_model,
 
   output_path <- paste0(dir_path, out_file_name, ".json")
 
+  #If a list have multiple time the same key
+  # list[[key]] will return the first key
+  # Exemple
+  #> lis <- list(method = "mcmc", method = "smc")
+  #> lis[["method"]] => "mcmc"
+  # So the user list have priority
+  options <-
+    list_to_options(append(
+      tp_list(...),
+      append(compiled_model$default_options[["compile"]],
+             compiled_model$default_options[["runtime"]])
+    ))
+
   # Empty LD_LIBRARY_PATH from R_env for this command specifically
   # due to conflict with internal env from treeppl self container
-  command <- paste("LD_LIBRARY_PATH= ",
-                   compiled_model,
-                   data,
-                   #n_string,
-                   paste(">", output_path)
-                   )
+  command <- paste(
+    "LD_LIBRARY_PATH= ",
+    compiled_model$get_exe(options[["compile"]]),
+    data,
+    options_to_string(options[["runtime"]]),
+    paste(">", output_path)
+  )
   system(command)
 
   # simple parsing
@@ -105,6 +85,3 @@ tp_run <- function(compiled_model,
 
   return(json_out)
 }
-
-
-
