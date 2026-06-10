@@ -1,16 +1,37 @@
 #' Options that can be passed to TreePPL compiler
 #'
-#' @returns A string with the output from the compiler's help <tpplc --help>
+#' @returns A data frame with the output from the compiler's help <tpplc --help>
 #'
 tp_compile_options <- function() {
 
-  #### under development ####
+  tpplc_path <- tp_installing_treeppl()
+  # treeppl options
+  cmd_opt <- system2(command = tpplc_path, args = "--help",
+                     env= "LD_LIBRARY_PATH= ", stdout = TRUE)
 
-  # text from tpplc --help
-  return()
+  # Preparing the output #
 
+  # find the line containing "Options:"
+  x <- which(cmd_opt == "Options:")
+  # extract everything after that line
+  cmd_opt <- cmd_opt[(x + 1):length(cmd_opt)]
+  cmd_opt <- trimws(cmd_opt)
+  cmd_opt <- strsplit(cmd_opt, " {2,}", perl = TRUE)
+
+  opt_tab <- do.call(rbind, lapply(cmd_opt, function(x) {
+    # if there is no description, make it NA
+    if (length(x) == 1) x <- c(x, NA)
+    data.frame(
+      argument = x[1],
+      description = x[2],
+      stringsAsFactors = FALSE
+    )
+  }))
+
+  # fix arguments (delete everything that comes after the first space)
+  opt_tab$argument <- sub(" .*", "", opt_tab$argument)
+  return(opt_tab)
 }
-
 
 
 #' Compile a TreePPL model and create inference machinery
@@ -93,13 +114,13 @@ tp_compile <- function(model,
   options <- paste("--output", output_path, args_str)
 
   # Preparing the command line program
-  tpplc_path <- installing_treeppl()   #### move this? ####
+  tpplc_path <- tp_installing_treeppl()
   command <- paste(tpplc_path, model_file_name, musts, options)
 
   # Compile program
   # Empty LD_LIBRARY_PATH from R_env for this command specifically
   # due to conflict with internal env from treeppl self-contained
-  system(paste0("LD_LIBRARY_PATH= MCORE_LIBS= ", command))
+  system(paste0("LD_LIBRARY_PATH= ", command))
 
   return(output_path)
 }
