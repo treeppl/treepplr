@@ -10,4 +10,13 @@ tp_compile_options()
 
 ## Value
 
-A string with the output from the compiler's help \<tpplc –help\>
+A data frame with the output from the compiler's help \<tpplc –help\>
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+a <- tp_compile_options()
+view(a)
+} # }
+```

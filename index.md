@@ -21,6 +21,7 @@ basic examples of running various models under
 You can install treepplr like so:
 
 ``` r
+
 if(!require("devtools", quietly = TRUE)) {
   install.packages("devtools")
   library(devtools)
@@ -37,6 +38,12 @@ TreePPL compiler is called. During the download, you will see a message
 like this
 
     [xx%] Downloaded xxxxxx bytes...
+    TreePPL initialisation ...please wait...
+    TreePPL initialisation : Done
+
+But you can force this download and installation
+
+    treepplr::tp_installing_treeppl()
 
 In subsequent analyses, the TreePPL compiler will be called directly,
 skipping this step.

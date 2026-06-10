@@ -19,6 +19,7 @@ to retrieve the models within the [TreePPL github
 repository](https://github.com/treeppl/treeppl/tree/main/models).
 
 ``` r
+
 model_lib <- tp_model_library()
 ```
 
@@ -31,6 +32,7 @@ full path to the `.tppl` file containing the model, or a string with the
 full model.
 
 ``` r
+
 # import a model from file
 model_path <- "path/to/my_model.tppl"
 ```
@@ -42,6 +44,7 @@ variety of input data to this format and writes to file, which will then
 be used by TreePPL. Here are some examples:
 
 ``` r
+
 # for models that only need a phylogenetic tree
 phylo <- ape::read.tree(file = "path/to/your/file.tre")
 data_path <- tp_data(data_input = phylo)
@@ -68,6 +71,7 @@ you can compile your model to en executable that also contains the
 necessary machinery to run the chosen inference method.
 
 ``` r
+
 # Using a model from the library and a Sequential Monte Carlo method
 exe_path <- tp_compile(model = "crbd", method = "smc-apf", particles = 10000)
 
@@ -83,6 +87,7 @@ your data to the compiled executable and choose how many independent
 runs you want to do.
 
 ``` r
+
 output <- tp_run(compiled_model = exe_path, data = data_path, n_runs = 4)
 ```
 
@@ -92,6 +97,7 @@ Then you can parse your output to produce a data frame and check for
 convergence.
 
 ``` r
+
 # If using SMC
 output_df_smc <- tp_parse_smc(output)
 
@@ -99,6 +105,7 @@ tp_smc_convergence(output_df_smc)
 ```
 
 ``` r
+
 # If using MCMC
 output_df_mcmc <- tp_parse_mcmc(output)
 ```

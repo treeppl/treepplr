@@ -10,6 +10,8 @@
   Import data for TreePPL program
 - [`tp_expected_input()`](http://treeppl.org/treepplr/reference/tp_expected_input.md)
   : List expected input variables for a model
+- [`tp_installing_treeppl()`](http://treeppl.org/treepplr/reference/tp_installing_treeppl.md)
+  : Platform-dependent treeppl self-contained installation
 - [`tp_json_to_phylo()`](http://treeppl.org/treepplr/reference/tp_json_to_phylo.md)
   : Convert TreePPL multi-line JSON to R phylo/multiPhylo object with
   associated weights

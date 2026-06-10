@@ -15,6 +15,7 @@ probability distribution for the value of `p`. Here, we will assume that
 First load the required R packages:
 
 ``` r
+
 library(treepplr)
 library(dplyr)
 library(ggplot2)
@@ -30,10 +31,12 @@ If you want to look at the TreePPL code here in R, you can use the
 following functions:
 
 ``` r
+
 model_path <- tp_model("coin")
 ```
 
 ``` r
+
 readr::read_file(model_path)
 ```
 
@@ -128,6 +131,7 @@ Now let’s compile the model to en executable that also contains the
 necessary machinery to run the chosen inference method.
 
 ``` r
+
 exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 1000)
 ```
 
@@ -139,12 +143,14 @@ observations in a suitable format. To load the example data provided in
 the *treepplr* package, use:
 
 ``` r
+
 data <- tp_data(data_input = "coin")
 ```
 
 We can look at the structure of the input data using:
 
 ``` r
+
 jsonlite::fromJSON(data)
 ```
 
@@ -172,6 +178,7 @@ function.
 Let’s run 10 sweeps (10 SMC runs, if you wish).
 
 ``` r
+
 output_list <- tp_run(compiled_model = exe_path, data = data, n_sweeps = 10)
 ```
 
@@ -207,6 +214,7 @@ Note that both the particle weights and normalizing constants are given
 in log units.
 
 ``` r
+
 output <- tp_parse_smc(output_list)
 
 tp_smc_convergence(output)
@@ -219,6 +227,7 @@ posterior distribution, as the variance is much smaller than 1.0.
 It is also easy to plot the sampled values.
 
 ``` r
+
 ggplot2::ggplot(output, ggplot2::aes(samples, weight = norm_weight)) +
   ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
                  col = "white", fill = "lightblue", binwidth=0.01) +
