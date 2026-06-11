@@ -60,18 +60,17 @@ tp_run <- function(compiled_model,
   #> lis <- list(method = "mcmc", method = "smc")
   #> lis[["method"]] => "mcmc"
   # So the user list have priority
-  options <-
-    list_to_options(append(
-      tp_list(...),
-      append(compiled_model$default_options[["compile"]],
-             compiled_model$default_options[["runtime"]])
-    ))
+  options <- list_to_options(tp_list(...))
+
+  if(length(options[["compile"]]) != 0) {
+    stop("Can't give compile time options here")
+  }
 
   # Empty LD_LIBRARY_PATH from R_env for this command specifically
   # due to conflict with internal env from treeppl self container
   command <- paste(
     "LD_LIBRARY_PATH= ",
-    compiled_model$get_exe(options[["compile"]]),
+    compiled_model$exe_path,
     data,
     options_to_string(options[["runtime"]]),
     paste(">", output_path)

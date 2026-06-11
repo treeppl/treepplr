@@ -12,7 +12,7 @@ test_that("Test-model_1a : tp_compile MCMC", {
 
   model <- treepplr::tp_compile("coin")
 
-  expect_no_error(readBin(model$exe_list[["--method mcmc"]], "raw", 10e6))
+  expect_no_error(readBin(model$exe_path, "raw", 10e6))
 
 })
 
@@ -21,7 +21,7 @@ test_that("Test-model_1b : tp_compile method SMC", {
 
   model <- treepplr::tp_compile("coin", method = "smc-bpf")
 
-  expect_no_error(readBin(model$exe_list[["--method smc-bpf"]], "raw", 10e6))
+  expect_no_error(readBin(model$exe_path, "raw", 10e6))
 })
 
 test_that("Test-model_2a : tp_compile model name", {

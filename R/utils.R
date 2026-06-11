@@ -11,7 +11,8 @@
 #'
 #' @return The path for TreePPL compiler.
 #' @export
-tp_installing_treeppl <- function(download = TRUE, keep_previous = FALSE) {
+tp_installing_treeppl <- function(download = TRUE,
+                                  keep_previous = FALSE) {
   if (Sys.getenv("TPPLC") != "") {
     tpplc_path <- Sys.getenv("TPPLC")
   } else{
@@ -20,21 +21,25 @@ tp_installing_treeppl <- function(download = TRUE, keep_previous = FALSE) {
       "tpplc"
     } else {
       path_treeppl <-
-        list.files(path = paste0(.libPaths()[1], "/treeppl/", TPPLC_VERSION),
-                   full.names = TRUE)
+        list.files(
+          path = paste0(.libPaths()[1], "/treeppl/", TPPLC_VERSION),
+          full.names = TRUE
+        )
     }
     # Test if tpplc is already here
-    tpplc_path <- paste0("/tmp/treeppl-",TPPLC_VERSION,"/tpplc")
-    if(!file.exists(tpplc_path)) {
-      if(download && length(path_treeppl) == 0) {
+    tpplc_path <- paste0("/tmp/treeppl-", TPPLC_VERSION, "/tpplc")
+    if (!file.exists(tpplc_path)) {
+      if (download && length(path_treeppl) == 0) {
         tag <- tp_fp_fetch(keep_previous)
         path_treeppl <-
-          list.files(path = paste0(.libPaths()[1], "/treeppl/", TPPLC_VERSION),
-                     full.names = TRUE)
+          list.files(
+            path = paste0(.libPaths()[1], "/treeppl/", TPPLC_VERSION),
+            full.names = TRUE
+          )
       }
       if (length(path_treeppl) != 0) {
         message("TreePPL initialisation ...please wait...")
-        utils::untar(path_treeppl, exdir="/tmp", verbose = FALSE)
+        utils::untar(path_treeppl, exdir = "/tmp", verbose = FALSE)
         message("TreePPL initialisation : Done")
       }
     }
@@ -51,41 +56,51 @@ tp_fp_fetch <- function(keep_previous = FALSE) {
     # Check for Linux
     if (Sys.info()["sysname"] == "Linux") {
       # assets[[2]] because releases are in alphabetical order (1 = Mac, 2 = Linux)
-      name <- paste0("treeppl-",TPPLC_VERSION,"-x86_64-linux.tar.gz")
+      name <- paste0("treeppl-", TPPLC_VERSION, "-x86_64-linux.tar.gz")
     } else {
-      name <- paste0("treeppl-",TPPLC_VERSION,"-aarch64-darwin.tar.gz")
+      name <- paste0("treeppl-", TPPLC_VERSION, "-aarch64-darwin.tar.gz")
     }
 
-    url <- paste0("https://github.com/treeppl/treeppl/releases/download/v",
-                  TPPLC_VERSION,"/",name)
+    url <- paste0(
+      "https://github.com/treeppl/treeppl/releases/download/v",
+      TPPLC_VERSION,
+      "/",
+      name
+    )
     # local repository
-    file_name <- list.files(path = paste0(.libPaths()[1], "/treeppl/",
-                                          TPPLC_VERSION),
-                            full.names = TRUE)
+    file_name <- list.files(
+      path = paste0(.libPaths()[1], "/treeppl/", TPPLC_VERSION),
+      full.names = TRUE
+    )
     # download file if file_name is empty
     if (length(file_name) == 0) {
-      if(!keep_previous) {
+      if (!keep_previous) {
 
       }
       # create destination folder if treeppl dir doesn't exist
       dest_folder <- paste0(.libPaths()[1], "/treeppl")
-      if(!keep_previous) {
-        system(paste("rm -rf", dest_folder), ignore.stdout = FALSE,
-               ignore.stderr = FALSE)
+      if (!keep_previous) {
+        system(
+          paste("rm -rf", dest_folder),
+          ignore.stdout = FALSE,
+          ignore.stderr = FALSE
+        )
       }
-      system(paste("mkdir", dest_folder), ignore.stdout = FALSE,
-             ignore.stderr = FALSE)
+      system(
+        paste("mkdir", dest_folder),
+        ignore.stdout = FALSE,
+        ignore.stderr = FALSE
+      )
       # create destination folder if version dir doesn't exist
       version_dir <- paste(dest_folder, TPPLC_VERSION, sep = "/")
-      system(paste("mkdir", version_dir), ignore.stdout = TRUE,
-             ignore.stderr = TRUE)
+      system(
+        paste("mkdir", version_dir),
+        ignore.stdout = TRUE,
+        ignore.stderr = TRUE
+      )
       # download
       fn <- paste(version_dir, name, sep = "/")
-      curl::curl_download(
-        url,
-        destfile = fn,
-        quiet = FALSE
-      )
+      curl::curl_download(url, destfile = fn, quiet = FALSE)
     }
   }
   TPPLC_VERSION
@@ -138,7 +153,6 @@ sep <- function() {
 #' @return A list of model names.
 #' @export
 tp_model_library <- function() {
-
   # make sure you get the appropriate version if you have more than one treeppl folder in the tmp
   fd <- list.files("/tmp",
                    pattern = paste0("treeppl-", TPPLC_VERSION),
@@ -148,7 +162,10 @@ tp_model_library <- function() {
   # add the rest of the path
   fd <- paste0(fd, "/lib/mcore/treeppl/models")
   # model names
-  mn <- list.files(fd, full.names = TRUE, recursive = TRUE, pattern = "\\.tppl$")
+  mn <- list.files(fd,
+                   full.names = TRUE,
+                   recursive = TRUE,
+                   pattern = "\\.tppl$")
   subcategory <- grepl(".*models/([^/]+)/([^/]+)/([^/]+)\\.tppl$", mn)
   no_sub <- mn[!subcategory]
 
@@ -171,13 +188,25 @@ tp_find <- function(model_name, ext) {
     version <- list.files(version, pattern = "lib", full.names = TRUE)
     version <- list.files(version, pattern = "models", full.names = TRUE)
     # path to the required model
-    fd <- list.files(path = version, pattern = paste0(model_name, ext), recursive = TRUE, full.names = TRUE)
+    fd <- list.files(
+      path = version,
+      pattern = paste0(model_name, ext),
+      recursive = TRUE,
+      full.names = TRUE
+    )
   } else {
-    fd <- list.files("/tmp", pattern = paste0("treeppl-", TPPLC_VERSION), full.names = TRUE)
+    fd <- list.files("/tmp",
+                     pattern = paste0("treeppl-", TPPLC_VERSION),
+                     full.names = TRUE)
     fd <- list.files(fd, pattern = "treeppl", full.names = TRUE)
     fd <- paste0(fd, "/lib/mcore/treeppl/models")
     # path to the required model
-    fd <- list.files(path = fd, pattern = paste0(model_name, ext), recursive = TRUE, full.names = TRUE)
+    fd <- list.files(
+      path = fd,
+      pattern = paste0(model_name, ext),
+      recursive = TRUE,
+      full.names = TRUE
+    )
   }
   return(fd)
 }

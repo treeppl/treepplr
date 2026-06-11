@@ -105,21 +105,9 @@ compiled_model_Template <-
   setRefClass(
     "compiled_model_Template",
     fields = list(
-      exe_list = "list",
+      exe_path = "character",
       path = "character",
-      default_options = "list"
-    ),
-    methods = list(
-      ######################
-      get_exe = function(options) {
-        str_options <- options_to_string(options)
-        exe <- exe_list[[str_options]]
-        if (is.null(exe)) {
-          exe <- compilation(path, str_options)
-          exe_list[[str_options]] <<- exe
-        }
-        exe
-      }
+      compile_options = "list"
     )
   )
 
@@ -203,7 +191,7 @@ tp_write_model <- function(model, model_file_name = "tmp_model_file") {
 
 tp_compile <- function(model, method = "mcmc", ...) {
   if (!assertthat::is.string(model)) {
-    stop("Input has to be a sring.")
+    stop("Input has to be a string.")
   }
 
   res <- try(file.exists(model), silent = TRUE)
@@ -228,7 +216,8 @@ tp_compile <- function(model, method = "mcmc", ...) {
   user_list <- append(tp_list(...), list(method = method))
   tmp <- list_to_options(user_list)
 
-  m$default_options <- tmp
-  m$get_exe(tmp[["compile"]])
+  m$compile_options <- tmp[["compile"]]
+  full_options = append(tmp[["compile"]], tmp[["runtime"]])
+  m$exe_path <- compilation(m$path, options_to_string(full_options))
   return(m)
 }
