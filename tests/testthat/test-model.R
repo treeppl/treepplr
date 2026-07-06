@@ -10,7 +10,7 @@ cat(crayon::yellow("\nTest-model : Compilation and modification of the options.\
 test_that("Test-model_1a : tp_compile MCMC", {
   cat("\tTest-model_1a : tp_compile MCMC \n")
 
-  model <- treepplr::tp_compile("coin")
+  model <- treepplr::tp_compile("crbd")
 
   expect_no_error(readBin(model$exe_path, "raw", 10e6))
 
@@ -19,7 +19,7 @@ test_that("Test-model_1a : tp_compile MCMC", {
 test_that("Test-model_1b : tp_compile method SMC", {
   cat("\tTest-model_1b : tp_compile method SMC \n")
 
-  model <- treepplr::tp_compile("coin", method = "smc-bpf")
+  model <- treepplr::tp_compile("crbd", method = "smc-bpf")
 
   expect_no_error(readBin(model$exe_path, "raw", 10e6))
 })
@@ -27,15 +27,15 @@ test_that("Test-model_1b : tp_compile method SMC", {
 test_that("Test-model_2a : tp_compile model name", {
   cat("\tTest-model_2a : tp_compile\n")
 
-  model <- treepplr::tp_compile("coin")
+  model <- treepplr::tp_compile("crbd")
 
   version <- list.files("/tmp",
                         pattern = paste0("treeppl-", TPPLC_VERSION),
                         full.names = TRUE)
 
-  model_right = system(paste0("find ", version, " -name coin.tppl"), intern = T)
+  model_right = system(paste0("find ", version, " -name crbd.tppl"), intern = T)
 
-  expect_equal(model$path, model_right)
+  expect_equal(readr::read_file(model$path), readr::read_file(model_right))
 })
 
 test_that("Test-model_2b : tp_compile model path ", {
@@ -45,7 +45,7 @@ test_that("Test-model_2b : tp_compile model path ", {
                         pattern = paste0("treeppl-", TPPLC_VERSION),
                         full.names = TRUE)
 
-  model_right = system(paste0("find ", version, " -name coin.tppl"), intern = T)
+  model_right = system(paste0("find ", version, " -name crbd.tppl"), intern = T)
   model <- treepplr::tp_compile(model_right)
 
   expect_equal(model$path, model_right)

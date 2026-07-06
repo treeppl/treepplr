@@ -185,7 +185,6 @@ tp_find <- function(model_name, ext) {
   # path to the model library
   version <- unlist(strsplit(Sys.getenv("MCORE_LIBS"), "treeppl="))[2]
   if (!is.na(version)) {
-    version <- list.files(version, pattern = "lib", full.names = TRUE)
     version <- list.files(version, pattern = "models", full.names = TRUE)
     # path to the required model
     fd <- list.files(
