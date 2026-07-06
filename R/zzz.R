@@ -7,7 +7,7 @@
 ##################
 
 #'@export
-TPPLC_VERSION <- "0.3.1"
+TPPLC_VERSION <- "0.4"
 
 .onLoad <- function(libname, pkgname){
   tp_installing_treeppl(download =  FALSE)

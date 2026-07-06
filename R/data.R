@@ -1,6 +1,7 @@
 
 
 
+
 #' Import data for TreePPL program
 #'
 #' @description
@@ -66,7 +67,6 @@ tp_data <- function(data_input,
     data_list <- tp_list(data_input)
     # write json with input data
     data_path <- tp_write_data(data_list, data_file_name, dir)
-
   } else {
     stop("Unknow R type (not a valid path, known data model, or list")
   }
