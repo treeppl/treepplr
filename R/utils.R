@@ -153,6 +153,7 @@ sep <- function() {
 #' @return A list of model names.
 #' @export
 tp_model_library <- function() {
+  tp_installing_treeppl()
   # make sure you get the appropriate version if you have more than one treeppl folder in the tmp
   fd <- list.files("/tmp",
                    pattern = paste0("treeppl-", TPPLC_VERSION),
@@ -194,6 +195,7 @@ tp_find <- function(model_name, ext) {
       full.names = TRUE
     )
   } else {
+    tp_installing_treeppl()
     fd <- list.files("/tmp",
                      pattern = paste0("treeppl-", TPPLC_VERSION),
                      full.names = TRUE)
