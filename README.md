@@ -18,14 +18,14 @@ and basic examples of running various models under [Articles](https://treeppl.or
 You can install treepplr like so:
 
 ``` r
-if(!require("devtools", quietly = TRUE)) {
-  install.packages("devtools")
-  library(devtools)
+if(!require("pak", quietly = TRUE)) {
+  install.packages("pak")
+  library(pak)
 } else {
- library(devtools)
+ library(pak)
 }
 
-devtools::install_github("treeppl/treepplr")
+pak::pak("treeppl/treepplr")
 ```
 
 This will only install the R package. The TreePPL compiler will not be downloaded and installed until you run your first analysis, and the TreePPL compiler is called.  During the download, you will see a message like this
