@@ -11,7 +11,7 @@ tp_parse_host_rep(treeppl_out)
 produced by \link{tp_run}.}
 }
 \value{
-A list (n = n_runs) of data frames with the output from inference
+A list (n = sweeps) of data frames with the output from inference
 in TreePPL under the host repertoire evolution model.
 }
 \description{

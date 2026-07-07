@@ -117,7 +117,7 @@ Now you are ready to run your analysis. All you have to do is to pass your data
 to the compiled executable and choose how many independent runs you want to do.
 
 ```{r}
-output <- tp_run(compiled_model = exe_path, data = data_path, n_runs = 4)
+output <- tp_run(compiled_model = exe_path, data = data_path)
 ```
 
 

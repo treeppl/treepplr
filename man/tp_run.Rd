@@ -47,6 +47,6 @@ exe_path <- tp_compile(model = "coin", method = "mcmc-naive", iterations = 2000)
 data_path <- tp_data(data_input = "coin")
 
 # run TreePPL
-result <- tp_run(exe_path, data_path, n_runs = 2)
+result <- tp_run(exe_path, data_path)
 }
 }
