@@ -19,9 +19,21 @@ tpplcCompileOptions <- c(
 
 #' Options that can be passed to TreePPL compiler
 #'
-#' @returns A data frame with the output from the compiler's help <tpplc --help>
+#' @returns A data frame with some outputs from the compiler's help <tpplc --help>
 #'
 tp_compile_options <- function() {
+  tp_find_options("Compile options:", "Runtime options:")
+}
+
+#' Options that can be passed to TreePPL run
+#'
+#' @returns A data frame with with some outputs from compiler's help <tpplc --help>
+#'
+tp_runtime_options <- function() {
+  tp_find_options("Runtime options:", "Inference methods:")
+}
+
+tp_find_options <- function(str_begin, str_end) {
   tpplc_path <- tp_installing_treeppl()
   # treeppl options
   cmd_opt <- system2(
@@ -33,10 +45,11 @@ tp_compile_options <- function() {
 
   # Preparing the output #
 
-  # find the line containing "Options:"
-  x <- which(cmd_opt == "Options:")
+  # find the line between str_begin and str_end
+  x <- which(cmd_opt == str_begin)
+  y <- which(cmd_opt == str_end)
   # extract everything after that line
-  cmd_opt <- cmd_opt[(x + 1):length(cmd_opt)]
+  cmd_opt <- cmd_opt[(x + 1):(y - 2)]
   cmd_opt <- trimws(cmd_opt)
   cmd_opt <- strsplit(cmd_opt, " {2,}", perl = TRUE)
 
@@ -139,7 +152,7 @@ compilation <- function(path, args_str) {
   dir_path <- tp_tempdir()
 
   # output
-  output_path <- paste0(dir_path, digest::digest(paste(path,args_str), "sha256"), ".exe")
+  output_path <- paste0(dir_path, digest::digest(paste(path, args_str), "sha256"), ".exe")
 
   options <- paste("--output", output_path, args_str)
 
@@ -166,7 +179,6 @@ compilation <- function(path, args_str) {
 #' @export
 #'
 tp_write_model <- function(model, model_file_name = "tmp_model_file") {
-
   path <- paste0(tp_tempdir(), model_file_name, ".tppl")
   cat(model, file = path)
 
