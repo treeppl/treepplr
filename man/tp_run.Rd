@@ -4,15 +4,7 @@
 \alias{tp_run}
 \title{Run a TreePPL program}
 \usage{
-tp_run(
-  compiled_model,
-  data,
-  n_runs = 1,
-  n_sweeps = 1,
-  dir = NULL,
-  out_file_name = "out",
-  ...
-)
+tp_run(compiled_model, data, dir = NULL, out_file_name = "out", ...)
 }
 \arguments{
 \item{compiled_model}{a \link[base:character]{base::character} with the full path to the compiled model
@@ -21,12 +13,8 @@ outputted by \link{tp_compile}.}
 \item{data}{a \link[base:character]{base::character} with the full path to the data file in TreePPL
 JSON format (as outputted by \link{tp_data}).}
 
-\item{n_runs}{When using MCMC, a \link[base:integer]{base::integer} giving the number of runs to be done.}
-
-\item{n_sweeps}{When using SMC, a \link[base:integer]{base::integer} giving the number of SMC sweeps to be done.}
-
 \item{dir}{a \link[base:character]{base::character} with the full path to the directory where you
-want to save the output. Default is \code{\link[base:tempfile]{base::tempdir()}}.}
+want to save the output. Default is \code{\link[base:tempdir]{base::tempdir()}}.}
 
 \item{out_file_name}{a \link[base:character]{base::character} with the name of the output file in
 JSON format. Default is "out".}
@@ -49,7 +37,7 @@ exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 2000)
 data_path <- tp_data(data_input = "coin")
 
 # run TreePPL
-result <- tp_run(exe_path, data_path, n_sweeps = 2)
+result <- tp_run(exe_path, data_path, sweeps = 2)
 
 
 # When using MCMC

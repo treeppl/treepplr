@@ -1,16 +1,4 @@
 
-#' List expected input variables for a model
-#'
-#' @param model A TreePPL model
-#'
-#' @returns The expected input data for a given TreePPL model.
-#' @export
-#'
-tp_expected_input <- function(model) {
-
-  #### under development here and in treeppl ####
-
-}
 
 
 
@@ -50,19 +38,18 @@ tp_expected_input <- function(model) {
 #' input
 #' }
 #'
-tp_data <- function(data_input, data_file_name = "tmp_data_file", dir = tp_tempdir()) {
-
+tp_data <- function(data_input,
+                    data_file_name = "tmp_data_file",
+                    dir = tp_tempdir()) {
   #### TODO data inputs have to be named as it is expected in the model ####
 
   if (assertthat::is.string(data_input)) {
-
     if (grepl("\\.(fasta|fas|nexus|nex)$", data_input, ignore.case = TRUE)) {
       data <- read_aln(data_input)
       data_list <- tp_list(list(data))
       data_path <- tp_write_data(data_list, data_file_name, dir)
 
     } else {
-
       res_lib <- tp_find_data(data_input)
 
       # model_input has the name of a known model
@@ -76,12 +63,10 @@ tp_data <- function(data_input, data_file_name = "tmp_data_file", dir = tp_tempd
 
     # OR data_input is a list (or a structured list)
   } else if (is.list(data_input)) {
-
     # flatten the list
     data_list <- tp_list(data_input)
     # write json with input data
     data_path <- tp_write_data(data_list, data_file_name, dir)
-
   } else {
     stop("Unknow R type (not a valid path, known data model, or list")
   }
@@ -89,7 +74,6 @@ tp_data <- function(data_input, data_file_name = "tmp_data_file", dir = tp_tempd
   return(data_path)
 
 }
-
 
 #' Write data to file
 #'
@@ -101,45 +85,17 @@ tp_data <- function(data_input, data_file_name = "tmp_data_file", dir = tp_tempd
 #' @returns The path to the created file
 #'
 #' @export
-tp_write_data <- function(data_list, data_file_name = "tmp_data_file", dir = tp_tempdir()) {
-
-  input_json <- jsonlite::toJSON(data_list, auto_unbox=TRUE)
+tp_write_data <- function(data_list,
+                          data_file_name = "tmp_data_file",
+                          dir = tp_tempdir()) {
+  input_json <- jsonlite::toJSON(data_list, auto_unbox = TRUE)
   path <- paste0(dir, data_file_name, ".json")
   write(input_json, file = path)
 
   return(path)
-
 }
-
-
-#' Create a flat list
-#'
-#' @description
-#' `tp_list` takes a variable number of arguments and returns a list.
-#'
-#' @param ... Variadic arguments (see details).
-#'
-#' @details
-#' This function takes a variable number of arguments, so that users can pass as
-#' arguments either independent lists, or a single structured
-#' list of list (name_arg = value_arg).
-#'
-#' @return A list.
-tp_list <- function(...) {
-  dotlist <- list(...)
-
-  if (length(dotlist) == 1L && is.list(dotlist[[1]])) {
-    dotlist <- dotlist[[1]]
-  }
-
-  dotlist
-}
-
-
 
 # UTILS: Data conversion
-
-
 ## Sequence data
 
 # Read alignment in FASTA or NEXUS (for tree inference)
@@ -212,7 +168,6 @@ read_aln <- function(file) {
   }
 }
 
-
 ## Phylogenetic trees
 
 #' Convert phylo obj to TreePPL tree
@@ -233,7 +188,6 @@ read_aln <- function(file) {
 #'
 #' @export
 tp_phylo_to_tpjson <- function(phylo_tree, age = "") {
-
   name <- "tree"
   root_tree <- tp_phylo_to_tppl_tree(phylo_tree)
 
@@ -293,7 +247,7 @@ tp_phylo_to_tppl_tree <- function(phylo_tree) {
       }
     }
   }
-  list(root_index,tree)
+  list(root_index, tree)
 }
 
 #' Calculate age in a tppl_tree
@@ -396,8 +350,6 @@ rec_tree_list <- function(tree, row_index) {
   pjs_list
 }
 
-
-
 #' Convert TreePPL multi-line JSON to R phylo/multiPhylo object with associated
 #' weights
 #'
@@ -415,11 +367,9 @@ rec_tree_list <- function(tree, row_index) {
 #'         $weights: A numeric vector of sample weights.
 #' @export
 tp_json_to_phylo <- function(json_out) {
-
   res <- try(file.exists(json_out), silent = TRUE)
   # If path exists, import output from file
   if (!is(res, "try-error") && res) {
-
     ## Read lines and parse each line as a separate JSON object
     raw_lines <- readLines(json_out, warn = FALSE)
 
@@ -427,7 +377,8 @@ tp_json_to_phylo <- function(json_out) {
     raw_lines <- raw_lines[raw_lines != ""]
 
     json_list <- lapply(raw_lines, function(x) {
-      jsonlite::fromJSON(x, simplifyVector = FALSE)})
+      jsonlite::fromJSON(x, simplifyVector = FALSE)
+    })
 
     # If path doesn't exist, then it should be a list
   } else if (is.list(json_out)) {
@@ -438,12 +389,10 @@ tp_json_to_phylo <- function(json_out) {
 
   ## Process each tree in the list
   newick_strings <- sapply(json_list, function(sweep) {
-
     # loop over all particles within the sweep
     samples <- sweep$samples
 
     sweep_string <- sapply(samples, function(particle) {
-
       # Extract the root age
       root_data <- particle[[1]]$`__data__`
       root_age  <- root_data$age
@@ -466,7 +415,6 @@ tp_json_to_phylo <- function(json_out) {
 
   # 5. Get weight for each tree
   nweight_matrix <- sapply(json_list, function(sweep) {
-
     nconst <- sweep$normConst
     logweights <- unlist(sweep$weights)
     log_nw <- nconst + logweights
@@ -479,11 +427,9 @@ tp_json_to_phylo <- function(json_out) {
   return(list(trees = trees, weights = norm_weights))
 }
 
-
 # 2. Recursive function to build Newick string
 # 'parent_age' is passed down from the caller
 build_newick_node <- function(node, parent_age) {
-
   type <- node[["__constructor__"]]
   data <- node[["__data__"]]
 
@@ -494,7 +440,7 @@ build_newick_node <- function(node, parent_age) {
     # Rule: Leaf branch length is the age of its parent node
     len <- parent_age
 
-    if (is.null(data$label)){
+    if (is.null(data$label)) {
       label <- data$index
     } else {
       label <- data$label
@@ -517,15 +463,16 @@ build_newick_node <- function(node, parent_age) {
   }
 }
 
-
 # Function to ladderize tree and correct tip label sequence
-ladderize_tree <- function(tree, temp_file = "temp", orientation = "left"){
-  if(file.exists(paste0("./", temp_file))){
+ladderize_tree <- function(tree,
+                           temp_file = "temp",
+                           orientation = "left") {
+  if (file.exists(paste0("./", temp_file))) {
     stop("The chosen temporary file exists! Please choose an other temp_file name")
   }
-  if(orientation == "left"){
+  if (orientation == "left") {
     right <- FALSE
-  }else{
+  } else{
     right <- TRUE
   }
   tree_temp <- ape::ladderize(tree, right = right)
@@ -534,8 +481,3 @@ ladderize_tree <- function(tree, temp_file = "temp", orientation = "left"){
   file.remove(paste0("./", temp_file, ".tre"))
   return(tree_lad)
 }
-
-
-
-
-

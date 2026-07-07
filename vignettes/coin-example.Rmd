@@ -34,6 +34,7 @@ First load the required R packages:
 library(treepplr)
 library(dplyr)
 library(ggplot2)
+library(readr)
 ```
 
 ## Understanding the coin model
@@ -44,11 +45,11 @@ can find all available models and some information about them [here](https://tre
 If you want to look at the TreePPL code here in R, you can use the following functions:
 
 ```{r, eval = FALSE}
-model_path <- tp_model("coin")
+model_path <- tp_compile("coin")
 ```
 
 ```{r, eval=FALSE}
-readr::read_file(model_path)
+readr::read_file(model_path$path)
 ```
 
 The main part of the model is defined in a function called `coinModel`:
@@ -130,7 +131,7 @@ Now let's compile the model to en executable that also contains the necessary ma
 to run the chosen inference method. 
 
 ```{r, eval = FALSE}
-exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 1000)
+exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 5000)
 ```
 
 ## Data
@@ -178,7 +179,7 @@ This is done using the `tp_run` function.
 Let's run 10 sweeps (10 SMC runs, if you wish).
 
 ```{r, eval=FALSE}
-output_list <- tp_run(compiled_model = exe_path, data = data, n_sweeps = 10)
+output_list <- tp_run(compiled_model = exe_path, data = data, sweeps = 10)
 ```
 
 ```{r, echo=FALSE}

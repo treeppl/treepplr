@@ -7,14 +7,14 @@
 tp_tempdir(temp_dir = NULL, sep = NULL, sub = NULL)
 }
 \arguments{
-\item{temp_dir}{NULL, or a path to be used; if NULL, R's \link[base:tempfile]{base::tempdir}
+\item{temp_dir}{NULL, or a path to be used; if NULL, R's \link[base:tempdir]{base::tempdir}
 is used.}
 
 \item{sep}{Better ignored; non-default values are passed to
 \link[base:normalizePath]{base::normalizePath}.}
 
 \item{sub}{Extension for defining a sub-directory within the directory
-defined by \link[base:tempfile]{base::tempdir}.}
+defined by \link[base:tempdir]{base::tempdir}.}
 }
 \value{
 Normalized path with system-dependent terminal separator.

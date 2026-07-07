@@ -12,7 +12,7 @@ tp_write_data(data_list, data_file_name = "tmp_data_file", dir = tp_tempdir())
 \item{data_file_name}{An optional name for the file created}
 
 \item{dir}{The directory where you want to save the data file in JSON format.
-Default is \code{\link[base:tempfile]{base::tempdir()}}.}
+Default is \code{\link[base:tempdir]{base::tempdir()}}.}
 }
 \value{
 The path to the created file
