@@ -3,8 +3,7 @@
 #' @description
 #' Run TreePPL and return output.
 #'
-#' @param compiled_model a [base::character] with the full path to the compiled model
-#' outputted by [treepplr::tp_compile].
+#' @param sampler a [treepplr::sampler_T] outputted by [treepplr::tp_compile].
 #' @param data a [base::character] with the full path to the data file in TreePPL
 #' JSON format (as outputted by [treepplr::tp_data]).
 #' @param dir a [base::character] with the full path to the directory where you
@@ -41,7 +40,7 @@
 #' result <- tp_run(exe_path, data_path, n_runs = 2)
 #' }
 
-tp_run <- function(compiled_model,
+tp_run <- function(sampler,
                    data,
                    dir = NULL,
                    out_file_name = "out",
@@ -62,7 +61,7 @@ tp_run <- function(compiled_model,
   # So the user list have priority
   options <- list_to_options(tp_list(...))
 
-  if(length(options[["compile"]]) != 0) {
+  if (length(options[["compile"]]) != 0) {
     stop("Can't give compile time options here")
   }
 
@@ -70,7 +69,7 @@ tp_run <- function(compiled_model,
   # due to conflict with internal env from treeppl self container
   command <- paste(
     "LD_LIBRARY_PATH= ",
-    compiled_model$exe_path,
+    sampler$exe_path,
     data,
     options_to_string(options[["runtime"]]),
     paste(">", output_path)

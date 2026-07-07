@@ -79,13 +79,12 @@ options_to_string <- function(options) {
   args_str <- c()
   if (length(options) != 0) {
     vec <- c()
-    args_vec <- unlist(options)
-    for (i in seq_along(args_vec)) {
-      if (!is.logical(args_vec[[i]])) {
-        str <- paste0("--", names(args_vec[i]), " ", args_vec[[i]])
+    for (i in seq_along(options)) {
+      if (!is.logical(options[[i]])) {
+        str <- paste0("--", names(options[i]), " ", options[[i]])
       } else {
-        if (args_vec[[i]]) {
-          str <- paste0("--", names(args_vec[i]))
+        if (options[[i]]) {
+          str <- paste0("--", names(options[i]))
         }
       }
       vec <- c(vec, str)
@@ -98,12 +97,12 @@ options_to_string <- function(options) {
 #' TreePPL model template
 #'
 #' @description
-#' `tp_modelT` template for TreePPL code carrying all the informations necessary
+#' `sampler_T` template for TreePPL code carrying all the informations necessary
 #' for compiling and running this model efficently
 
-compiled_model_Template <-
+sampler_T <-
   setRefClass(
-    "compiled_model_Template",
+    "sampler_T",
     fields = list(
       exe_path = "character",
       path = "character",
@@ -177,7 +176,7 @@ tp_write_model <- function(model, model_file_name = "tmp_model_file") {
 #' Create a TreePPL model
 #'
 #' @description
-#' `tp_compile` takes TreePPL model and prepares it to be used by
+#' `tp_compile` takes TreePPL model and create a sampler to be used by
 #' [treepplr::tp_run()].
 #'
 #' @param model One of tree options:
@@ -186,7 +185,7 @@ tp_write_model <- function(model, model_file_name = "tmp_model_file") {
 #' (see [treepplr::tp_model_library()]), OR
 #'   * A string containing the entire TreePPL code.
 #'
-#' @return compiled_model from a compiled_model_Template
+#' @return sampler from a sampler_T
 #' @export
 
 tp_compile <- function(model, method = "mcmc", ...) {
@@ -212,7 +211,7 @@ tp_compile <- function(model, method = "mcmc", ...) {
       model_path <- tp_write_model(model)
     }
   }
-  m <- new("compiled_model_Template", path = model_path)
+  m <- new("sampler_T", path = model_path)
   user_list <- append(tp_list(...), list(method = method))
   tmp <- list_to_options(user_list)
 

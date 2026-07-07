@@ -16,9 +16,9 @@ tp_compile(model, method = "mcmc", ...)
 }}
 }
 \value{
-compiled_model from a compiled_model_Template
+sampler from a sampler_T
 }
 \description{
-\code{tp_compile} takes TreePPL model and prepares it to be used by
+\code{tp_compile} takes TreePPL model and create a sampler to be used by
 \code{\link[=tp_run]{tp_run()}}.
 }
