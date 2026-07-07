@@ -19,6 +19,7 @@ First load the required R packages:
 library(treepplr)
 library(dplyr)
 library(ggplot2)
+library(readr)
 ```
 
 ## Understanding the coin model
@@ -32,12 +33,12 @@ following functions:
 
 ``` r
 
-model_path <- tp_model("coin")
+model_path <- tp_compile("coin")
 ```
 
 ``` r
 
-readr::read_file(model_path)
+readr::read_file(model_path$path)
 ```
 
 The main part of the model is defined in a function called `coinModel`:
@@ -132,7 +133,7 @@ necessary machinery to run the chosen inference method.
 
 ``` r
 
-exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 1000)
+exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 5000)
 ```
 
 ## Data
@@ -179,7 +180,7 @@ Let’s run 10 sweeps (10 SMC runs, if you wish).
 
 ``` r
 
-output_list <- tp_run(compiled_model = exe_path, data = data, n_sweeps = 10)
+output_list <- tp_run(compiled_model = exe_path, data = data, sweeps = 10)
 ```
 
 The run should take a few seconds to complete depending on your machine.

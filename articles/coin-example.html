@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">treepplr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,8 @@ distribution.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/treeppl/treepplr" class="external-link">treepplr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="understanding-the-coin-model">Understanding the coin model<a class="anchor" aria-label="anchor" href="#understanding-the-coin-model"></a>
@@ -93,9 +94,9 @@ them <a href="https://treeppl.org/docs/model-library" class="external-link">here
 <p>If you want to look at the TreePPL code here in R, you can use the
 following functions:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_model.html">tp_model</a></span><span class="op">(</span><span class="st">"coin"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">model_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_compile.html">tp_compile</a></span><span class="op">(</span><span class="st">"coin"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">readr</span><span class="fu">::</span><span class="fu">read_file</span><span class="op">(</span><span class="va">model_path</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_file.html" class="external-link">read_file</a></span><span class="op">(</span><span class="va">model_path</span><span class="op">$</span><span class="va">path</span><span class="op">)</span></span></code></pre></div>
 <p>The main part of the model is defined in a function called
 <code>coinModel</code>:</p>
 <pre><code>model function coinModel(coinflips: Bool[]) =&gt; Real  {
@@ -178,7 +179,7 @@ up-to-date description of available inference strategies supported, see
 <p>Now let’s compile the model to en executable that also contains the
 necessary machinery to run the chosen inference method.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">exe_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_compile.html">tp_compile</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"coin"</span>, method <span class="op">=</span> <span class="st">"smc-bpf"</span>, particles <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">exe_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_compile.html">tp_compile</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"coin"</span>, method <span class="op">=</span> <span class="st">"smc-bpf"</span>, particles <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
@@ -214,7 +215,7 @@ distribution of <code>p</code> conditioned on the input data. This is
 done using the <code>tp_run</code> function.</p>
 <p>Let’s run 10 sweeps (10 SMC runs, if you wish).</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">output_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_run.html">tp_run</a></span><span class="op">(</span>compiled_model <span class="op">=</span> <span class="va">exe_path</span>, data <span class="op">=</span> <span class="va">data</span>, n_sweeps <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">output_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_run.html">tp_run</a></span><span class="op">(</span>compiled_model <span class="op">=</span> <span class="va">exe_path</span>, data <span class="op">=</span> <span class="va">data</span>, sweeps <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>The run should take a few seconds to complete depending on your
 machine.</p>
 <p>In general, the TreePPL inference strategies can be described as
