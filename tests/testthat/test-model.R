@@ -10,24 +10,24 @@ cat(crayon::yellow("\nTest-model : Compilation and modification of the options.\
 test_that("Test-model_1a : tp_compile MCMC", {
   cat("\tTest-model_1a : tp_compile MCMC \n")
 
-  model <- treepplr::tp_compile("crbd")
+  sampler <- treepplr::tp_compile("crbd")
 
-  expect_no_error(readBin(model$exe_path, "raw", 10e6))
+  expect_no_error(readBin(sampler$exe_path, "raw", 10e6))
 
 })
 
 test_that("Test-model_1b : tp_compile method SMC", {
   cat("\tTest-model_1b : tp_compile method SMC \n")
 
-  model <- treepplr::tp_compile("crbd", method = "smc-bpf")
+  sampler <- treepplr::tp_compile("crbd", method = "smc-bpf")
 
-  expect_no_error(readBin(model$exe_path, "raw", 10e6))
+  expect_no_error(readBin(sampler$exe_path, "raw", 10e6))
 })
 
 test_that("Test-model_2a : tp_compile model name", {
   cat("\tTest-model_2a : tp_compile\n")
 
-  model <- treepplr::tp_compile("crbd")
+  sampler <- treepplr::tp_compile("crbd")
 
   version <- list.files("/tmp",
                         pattern = paste0("treeppl-", TPPLC_VERSION),
@@ -35,7 +35,7 @@ test_that("Test-model_2a : tp_compile model name", {
 
   model_right = system(paste0("find ", version, " -name crbd.tppl"), intern = T)
 
-  expect_equal(readr::read_file(model$path), readr::read_file(model_right))
+  expect_equal(readr::read_file(sampler$model_path), readr::read_file(model_right))
 })
 
 test_that("Test-model_2b : tp_compile model path ", {
@@ -46,9 +46,9 @@ test_that("Test-model_2b : tp_compile model path ", {
                         full.names = TRUE)
 
   model_right = system(paste0("find ", version, " -name crbd.tppl"), intern = T)
-  model <- treepplr::tp_compile(model_right)
+  sampler <- treepplr::tp_compile(model_right)
 
-  expect_equal(model$path, model_right)
+  expect_equal(sampler$model_path, model_right)
 })
 
 test_that("Test-model_3a : tp_write path", {
@@ -75,8 +75,8 @@ test_that("Test-model_4 : tp_compile model string ", {
   cat("\tTest-model_4 : tp_compile\n")
 
   model_string <- "model function blo() => Int {let blo = 3; return blo;}"
-  model <- treepplr::tp_compile(model_string)
+  sampler <- treepplr::tp_compile(model_string)
   model_right <- paste0(temp_dir, "tmp_model_file.tppl")
 
-  expect_equal(model$path, model_right)
+  expect_equal(sampler$model_path, model_right)
 })

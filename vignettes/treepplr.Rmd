@@ -103,10 +103,10 @@ to run the chosen inference method.
 
 ```{r}
 # Using a model from the library and a Sequential Monte Carlo method
-exe_path <- tp_compile(model = "crbd", method = "smc-apf", particles = 10000)
+sampler <- tp_compile(model = "crbd", method = "smc-apf", particles = 10000)
 
 # Using a custom model and a Markov chain Monte Carlo method
-exe_path <- tp_compile(model = model_path, method = "mcmc-lightweight",
+sampler <- tp_compile(model = model_path, method = "mcmc-lightweight",
                        iterations = 10000)
 ```
 
@@ -117,7 +117,7 @@ Now you are ready to run your analysis. All you have to do is to pass your data
 to the compiled executable and choose how many independent runs you want to do.
 
 ```{r}
-output <- tp_run(compiled_model = exe_path, data = data_path)
+output <- tp_run(compiled_model = sampler, data = data_path)
 ```
 
 

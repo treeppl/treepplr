@@ -118,7 +118,7 @@ sampler_T <-
     "sampler_T",
     fields = list(
       exe_path = "character",
-      path = "character",
+      model_path = "character",
       compile_options = "list"
     )
   )
@@ -223,12 +223,12 @@ tp_compile <- function(model, method = "mcmc", ...) {
       model_path <- tp_write_model(model)
     }
   }
-  m <- new("sampler_T", path = model_path)
+  sampler <- new("sampler_T", model_path = model_path)
   user_list <- append(tp_list(...), list(method = method))
   tmp <- list_to_options(user_list)
 
-  m$compile_options <- tmp[["compile"]]
+  sampler$compile_options <- tmp[["compile"]]
   full_options = append(tmp[["compile"]], tmp[["runtime"]])
-  m$exe_path <- compilation(m$path, options_to_string(full_options))
-  return(m)
+  sampler$exe_path <- compilation(sampler$model_path, options_to_string(full_options))
+  return(sampler)
 }

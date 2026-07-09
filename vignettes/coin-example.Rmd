@@ -45,11 +45,11 @@ can find all available models and some information about them [here](https://tre
 If you want to look at the TreePPL code here in R, you can use the following functions:
 
 ```{r, eval = FALSE}
-model_path <- tp_compile("coin")
+sampler <- tp_compile("coin")
 ```
 
 ```{r, eval=FALSE}
-readr::read_file(model_path$path)
+readr::read_file(sampler$model_path)
 ```
 
 The main part of the model is defined in a function called `coinModel`:
