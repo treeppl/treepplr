@@ -4,7 +4,15 @@
 \alias{tp_run}
 \title{Run a TreePPL program}
 \usage{
-tp_run(sampler, data, dir = NULL, out_file_name = "out", ...)
+tp_run(
+  sampler,
+  data,
+  dir = NULL,
+  out_file_name = "out",
+  n_runs = 1,
+  n_processes = 3,
+  ...
+)
 }
 \arguments{
 \item{sampler}{a \link{sampler_T} outputted by \link{tp_compile}.}

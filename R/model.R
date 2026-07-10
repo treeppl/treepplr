@@ -154,11 +154,11 @@ compilation <- function(path, args_str) {
   # output
   output_path <- paste0(dir_path, digest::digest(paste(path, args_str), "sha256"), ".exe")
 
-  options <- paste("--output", output_path, args_str)
+  options <- paste(args_str, "--output", output_path)
 
   # Preparing the command line program
   tpplc_path <- tp_installing_treeppl()
-  command <- paste(tpplc_path, path, options)
+  command <- paste(tpplc_path, options, path)
 
   # Compile program
   # Empty LD_LIBRARY_PATH from R_env for this command specifically
@@ -224,7 +224,7 @@ tp_compile <- function(model, method = "mcmc", ...) {
     }
   }
   sampler <- new("sampler_T", model_path = model_path)
-  user_list <- append(tp_list(...), list(method = method))
+  user_list <- append(list(method = method), tp_list(...))
   tmp <- list_to_options(user_list)
 
   sampler$compile_options <- tmp[["compile"]]

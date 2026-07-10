@@ -16,6 +16,7 @@ Depends:
 Imports: 
     assertthat,
     digest,
+    future.apply,
     methods,
     jsonlite,
     tidytree,

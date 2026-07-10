@@ -44,6 +44,8 @@ tp_run <- function(sampler,
                    data,
                    dir = NULL,
                    out_file_name = "out",
+                   n_runs = 1,
+                   n_processes = 3,
                    ...) {
   if (is.null(dir)) {
     dir_path <- tp_tempdir()
@@ -64,7 +66,6 @@ tp_run <- function(sampler,
   if (length(options[["compile"]]) != 0) {
     stop("Can't give compile time options here")
   }
-
   # Empty LD_LIBRARY_PATH from R_env for this command specifically
   # due to conflict with internal env from treeppl self container
   command <- paste(
@@ -74,7 +75,18 @@ tp_run <- function(sampler,
     options_to_string(options[["runtime"]]),
     paste(">", output_path)
   )
-  system(command)
+
+  if (n_runs > 1) {
+    plan(multisession, workers = n_processes)
+    future_sapply(
+      1:n_runs,
+      FUN = function(i) {
+        system(paste0(command, i))
+      }
+    )
+  } else {
+    system(command)
+  }
 
   # simple parsing
   #### change this? ####
