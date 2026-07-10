@@ -6,6 +6,10 @@
 #version <- repo_info[[1]]$tag_name
 ##################
 
+#' TreePPL version
+#'
+#' @description
+#' TreePPL program version in use for this package version
 #'@export
 TPPLC_VERSION <- "0.4"
 

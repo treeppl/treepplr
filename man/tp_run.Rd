@@ -26,7 +26,12 @@ want to save the output. Default is \code{\link[base:tempdir]{base::tempdir()}}.
 \item{out_file_name}{a \link[base:character]{base::character} with the name of the output file in
 JSON format. Default is "out".}
 
-\item{...}{See \link{tp_run_options} for all supported arguments.}
+\item{n_runs}{a \link[base:numeric]{base::numeric} for the numbers of sweeps(SMC)/Chains(MCMC).}
+
+\item{n_processes}{a \link[base:numeric]{base::numeric}, number of parallel processes to use.
+Can't be > n_runs.}
+
+\item{...}{See \link{tp_runtime_options} for all supported arguments.}
 }
 \value{
 A list of TreePPL output in parsed JSON format.

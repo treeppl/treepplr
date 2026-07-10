@@ -2,13 +2,13 @@
 % Please edit documentation in R/model.R
 \name{tp_runtime_options}
 \alias{tp_runtime_options}
-\title{Options that can be passed to TreePPL run}
+\title{Options to \code{\link[=tp_run]{tp_run()}}}
 \usage{
 tp_runtime_options()
 }
 \value{
-A data frame with with some outputs from compiler's help <tpplc --help>
+A data frame with options that can be passed to \code{\link[=tp_run]{tp_run()}}
 }
 \description{
-Options that can be passed to TreePPL run
+Options to \code{\link[=tp_run]{tp_run()}}
 }

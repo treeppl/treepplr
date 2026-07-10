@@ -10,7 +10,10 @@
 #' want to save the output. Default is [base::tempdir()].
 #' @param out_file_name a [base::character] with the name of the output file in
 #' JSON format. Default is "out".
-#' @param ... See [treepplr::tp_run_options] for all supported arguments.
+#' @param n_runs a [base::numeric] for the numbers of sweeps(SMC)/Chains(MCMC).
+#' @param n_processes a [base::numeric], number of parallel processes to use.
+#' Can't be > n_runs.
+#' @param ... See [treepplr::tp_runtime_options] for all supported arguments.
 #'
 #'
 #' @return A list of TreePPL output in parsed JSON format.
@@ -85,8 +88,12 @@ tp_run <- function(sampler,
   )
 
   if (n_runs > 1) {
-    plan(multisession, workers = n_processes)
-    future_sapply(
+    if (n_processes > n_runs) {
+      warning("n_processes reduce to be equal to n_runs.")
+      n_processes <- n_runs
+    }
+    future::plan(future::multisession, workers = n_processes)
+    future.apply::future_sapply(
       1:n_runs,
       FUN = function(i) {
         system(paste0(command, i))
