@@ -19,9 +19,21 @@ tpplcCompileOptions <- c(
 
 #' Options that can be passed to TreePPL compiler
 #'
-#' @returns A data frame with the output from the compiler's help <tpplc --help>
+#' @returns A data frame with some outputs from the compiler's help <tpplc --help>
 #'
 tp_compile_options <- function() {
+  tp_find_options("Compile options:", "Runtime options:")
+}
+
+#' Options that can be passed to TreePPL run
+#'
+#' @returns A data frame with with some outputs from compiler's help <tpplc --help>
+#'
+tp_runtime_options <- function() {
+  tp_find_options("Runtime options:", "Inference methods:")
+}
+
+tp_find_options <- function(str_begin, str_end) {
   tpplc_path <- tp_installing_treeppl()
   # treeppl options
   cmd_opt <- system2(
@@ -33,10 +45,11 @@ tp_compile_options <- function() {
 
   # Preparing the output #
 
-  # find the line containing "Options:"
-  x <- which(cmd_opt == "Options:")
+  # find the line between str_begin and str_end
+  x <- which(cmd_opt == str_begin)
+  y <- which(cmd_opt == str_end)
   # extract everything after that line
-  cmd_opt <- cmd_opt[(x + 1):length(cmd_opt)]
+  cmd_opt <- cmd_opt[(x + 1):(y - 2)]
   cmd_opt <- trimws(cmd_opt)
   cmd_opt <- strsplit(cmd_opt, " {2,}", perl = TRUE)
 
@@ -79,13 +92,12 @@ options_to_string <- function(options) {
   args_str <- c()
   if (length(options) != 0) {
     vec <- c()
-    args_vec <- unlist(options)
-    for (i in seq_along(args_vec)) {
-      if (!is.logical(args_vec[[i]])) {
-        str <- paste0("--", names(args_vec[i]), " ", args_vec[[i]])
+    for (i in seq_along(options)) {
+      if (!is.logical(options[[i]])) {
+        str <- paste0("--", names(options[i]), " ", options[[i]])
       } else {
-        if (args_vec[[i]]) {
-          str <- paste0("--", names(args_vec[i]))
+        if (options[[i]]) {
+          str <- paste0("--", names(options[i]))
         }
       }
       vec <- c(vec, str)
@@ -98,15 +110,15 @@ options_to_string <- function(options) {
 #' TreePPL model template
 #'
 #' @description
-#' `tp_modelT` template for TreePPL code carrying all the informations necessary
+#' `sampler_T` template for TreePPL code carrying all the informations necessary
 #' for compiling and running this model efficently
 
-compiled_model_Template <-
+sampler_T <-
   setRefClass(
-    "compiled_model_Template",
+    "sampler_T",
     fields = list(
       exe_path = "character",
-      path = "character",
+      model_path = "character",
       compile_options = "list"
     )
   )
@@ -140,7 +152,7 @@ compilation <- function(path, args_str) {
   dir_path <- tp_tempdir()
 
   # output
-  output_path <- paste0(dir_path, digest::digest(paste(path,args_str), "sha256"), ".exe")
+  output_path <- paste0(dir_path, digest::digest(paste(path, args_str), "sha256"), ".exe")
 
   options <- paste("--output", output_path, args_str)
 
@@ -167,7 +179,6 @@ compilation <- function(path, args_str) {
 #' @export
 #'
 tp_write_model <- function(model, model_file_name = "tmp_model_file") {
-
   path <- paste0(tp_tempdir(), model_file_name, ".tppl")
   cat(model, file = path)
 
@@ -177,7 +188,7 @@ tp_write_model <- function(model, model_file_name = "tmp_model_file") {
 #' Create a TreePPL model
 #'
 #' @description
-#' `tp_compile` takes TreePPL model and prepares it to be used by
+#' `tp_compile` takes TreePPL model and create a sampler to be used by
 #' [treepplr::tp_run()].
 #'
 #' @param model One of tree options:
@@ -186,7 +197,7 @@ tp_write_model <- function(model, model_file_name = "tmp_model_file") {
 #' (see [treepplr::tp_model_library()]), OR
 #'   * A string containing the entire TreePPL code.
 #'
-#' @return compiled_model from a compiled_model_Template
+#' @return sampler from a sampler_T
 #' @export
 
 tp_compile <- function(model, method = "mcmc", ...) {
@@ -212,12 +223,12 @@ tp_compile <- function(model, method = "mcmc", ...) {
       model_path <- tp_write_model(model)
     }
   }
-  m <- new("compiled_model_Template", path = model_path)
+  sampler <- new("sampler_T", model_path = model_path)
   user_list <- append(tp_list(...), list(method = method))
   tmp <- list_to_options(user_list)
 
-  m$compile_options <- tmp[["compile"]]
+  sampler$compile_options <- tmp[["compile"]]
   full_options = append(tmp[["compile"]], tmp[["runtime"]])
-  m$exe_path <- compilation(m$path, options_to_string(full_options))
-  return(m)
+  sampler$exe_path <- compilation(sampler$model_path, options_to_string(full_options))
+  return(sampler)
 }
