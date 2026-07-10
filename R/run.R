@@ -47,10 +47,18 @@ tp_run <- function(sampler,
                    n_runs = 1,
                    n_processes = 3,
                    ...) {
+
   if (is.null(dir)) {
     dir_path <- tp_tempdir()
   } else {
     dir_path <- dir
+  }
+
+  listFiles <- list.files(path = dir_path,
+                          pattern = out_file_name,
+                          full.names = TRUE)
+  if(length(listFiles) != 0) {
+    file.remove(listFiles)
   }
 
   output_path <- paste0(dir_path, out_file_name, ".json")
@@ -61,9 +69,9 @@ tp_run <- function(sampler,
   #> lis <- list(method = "mcmc", method = "smc")
   #> lis[["method"]] => "mcmc"
   # So the user list have priority
-  options <- list_to_options(tp_list(...))
+  tpplc_options <- list_to_options(tp_list(...))
 
-  if (length(options[["compile"]]) != 0) {
+  if (length(tpplc_options[["compile"]]) != 0) {
     stop("Can't give compile time options here")
   }
   # Empty LD_LIBRARY_PATH from R_env for this command specifically
@@ -72,7 +80,7 @@ tp_run <- function(sampler,
     "LD_LIBRARY_PATH= ",
     sampler$exe_path,
     data,
-    options_to_string(options[["runtime"]]),
+    options_to_string(tpplc_options[["runtime"]]),
     paste(">", output_path)
   )
 
@@ -88,9 +96,11 @@ tp_run <- function(sampler,
     system(command)
   }
 
-  # simple parsing
-  #### change this? ####
-  json_out <- readLines(output_path) |>
+  listFiles <- list.files(path = dir_path,
+                          pattern = out_file_name,
+                          full.names = TRUE)
+
+  json_out <- readr::read_lines(listFiles) |>
     lapply(jsonlite::fromJSON, simplifyVector = FALSE)
 
   return(json_out)
