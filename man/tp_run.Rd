@@ -26,10 +26,10 @@ want to save the output. Default is \code{\link[base:tempdir]{base::tempdir()}}.
 \item{out_file_name}{a \link[base:character]{base::character} with the name of the output file in
 JSON format. Default is "out".}
 
-\item{n_runs}{a \link[base:numeric]{base::numeric} for the numbers of sweeps(SMC)/Chains(MCMC).}
+\item{n_runs}{a \link[base:numeric]{base::numeric} giving the numbers of sweeps(SMC)/runs(MCMC).}
 
 \item{n_processes}{a \link[base:numeric]{base::numeric}, number of parallel processes to use.
-Can't be > n_runs.}
+Can't be superior to n_runs.}
 
 \item{...}{See \link{tp_runtime_options} for all supported arguments.}
 }
@@ -49,7 +49,7 @@ exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 2000)
 data_path <- tp_data(data_input = "coin")
 
 # run TreePPL
-result <- tp_run(exe_path, data_path, sweeps = 2)
+result <- tp_run(exe_path, data_path, n_runs = 2)
 
 
 # When using MCMC

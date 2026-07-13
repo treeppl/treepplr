@@ -10,9 +10,9 @@
 #' want to save the output. Default is [base::tempdir()].
 #' @param out_file_name a [base::character] with the name of the output file in
 #' JSON format. Default is "out".
-#' @param n_runs a [base::numeric] for the numbers of sweeps(SMC)/Chains(MCMC).
+#' @param n_runs a [base::numeric] giving the numbers of sweeps(SMC)/runs(MCMC).
 #' @param n_processes a [base::numeric], number of parallel processes to use.
-#' Can't be > n_runs.
+#' Can't be superior to n_runs.
 #' @param ... See [treepplr::tp_runtime_options] for all supported arguments.
 #'
 #'
@@ -29,7 +29,7 @@
 #' data_path <- tp_data(data_input = "coin")
 #'
 #' # run TreePPL
-#' result <- tp_run(exe_path, data_path, sweeps = 2)
+#' result <- tp_run(exe_path, data_path, n_runs = 2)
 #'
 #'
 #' # When using MCMC
