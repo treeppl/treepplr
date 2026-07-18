@@ -17,18 +17,58 @@ tpplcCompileOptions <- c(
   "static-delay"
 )
 
-#' Options that can be passed to TreePPL compiler
+#' Methods to [treepplr::tp_compile()]
 #'
-#' @returns A data frame with some outputs from the compiler's help <tpplc --help>
+#' @returns  A data frame with methods that can be passed to [treepplr::tp_compile()]
 #'
+#' @export
+tp_compile_methods <- function() {
+  tpplc_path <- tp_installing_treeppl()
+  # treeppl options
+  cmd_opt <- system2(
+    command = tpplc_path,
+    args = "--help",
+    env = "LD_LIBRARY_PATH= ",
+    stdout = TRUE
+  )
+
+  # Preparing the output #
+
+  # find the line between str_begin and str_end
+  x <- which(cmd_opt == "Inference methods:")
+
+  # extract everything after that line
+  cmd_opt <- cmd_opt[(x + 1):length(cmd_opt)]
+  cmd_opt <- trimws(cmd_opt)
+  cmd_opt <- strsplit(cmd_opt, " ", perl = TRUE)
+
+
+  opt_tab <- do.call(rbind, lapply(cmd_opt, function(x) {
+    # if there is no description, make it NA
+    data.frame(
+      argument = x[2],
+      description = trimws(paste(x[-2:-1], collapse = " ")),
+      stringsAsFactors = FALSE
+    )
+  }))
+
+  return(opt_tab)
+}
+
+#' Options to [treepplr::tp_compile()]
+#'
+#' @returns  A data frame with options that can be passed to [treepplr::tp_compile()]
+#'
+#' @export
 tp_compile_options <- function() {
   tp_find_options("Compile options:", "Runtime options:")
 }
 
-#' Options that can be passed to TreePPL run
+#' Options to [treepplr::tp_run()]
 #'
-#' @returns A data frame with with some outputs from compiler's help <tpplc --help>
+#' @returns  A data frame with options that can be passed to [treepplr::tp_run()]
 #'
+#' @export
 tp_runtime_options <- function() {
   tp_find_options("Runtime options:", "Inference methods:")
 }
@@ -86,8 +126,8 @@ list_to_options <- function(user_list) {
   options
 }
 
-#' Convert options to a proper string of flags, e.g., `_` to `-`,
-#' adding `--` in the beginning, spaces between things, etc.
+#Convert options to a proper string of flags, e.g., `_` to `-`,
+#adding `--` in the beginning, spaces between things, etc.
 options_to_string <- function(options) {
   args_str <- c()
   if (length(options) != 0) {
@@ -114,7 +154,7 @@ options_to_string <- function(options) {
 #' for compiling and running this model efficently
 
 sampler_T <-
-  setRefClass(
+  methods::setRefClass(
     "sampler_T",
     fields = list(
       exe_path = "character",
@@ -129,20 +169,8 @@ sampler_T <-
 #' `compilation` compile a TreePPL model and create inference machinery to be
 #' used by [treepplr::tp_run].
 #'
-#' @param model One of tree options:
-#'   * The full path of the model file that contains the TreePPL code, OR
-#'   * A string with the name of a model supported by treepplr
-#' (see [treepplr::tp_model_library()]), OR
-#'   * A string containing the entire TreePPL code.
-#' @param method Inference method to be used. See tp_compile_options()
-#' for all supported methods.
-#' @param iterations The number of MCMC iterations to be run.
-#' @param particles The number of SMC particles to be run.
-#' @param dir The directory where you want to save the executable. Default is
-#' [base::tempdir()]
-#' @param output Complete path to the compiled TreePPL program that will be
-#' created. Default is dir/<name of the model object>.exe
-#' @param ... See tp_compile_options() for all supported arguments.
+#' @param path [base::character] to a treppl model
+#' @param args_str [base::character] of options for treeppl compiler
 #'
 #' @return The path for the compiled TreePPL program.
 
@@ -154,11 +182,11 @@ compilation <- function(path, args_str) {
   # output
   output_path <- paste0(dir_path, digest::digest(paste(path, args_str), "sha256"), ".exe")
 
-  options <- paste("--output", output_path, args_str)
+  options <- paste(args_str, "--output", output_path)
 
   # Preparing the command line program
   tpplc_path <- tp_installing_treeppl()
-  command <- paste(tpplc_path, path, options)
+  command <- paste(tpplc_path, options, path)
 
   # Compile program
   # Empty LD_LIBRARY_PATH from R_env for this command specifically
@@ -196,6 +224,9 @@ tp_write_model <- function(model, model_file_name = "tmp_model_file") {
 #'   * A string with the name of a model supported by treepplr
 #' (see [treepplr::tp_model_library()]), OR
 #'   * A string containing the entire TreePPL code.
+#' @param method Inference method to be used. See [treepplr::tp_compile_methods()]
+#' for all supported methods.
+#' @param ... See [treepplr::tp_compile_options()] for all supported arguments.
 #'
 #' @return sampler from a sampler_T
 #' @export
@@ -223,8 +254,8 @@ tp_compile <- function(model, method = "mcmc", ...) {
       model_path <- tp_write_model(model)
     }
   }
-  sampler <- new("sampler_T", model_path = model_path)
-  user_list <- append(tp_list(...), list(method = method))
+  sampler <- methods::new("sampler_T", model_path = model_path)
+  user_list <- append(list(method = method), tp_list(...))
   tmp <- list_to_options(user_list)
 
   sampler$compile_options <- tmp[["compile"]]
