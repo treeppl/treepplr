@@ -1,9 +1,12 @@
 Package: treepplr
 Title: R Interface to TreePPL
 Version: 0.15.0
-Authors@R: 
+Authors@R: c(
     person("Mariana", "P Braga", , "mpiresbr@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-1253-2536"))
+           comment = c(ORCID = "0000-0002-1253-2536")),
+    person("Tim", "Virgoulay", role = "aut"),
+    person("Stenio", "Foerster", role = "aut")
+  )
 Description: This package in an interface for using TreePPL programs.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -17,6 +20,7 @@ Imports:
     assertthat,
     digest,
     future,
+    future.apply,
     methods,
     jsonlite,
     tidytree,
