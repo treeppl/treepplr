@@ -4,11 +4,10 @@
 \alias{tp_run}
 \title{Run a TreePPL program}
 \usage{
-tp_run(compiled_model, data, dir = NULL, out_file_name = "out", ...)
+tp_run(sampler, data, dir = NULL, out_file_name = "out", ...)
 }
 \arguments{
-\item{compiled_model}{a \link[base:character]{base::character} with the full path to the compiled model
-outputted by \link{tp_compile}.}
+\item{sampler}{a \link{sampler_T} outputted by \link{tp_compile}.}
 
 \item{data}{a \link[base:character]{base::character} with the full path to the data file in TreePPL
 JSON format (as outputted by \link{tp_data}).}
@@ -48,6 +47,6 @@ exe_path <- tp_compile(model = "coin", method = "mcmc-naive", iterations = 2000)
 data_path <- tp_data(data_input = "coin")
 
 # run TreePPL
-result <- tp_run(exe_path, data_path, n_runs = 2)
+result <- tp_run(exe_path, data_path)
 }
 }
