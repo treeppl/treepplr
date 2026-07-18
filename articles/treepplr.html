@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">treepplr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -135,10 +135,10 @@ use, you can compile your model to en executable that also contains the
 necessary machinery to run the chosen inference method.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using a model from the library and a Sequential Monte Carlo method</span></span>
-<span><span class="va">exe_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_compile.html">tp_compile</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"crbd"</span>, method <span class="op">=</span> <span class="st">"smc-apf"</span>, particles <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span>
+<span><span class="va">sampler</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_compile.html">tp_compile</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"crbd"</span>, method <span class="op">=</span> <span class="st">"smc-apf"</span>, particles <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Using a custom model and a Markov chain Monte Carlo method</span></span>
-<span><span class="va">exe_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_compile.html">tp_compile</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model_path</span>, method <span class="op">=</span> <span class="st">"mcmc-lightweight"</span>,</span>
+<span><span class="va">sampler</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_compile.html">tp_compile</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">model_path</span>, method <span class="op">=</span> <span class="st">"mcmc-lightweight"</span>,</span>
 <span>                       iterations <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -148,7 +148,7 @@ necessary machinery to run the chosen inference method.</p>
 your data to the compiled executable and choose how many independent
 runs you want to do.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_run.html">tp_run</a></span><span class="op">(</span>compiled_model <span class="op">=</span> <span class="va">exe_path</span>, data <span class="op">=</span> <span class="va">data_path</span>, n_runs <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tp_run.html">tp_run</a></span><span class="op">(</span>compiled_model <span class="op">=</span> <span class="va">sampler</span>, data <span class="op">=</span> <span class="va">data_path</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="convergence">Convergence<a class="anchor" aria-label="anchor" href="#convergence"></a>
@@ -182,7 +182,7 @@ your TreePPL output.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

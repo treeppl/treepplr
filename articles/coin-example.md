@@ -33,12 +33,12 @@ following functions:
 
 ``` r
 
-model_path <- tp_compile("coin")
+sampler <- tp_compile("coin")
 ```
 
 ``` r
 
-readr::read_file(model_path$path)
+readr::read_file(sampler$model_path)
 ```
 
 The main part of the model is defined in a function called `coinModel`:

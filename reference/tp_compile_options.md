@@ -10,4 +10,4 @@ tp_compile_options()
 
 ## Value
 
-A data frame with the output from the compiler's help \<tpplc –help\>
+A data frame with some outputs from the compiler's help \<tpplc –help\>

@@ -5,15 +5,16 @@ Run TreePPL and return output.
 ## Usage
 
 ``` r
-tp_run(compiled_model, data, dir = NULL, out_file_name = "out", ...)
+tp_run(sampler, data, dir = NULL, out_file_name = "out", ...)
 ```
 
 ## Arguments
 
-- compiled_model:
+- sampler:
 
-  a [base::character](https://rdrr.io/r/base/character.html) with the
-  full path to the compiled model outputted by
+  a
+  [sampler_T](http://treeppl.org/treepplr/reference/sampler_T-class.md)
+  outputted by
   [tp_compile](http://treeppl.org/treepplr/reference/tp_compile.md).
 
 - data:
@@ -64,6 +65,6 @@ exe_path <- tp_compile(model = "coin", method = "mcmc-naive", iterations = 2000)
 data_path <- tp_data(data_input = "coin")
 
 # run TreePPL
-result <- tp_run(exe_path, data_path, n_runs = 2)
+result <- tp_run(exe_path, data_path)
 } # }
 ```

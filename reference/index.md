@@ -5,15 +5,15 @@
 - [`compilation()`](http://treeppl.org/treepplr/reference/compilation.md)
   : Compile a TreePPL model and create inference machinery
 
-- [`compiled_model_Template-class`](http://treeppl.org/treepplr/reference/compiled_model_Template-class.md)
-  [`compiled_model_Template`](http://treeppl.org/treepplr/reference/compiled_model_Template-class.md)
-  : TreePPL model template
-
 - [`options_to_string()`](http://treeppl.org/treepplr/reference/options_to_string.md)
   :
 
   Convert options to a proper string of flags, e.g., `_` to `-`, adding
   `--` in the beginning, spaces between things, etc.
+
+- [`sampler_T-class`](http://treeppl.org/treepplr/reference/sampler_T-class.md)
+  [`sampler_T`](http://treeppl.org/treepplr/reference/sampler_T-class.md)
+  : TreePPL model template
 
 - [`tp_compile()`](http://treeppl.org/treepplr/reference/tp_compile.md)
   : Create a TreePPL model
@@ -60,6 +60,9 @@
 
 - [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md) : Run a
   TreePPL program
+
+- [`tp_runtime_options()`](http://treeppl.org/treepplr/reference/tp_runtime_options.md)
+  : Options that can be passed to TreePPL run
 
 - [`tp_smc_convergence()`](http://treeppl.org/treepplr/reference/tp_smc_convergence.md)
   : Check for convergence across multiple SMC sweeps.
