@@ -5,7 +5,15 @@ Run TreePPL and return output.
 ## Usage
 
 ``` r
-tp_run(sampler, data, dir = NULL, out_file_name = "out", ...)
+tp_run(
+  sampler,
+  data,
+  dir = NULL,
+  out_file_name = "out",
+  n_runs = 1,
+  n_processes = 3,
+  ...
+)
 ```
 
 ## Arguments
@@ -34,9 +42,21 @@ tp_run(sampler, data, dir = NULL, out_file_name = "out", ...)
   a [base::character](https://rdrr.io/r/base/character.html) with the
   name of the output file in JSON format. Default is "out".
 
+- n_runs:
+
+  a [base::numeric](https://rdrr.io/r/base/numeric.html) giving the
+  numbers of sweeps(SMC)/runs(MCMC).
+
+- n_processes:
+
+  a [base::numeric](https://rdrr.io/r/base/numeric.html), number of
+  parallel processes to use. Can't be superior to n_runs.
+
 - ...:
 
-  See tp_run_options for all supported arguments.
+  See
+  [tp_runtime_options](http://treeppl.org/treepplr/reference/tp_runtime_options.md)
+  for all supported arguments.
 
 ## Value
 
@@ -54,7 +74,7 @@ exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 2000)
 data_path <- tp_data(data_input = "coin")
 
 # run TreePPL
-result <- tp_run(exe_path, data_path, sweeps = 2)
+result <- tp_run(exe_path, data_path, n_runs = 2)
 
 
 # When using MCMC

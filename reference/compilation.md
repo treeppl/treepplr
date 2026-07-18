@@ -11,44 +11,15 @@ compilation(path, args_str)
 
 ## Arguments
 
-- model:
+- path:
 
-  One of tree options:
+  [base::character](https://rdrr.io/r/base/character.html) to a treppl
+  model
 
-  - The full path of the model file that contains the TreePPL code, OR
+- args_str:
 
-  - A string with the name of a model supported by treepplr (see
-    [`tp_model_library()`](http://treeppl.org/treepplr/reference/tp_model_library.md)),
-    OR
-
-  - A string containing the entire TreePPL code.
-
-- method:
-
-  Inference method to be used. See tp_compile_options() for all
-  supported methods.
-
-- iterations:
-
-  The number of MCMC iterations to be run.
-
-- particles:
-
-  The number of SMC particles to be run.
-
-- dir:
-
-  The directory where you want to save the executable. Default is
-  [`base::tempdir()`](https://rdrr.io/r/base/tempfile.html)
-
-- output:
-
-  Complete path to the compiled TreePPL program that will be created.
-  Default is dir/.exe
-
-- ...:
-
-  See tp_compile_options() for all supported arguments.
+  [base::character](https://rdrr.io/r/base/character.html) of options
+  for treeppl compiler
 
 ## Value
 

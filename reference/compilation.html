@@ -9,7 +9,7 @@ used by tp_run."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">treepplr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.15.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,39 +54,12 @@ used by <a href="tp_run.html">tp_run</a>.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
-<dd><p>One of tree options:</p><ul><li><p>The full path of the model file that contains the TreePPL code, OR</p></li>
-<li><p>A string with the name of a model supported by treepplr
-(see <code><a href="tp_model_library.html">tp_model_library()</a></code>), OR</p></li>
-<li><p>A string containing the entire TreePPL code.</p></li>
-</ul></dd>
+<dl><dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
+<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">base::character</a> to a treppl model</p></dd>
 
 
-<dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Inference method to be used. See tp_compile_options()
-for all supported methods.</p></dd>
-
-
-<dt id="arg-iterations">iterations<a class="anchor" aria-label="anchor" href="#arg-iterations"></a></dt>
-<dd><p>The number of MCMC iterations to be run.</p></dd>
-
-
-<dt id="arg-particles">particles<a class="anchor" aria-label="anchor" href="#arg-particles"></a></dt>
-<dd><p>The number of SMC particles to be run.</p></dd>
-
-
-<dt id="arg-dir">dir<a class="anchor" aria-label="anchor" href="#arg-dir"></a></dt>
-<dd><p>The directory where you want to save the executable. Default is
-<code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">base::tempdir()</a></code></p></dd>
-
-
-<dt id="arg-output">output<a class="anchor" aria-label="anchor" href="#arg-output"></a></dt>
-<dd><p>Complete path to the compiled TreePPL program that will be
-created. Default is dir/<name of the model object>.exe</name></p></dd>
-
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>See tp_compile_options() for all supported arguments.</p></dd>
+<dt id="arg-args-str">args_str<a class="anchor" aria-label="anchor" href="#arg-args-str"></a></dt>
+<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">base::character</a> of options for treeppl compiler</p></dd>
 
 </dl></div>
     <div class="section level2">

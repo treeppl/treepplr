@@ -1,6 +1,6 @@
-# Options that can be passed to TreePPL run
+# Options to [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md)
 
-Options that can be passed to TreePPL run
+Options to [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md)
 
 ## Usage
 
@@ -10,4 +10,5 @@ tp_runtime_options()
 
 ## Value
 
-A data frame with with some outputs from compiler's help \<tpplc –help\>
+A data frame with options that can be passed to
+[`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md)

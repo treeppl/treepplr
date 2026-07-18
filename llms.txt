@@ -52,14 +52,11 @@ skipping this step.
 
 ## All functions
 
+- [`TPPLC_VERSION`](http://treeppl.org/treepplr/reference/TPPLC_VERSION.md)
+  : TreePPL version
+
 - [`compilation()`](http://treeppl.org/treepplr/reference/compilation.md)
   : Compile a TreePPL model and create inference machinery
-
-- [`options_to_string()`](http://treeppl.org/treepplr/reference/options_to_string.md)
-  :
-
-  Convert options to a proper string of flags, e.g., `_` to `-`, adding
-  `--` in the beginning, spaces between things, etc.
 
 - [`sampler_T-class`](http://treeppl.org/treepplr/reference/sampler_T-class.md)
   [`sampler_T`](http://treeppl.org/treepplr/reference/sampler_T-class.md)
@@ -68,8 +65,17 @@ skipping this step.
 - [`tp_compile()`](http://treeppl.org/treepplr/reference/tp_compile.md)
   : Create a TreePPL model
 
+- [`tp_compile_methods()`](http://treeppl.org/treepplr/reference/tp_compile_methods.md)
+  :
+
+  Methods to
+  [`tp_compile()`](http://treeppl.org/treepplr/reference/tp_compile.md)
+
 - [`tp_compile_options()`](http://treeppl.org/treepplr/reference/tp_compile_options.md)
-  : Options that can be passed to TreePPL compiler
+  :
+
+  Options to
+  [`tp_compile()`](http://treeppl.org/treepplr/reference/tp_compile.md)
 
 - [`tp_data()`](http://treeppl.org/treepplr/reference/tp_data.md) :
   Import data for TreePPL program
@@ -112,7 +118,10 @@ skipping this step.
   TreePPL program
 
 - [`tp_runtime_options()`](http://treeppl.org/treepplr/reference/tp_runtime_options.md)
-  : Options that can be passed to TreePPL run
+  :
+
+  Options to
+  [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md)
 
 - [`tp_smc_convergence()`](http://treeppl.org/treepplr/reference/tp_smc_convergence.md)
   : Check for convergence across multiple SMC sweeps.

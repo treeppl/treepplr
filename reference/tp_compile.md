@@ -23,6 +23,18 @@ tp_compile(model, method = "mcmc", ...)
 
   - A string containing the entire TreePPL code.
 
+- method:
+
+  Inference method to be used. See
+  [`tp_compile_methods()`](http://treeppl.org/treepplr/reference/tp_compile_methods.md)
+  for all supported methods.
+
+- ...:
+
+  See
+  [`tp_compile_options()`](http://treeppl.org/treepplr/reference/tp_compile_options.md)
+  for all supported arguments.
+
 ## Value
 
 sampler from a sampler_T
