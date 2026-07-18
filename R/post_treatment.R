@@ -106,7 +106,7 @@ tp_parse_mcmc <- function(treeppl_out) {
 #' @param treeppl_out a character vector giving the TreePPL json output
 #' produced by [tp_run].
 #'
-#' @return A list (n = n_runs) of data frames with the output from inference
+#' @return A list (n = sweeps) of data frames with the output from inference
 #' in TreePPL under the host repertoire evolution model.
 #' @export
 

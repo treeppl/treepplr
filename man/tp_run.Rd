@@ -4,11 +4,18 @@
 \alias{tp_run}
 \title{Run a TreePPL program}
 \usage{
-tp_run(compiled_model, data, dir = NULL, out_file_name = "out", ...)
+tp_run(
+  sampler,
+  data,
+  dir = NULL,
+  out_file_name = "out",
+  n_runs = 1,
+  n_processes = 3,
+  ...
+)
 }
 \arguments{
-\item{compiled_model}{a \link[base:character]{base::character} with the full path to the compiled model
-outputted by \link{tp_compile}.}
+\item{sampler}{a \link{sampler_T} outputted by \link{tp_compile}.}
 
 \item{data}{a \link[base:character]{base::character} with the full path to the data file in TreePPL
 JSON format (as outputted by \link{tp_data}).}
@@ -19,7 +26,12 @@ want to save the output. Default is \code{\link[base:tempdir]{base::tempdir()}}.
 \item{out_file_name}{a \link[base:character]{base::character} with the name of the output file in
 JSON format. Default is "out".}
 
-\item{...}{See \link{tp_run_options} for all supported arguments.}
+\item{n_runs}{a \link[base:numeric]{base::numeric} giving the numbers of sweeps(SMC)/runs(MCMC).}
+
+\item{n_processes}{a \link[base:numeric]{base::numeric}, number of parallel processes to use.
+Can't be superior to n_runs.}
+
+\item{...}{See \link{tp_runtime_options} for all supported arguments.}
 }
 \value{
 A list of TreePPL output in parsed JSON format.
@@ -37,7 +49,7 @@ exe_path <- tp_compile(model = "coin", method = "smc-bpf", particles = 2000)
 data_path <- tp_data(data_input = "coin")
 
 # run TreePPL
-result <- tp_run(exe_path, data_path, sweeps = 2)
+result <- tp_run(exe_path, data_path, n_runs = 2)
 
 
 # When using MCMC
@@ -48,6 +60,6 @@ exe_path <- tp_compile(model = "coin", method = "mcmc-naive", iterations = 2000)
 data_path <- tp_data(data_input = "coin")
 
 # run TreePPL
-result <- tp_run(exe_path, data_path, n_runs = 2)
+result <- tp_run(exe_path, data_path)
 }
 }

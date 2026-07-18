@@ -2,13 +2,13 @@
 % Please edit documentation in R/model.R
 \name{tp_compile_options}
 \alias{tp_compile_options}
-\title{Options that can be passed to TreePPL compiler}
+\title{Options to \code{\link[=tp_compile]{tp_compile()}}}
 \usage{
 tp_compile_options()
 }
 \value{
-A data frame with the output from the compiler's help <tpplc --help>
+A data frame with options that can be passed to \code{\link[=tp_compile]{tp_compile()}}
 }
 \description{
-Options that can be passed to TreePPL compiler
+Options to \code{\link[=tp_compile]{tp_compile()}}
 }

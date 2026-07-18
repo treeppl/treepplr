@@ -7,28 +7,9 @@
 compilation(path, args_str)
 }
 \arguments{
-\item{model}{One of tree options:
-\itemize{
-\item The full path of the model file that contains the TreePPL code, OR
-\item A string with the name of a model supported by treepplr
-(see \code{\link[=tp_model_library]{tp_model_library()}}), OR
-\item A string containing the entire TreePPL code.
-}}
+\item{path}{\link[base:character]{base::character} to a treppl model}
 
-\item{method}{Inference method to be used. See tp_compile_options()
-for all supported methods.}
-
-\item{iterations}{The number of MCMC iterations to be run.}
-
-\item{particles}{The number of SMC particles to be run.}
-
-\item{dir}{The directory where you want to save the executable. Default is
-\code{\link[base:tempdir]{base::tempdir()}}}
-
-\item{output}{Complete path to the compiled TreePPL program that will be
-created. Default is dir/\if{html}{\out{<name of the model object>}}.exe}
-
-\item{...}{See tp_compile_options() for all supported arguments.}
+\item{args_str}{\link[base:character]{base::character} of options for treeppl compiler}
 }
 \value{
 The path for the compiled TreePPL program.
