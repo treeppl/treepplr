@@ -203,16 +203,32 @@ tp_parse_smc <- function(json_path, wide = TRUE) {
 #'
 #' @export
 tp_parse_mcmc <- function(json_path, wide = TRUE) {
-  # read in the JSON file(s)
-  treeppl_out <- readr::read_lines(json_path)
-  treeppl_out <- lapply(treeppl_out, jsonlite::fromJSON, simplifyVector = FALSE)
+  parse_file <- function(file, run_id) {
+    lines <- readr::read_lines(file)
+    parsed <- lapply(lines, jsonlite::fromJSON, simplifyVector = FALSE)
 
-  # parse mcmc runs
-  parse_run <- function(run, run_id) {
-    samples <- run$samples
+    # detect if JSON was created using --incremental-printing
+    is_incr_print <- identical(parsed[[1]][["__constructor__"]], "ReturnType")
+    if (is_incr_print) {
+      is_sample <- purrr::map_lgl(
+        parsed, ~ identical(.x[["__constructor__"]], "ReturnType")
+      )
+      n_dropped <- sum(!is_sample)
+      samples <- parsed[is_sample]
+    } else {
+      # regular JSON format, i.e., no --incremental-printing
+      samples <- parsed[[1]]$samples
+    }
+
+    if (length(samples) == 0) {
+      stop("No samples found in file: ", file)
+    }
+
+    # parameter names
     has_parameter_names <- is.list(samples[[1]]) && !is.null(samples[[1]][["__data__"]])
 
     if (has_parameter_names) {
+      # use parameter names, if they are present in the JSON
       purrr::imap_dfr(samples, function(s, iteration_id) {
         param_values <- s[["__data__"]]
         tibble::tibble(
@@ -223,6 +239,7 @@ tp_parse_mcmc <- function(json_path, wide = TRUE) {
         )
       })
     } else {
+      # build data frame with arbitrary parameter names (e.g., x1, x2,...xn)
       purrr::imap_dfr(samples, function(s, iteration_id) {
         values <- as.numeric(unlist(s))
         tibble::tibble(
@@ -235,13 +252,11 @@ tp_parse_mcmc <- function(json_path, wide = TRUE) {
     }
   }
 
-  result_df <- purrr::imap_dfr(treeppl_out, parse_run)
-
+  result_df <- purrr::imap_dfr(json_path, parse_file)
   if (nrow(result_df) == 0) {
     stop("All runs failed")
   }
 
-  # long or wide
   if (!wide) {
     return(result_df)
   }
@@ -253,7 +268,6 @@ tp_parse_mcmc <- function(json_path, wide = TRUE) {
       values_from = sample
     )
 }
-
 
 
 #' Parse TreePPL json output for host repertoire model
