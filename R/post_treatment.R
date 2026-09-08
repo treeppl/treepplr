@@ -102,9 +102,11 @@ tp_parse_smc <- function(json_path, wide = TRUE) {
       })
     } else {
       samples_df <- purrr::imap_dfr(samples, function(s, particle_id) {
+        values <- as.numeric(unlist(s))
         tibble::tibble(
           particle = particle_id,
-          sample = as.numeric(unlist(s))
+          parameter = paste0("x", seq_along(values)),
+          sample = values
         )
       })
     }
@@ -143,24 +145,18 @@ tp_parse_smc <- function(json_path, wide = TRUE) {
     dplyr::select(-"total_lweight") |>
     dplyr::relocate("sweep")
 
-
   if (!wide) {
-  return(result_df)
-  } else if (wide && !"parameter" %in% colnames(result_df)) {
-    message("Parameter names could not be found; returning data frame in long format.")
-    return(result_df)
-  } else if ("parameter" %in% colnames(result_df) && wide) {
-    result_df <- result_df |>
-      dplyr::group_by(sweep, parameter) |>
-      dplyr::mutate(particle = dplyr::row_number()) |>
-      dplyr::ungroup() |>
-      tidyr::pivot_wider(
-        id_cols = c(sweep, particle, log_weight, norm_constant, norm_weight),
-        names_from = parameter,
-        values_from = sample
-      )
     return(result_df)
   }
+  result_df |>
+    dplyr::group_by(sweep, parameter) |>
+    dplyr::mutate(particle = dplyr::row_number()) |>
+    dplyr::ungroup() |>
+    tidyr::pivot_wider(
+      id_cols = c(sweep, particle, log_weight, norm_constant, norm_weight),
+      names_from = parameter,
+      values_from = sample
+    )
 }
 
 
@@ -228,10 +224,12 @@ tp_parse_mcmc <- function(json_path, wide = TRUE) {
       })
     } else {
       purrr::imap_dfr(samples, function(s, iteration_id) {
+        values <- as.numeric(unlist(s))
         tibble::tibble(
           run = run_id,
           iteration = iteration_id,
-          sample = as.numeric(unlist(s))
+          parameter = paste0("x", seq_along(values)),
+          sample = values
         )
       })
     }
@@ -246,19 +244,16 @@ tp_parse_mcmc <- function(json_path, wide = TRUE) {
   # long or wide
   if (!wide) {
     return(result_df)
-  } else if (wide && !"parameter" %in% colnames(result_df)) {
-    message("Parameter names could not be found; returning data frame in long format.")
-    return(result_df)
-  } else if ("parameter" %in% colnames(result_df) && wide) {
-    result_df <- result_df |>
-      tidyr::pivot_wider(
-        id_cols = c(run, iteration),
-        names_from = parameter,
-        values_from = sample
-      )
-    return(result_df)
   }
+
+  result_df |>
+    tidyr::pivot_wider(
+      id_cols = c(run, iteration),
+      names_from = parameter,
+      values_from = sample
+    )
 }
+
 
 
 #' Parse TreePPL json output for host repertoire model
