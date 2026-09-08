@@ -81,7 +81,7 @@ tp_run <- function(
     file.remove(listFiles)
   }
 
-  output_path <- paste0(dir_path, out_file_name, ".json")
+  output_path <- file.path(dir_path, paste0(out_file_name, ".json"))
 
   # If a list have multiple time the same key
   # list[[key]] will return the first key
@@ -113,7 +113,15 @@ tp_run <- function(
     future.apply::future_sapply(
       1:n_runs,
       FUN = function(i) {
-        system(paste0(command, i))
+        output_path_i <- file.path(dir_path, paste0(out_file_name, i, ".json"))
+        command_i <- paste(
+          "LD_LIBRARY_PATH= ",
+          sampler$exe_path,
+          data,
+          options_to_string(tpplc_options[["runtime"]]),
+          paste(">", output_path_i)
+        )
+        system(command_i)
       }
     )
   } else {
@@ -146,7 +154,7 @@ tp_run <- function(
     crayon::bold("Analysis Summary\n"),
     "-----------------------------\n",
     crayon::green("Status: "), "Completed\n",
-    crayon::cyan("Time elapsed: "), et, "\n",
+    crayon::cyan("Elapsed time: "), et, " ", units(et), "\n",
     crayon::cyan("Model: "), mod, "\n",
     crayon::cyan("Method: "), mtd, "\n",
     crayon::cyan("Output directory: "), dir_path, "\n",
