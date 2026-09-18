@@ -94,7 +94,7 @@ skipping this step.
   : Find the Maximum A Posteriori (MAP) Tree from weighted samples
 
 - [`tp_mcmc_convergence()`](http://treeppl.org/treepplr/reference/tp_mcmc_convergence.md)
-  : Check for convergence across multiple MCMC runs.
+  : Assess MCMC convergence for a TreePPL analysis
 
 - [`tp_model_library()`](http://treeppl.org/treepplr/reference/tp_model_library.md)
   : Model names supported by treepplr
@@ -103,10 +103,10 @@ skipping this step.
   : Parse TreePPL json output for host repertoire model
 
 - [`tp_parse_mcmc()`](http://treeppl.org/treepplr/reference/tp_parse_mcmc.md)
-  : Parse simple TreePPL json MCMC output
+  : Parse TreePPL MCMC output into a tidy data frame
 
 - [`tp_parse_smc()`](http://treeppl.org/treepplr/reference/tp_parse_smc.md)
-  : Parse simple TreePPL json SMC output
+  : Parse TreePPL SMC output into a tidy data frame
 
 - [`tp_phylo_to_tpjson()`](http://treeppl.org/treepplr/reference/tp_phylo_to_tpjson.md)
   : Convert phylo obj to TreePPL tree
