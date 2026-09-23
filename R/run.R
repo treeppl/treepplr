@@ -61,6 +61,7 @@ tp_run <- function(
   out_file_name = "out",
   n_runs = 1,
   n_processes = 3,
+  verbose = TRUE,
   ...
 ) {
   # start time
@@ -162,7 +163,7 @@ tp_run <- function(
   )
 
   # print run info summary
-  cat(run_info)
+  if (verbose) cat(run_info)
 
   # parse JSON to tidy data frames & return #
   # get model category: this is needed because at the moment, we do not have parsers
