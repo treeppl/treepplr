@@ -9,7 +9,8 @@ test_that("Test-run_1a : tp_run SMC", {
   cat("\tTest-run_1a : tp_run SMC \n")
   run_smc <- tp_run(
     sampler = tp_compile(model = "crbd", method = "smc-apf", sweeps = 2, particles = 5),
-    data = tp_data(data_input = "crbd")
+    data = tp_data(data_input = "crbd"),
+    verbose = FALSE
   )
   expect_equal(2, length(unique(run_smc$sweep)))
 })
@@ -20,7 +21,8 @@ test_that("Test-run_1b : tp_run MCMC", {
     sampler = tp_compile(model = "crbd", method = "mcmc", iterations = 10),
     data = tp_data(data_input = "crbd"),
     n_runs = 2,
-    n_processes = 2
+    n_processes = 2,
+    verbose = FALSE
   )
   expect_equal(2, length(unique(run_mcmc$run)))
 })
@@ -30,7 +32,8 @@ test_that("Test-run_1c : tp_run custom_name", {
   run_smc <- tp_run(
     sampler = tp_compile(model = "crbd", method = "smc-apf", sweeps = 2, particles = 5),
     data = tp_data(data_input = "crbd"),
-    out_file_name = "test_out"
+    out_file_name = "test_out",
+    verbose = FALSE
   )
   expect_equal(2, length(unique(run_smc$sweep)))
 })
@@ -40,7 +43,8 @@ test_that("Test-run_1d : tp_run threading", {
   run_smc <- tp_run(
     sampler = tp_compile(model = "crbd", method = "smc-apf", sweeps = 2, particles = 5),
     data = tp_data(data_input = "crbd"),
-    n_processes = 2
+    n_processes = 2,
+    verbose = FALSE
   )
   expect_equal(2, length(unique(run_smc$sweep)))
 })
@@ -50,7 +54,8 @@ test_that("Test-run_1e : tp_run no_parser", {
   run_smc <- tp_run(
     sampler = tp_compile(model = "tree_inference", method = "smc-apf", sweeps = 2, particles = 5),
     data = tp_data(data_input = "tree_inference"),
-    n_processes = 2
+    n_processes = 2,
+    verbose = FALSE
   )
   expect_true(is.character(run_smc))
 })
