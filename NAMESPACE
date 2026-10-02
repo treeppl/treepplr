@@ -22,9 +22,9 @@ export(tp_tempdir)
 export(tp_treeppl_json)
 export(tp_write_data)
 export(tp_write_model)
-importFrom("methods", "new")
 importFrom(bnpsd,tree_reorder)
 importFrom(methods,is)
+importFrom(methods,new)
 importFrom(phangorn,
   add_edge_length,
   allCompat

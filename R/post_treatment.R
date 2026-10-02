@@ -149,13 +149,13 @@ tp_parse_smc <- function(json_path, wide = TRUE) {
     return(result_df)
   }
   result_df |>
-    dplyr::group_by(sweep, parameter) |>
+    dplyr::group_by(.data$sweep, .data$parameter) |>
     dplyr::mutate(particle = dplyr::row_number()) |>
     dplyr::ungroup() |>
     tidyr::pivot_wider(
-      id_cols = c(sweep, particle, log_weight, norm_constant, norm_weight),
-      names_from = parameter,
-      values_from = sample
+      id_cols = c("sweep", "particle", "log_weight", "norm_constant", "norm_weight"),
+      names_from = "parameter",
+      values_from = "sample"
     )
 }
 
@@ -263,9 +263,9 @@ tp_parse_mcmc <- function(json_path, wide = TRUE) {
 
   result_df |>
     tidyr::pivot_wider(
-      id_cols = c(run, iteration),
-      names_from = parameter,
-      values_from = sample
+      id_cols = c("run", "iteration"),
+      names_from = "parameter",
+      values_from = "sample"
     )
 }
 
@@ -521,7 +521,7 @@ tp_mcmc_convergence <- function(treeppl_out) {
   if (!"sample" %in% colnames(treeppl_out)) {
     treeppl_out <- treeppl_out |>
       tidyr::pivot_longer(
-        cols = -c(run, iteration),
+        cols = -c("run", "iteration"),
         names_to = "parameter",
         values_to = "sample"
       )

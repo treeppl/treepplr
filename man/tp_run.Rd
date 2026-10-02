@@ -11,6 +11,7 @@ tp_run(
   out_file_name = "out",
   n_runs = 1,
   n_processes = 3,
+  verbose = TRUE,
   ...
 )
 }
@@ -29,6 +30,9 @@ you want to save the output. Defaults to \code{tp_tempdir()}.}
 
 \item{n_processes}{(\code{integer}) the number of parallel processes to use.
 Cannot be greater than \code{n_runs}.}
+
+\item{verbose}{(\code{logical}) Whether to print a run summary on completion.
+Default is \code{TRUE}.}
 
 \item{...}{See \code{\link[=tp_runtime_options]{tp_runtime_options()}} for all supported arguments.}
 }

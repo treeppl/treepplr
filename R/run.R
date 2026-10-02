@@ -14,6 +14,8 @@
 #' (MCMC).
 #' @param n_processes (\code{integer}) the number of parallel processes to use.
 #' Cannot be greater than `n_runs`.
+#' @param verbose (\code{logical}) Whether to print a run summary on completion.
+#' Default is `TRUE`.
 #' @param ... See [treepplr::tp_runtime_options()] for all supported arguments.
 #'
 #' @details
@@ -170,7 +172,7 @@ tp_run <- function(
   # for models that return trees. NB: This is a temporary solution while we come up
   # with new parsers.
   mc <- tp_model_library()
-  mod_cat <- mc[mc$model_name == mod, ]$category
+  mod_cat <- mc$category[match(mod, mc$model_name)]
 
   # model categories with unavailable parsers
   no_parsers <- c(
