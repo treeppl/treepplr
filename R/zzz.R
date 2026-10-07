@@ -11,7 +11,7 @@
 #' @description
 #' TreePPL program version in use for this package version
 #'@export
-TPPLC_VERSION <- "0.4"
+TPPLC_VERSION <- "0.5"
 
 .onLoad <- function(libname, pkgname){
   tp_installing_treeppl(download =  FALSE)
