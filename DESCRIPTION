@@ -32,14 +32,15 @@ Imports:
     purrr,
     tibble,
     dplyr,
-    coda
+    coda,
+    crayon,
+    tidyr
 Suggests:
     devtools,
     ggplot2,
     ape,
     knitr,
     testthat,
-    crayon,
     BiocManager,
     ggtree (>= 3.16.0),
     evolnets (>= 0.0.0.9000),

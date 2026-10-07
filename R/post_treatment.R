@@ -1,17 +1,20 @@
 #' Parse TreePPL SMC output into a tidy data frame
 #'
-#' Converts a list of parsed SMC sweeps (from \code{tp_run()}) into a
+#' Converts a JSON file from an SMC analysis produced by TreePPL into a
 #' single tidy tibble of particles, their samples, and normalized weights.
 #' The function internally removes sweeps with an undefined normalizing constant.
 #'
-#' @param treeppl_out A list of sweeps parsed from a SMC JSON output: i.e.,
-#' the output object of \code{tp_run()}.
+#' @param json_path The full path to the (SMC) JSON file produced by TreePPL.
+#' @param wide Logical. If \code{TRUE} (default), return the data frame in wide format,
+#' with one column per parameter. If \code{FALSE}, return the data frame in long format,
+#' with parameter names and values stored in \code{parameter}
+#' and \code{sample} columns.
 #'
 #' @return A tibble with one row per particle, containing:
 #'   \describe{
 #'     \item{sweep}{Sweep index.}
 #'     \item{parameter}{Parameter name, if present in the input JSON.}
-#'     \item{samples}{Sampled value.}
+#'     \item{sample}{Sampled value.}
 #'     \item{log_weight}{Log weight of the particle.}
 #'     \item{norm_constant}{Log normalizing constant for the sweep.}
 #'     \item{norm_weight}{Normalized weight, rescaled so the maximum
@@ -20,21 +23,35 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Fit a quick CRBD model:
-#' path_data <- tp_data(data_input = "crbd")
-#' sampler_smc <- tp_compile(
-#'   model = "crbd",
-#'   method = "smc-apf",
-#'   sweeps = 2,
-#'   particles = 10
+#' # fit a CRBD model
+#' run_smc <- tp_run(
+#'   data = tp_data(data_input = "crbd"),
+#'   sampler = tp_compile(
+#'     model = "crbd",
+#'     method = "smc-apf",
+#'     sweeps = 2,
+#'     particles = 10
+#'   )
 #' )
-#' mod_smc <- tp_run(sampler = sampler_smc, data = path_data)
 #'
-#' tp_parse_smc(mod_smc)
+#' # get the path to the output JSON file:
+#' out_file <- list.files(
+#'   path = tp_tempdir(),
+#'   pattern = "out",
+#'   full.names = TRUE
+#' )
+#'
+#' # parse JSON to a tidy data frame
+#' tp_parse_smc(json_path = out_file)
 #' }
 #'
 #' @export
-tp_parse_smc <- function(treeppl_out) {
+tp_parse_smc <- function(json_path, wide = TRUE) {
+  # read in the JSON file(s)
+  treeppl_out <- readr::read_lines(json_path)
+  treeppl_out <- lapply(treeppl_out, jsonlite::fromJSON, simplifyVector = FALSE)
+
+  # parse sweeps
   parse_sweep <- function(sweep, sweep_id) {
     # remove sweeps with nan norm const
     if (identical(sweep$normConst, "nan")) {
@@ -80,14 +97,16 @@ tp_parse_smc <- function(treeppl_out) {
         tibble::tibble(
           particle = particle_id,
           parameter = names(param_values),
-          samples = as.numeric(unlist(param_values))
+          sample = as.numeric(unlist(param_values))
         )
       })
     } else {
       samples_df <- purrr::imap_dfr(samples, function(s, particle_id) {
+        values <- as.numeric(unlist(s))
         tibble::tibble(
           particle = particle_id,
-          samples = as.numeric(unlist(s))
+          parameter = paste0("x", seq_along(values)),
+          sample = values
         )
       })
     }
@@ -117,7 +136,7 @@ tp_parse_smc <- function(treeppl_out) {
   }
 
   # calculate the normalized weight and return
-  result_df |>
+  result_df <- result_df |>
     dplyr::filter(!is.infinite(.data$log_weight)) |>
     dplyr::mutate(
       total_lweight = .data$log_weight + .data$norm_constant,
@@ -125,73 +144,129 @@ tp_parse_smc <- function(treeppl_out) {
     ) |>
     dplyr::select(-"total_lweight") |>
     dplyr::relocate("sweep")
+
+  if (!wide) {
+    return(result_df)
+  }
+  result_df |>
+    dplyr::group_by(.data$sweep, .data$parameter) |>
+    dplyr::mutate(particle = dplyr::row_number()) |>
+    dplyr::ungroup() |>
+    tidyr::pivot_wider(
+      id_cols = c("sweep", "particle", "log_weight", "norm_constant", "norm_weight"),
+      names_from = "parameter",
+      values_from = "sample"
+    )
 }
 
 
 #' Parse TreePPL MCMC output into a tidy data frame
 #'
-#' Converts a list of parsed MCMC runs (from \code{tp_run()}) into a
+#' Converts JSON file(s) produced by an MCMC analysis in TreePPL into a
 #' single tidy tibble of samples, one row per iteration.
 #'
-#' @param treeppl_out A list of MCMC runs parsed from MCMC JSON output files: i.e.,
-#' the output object of \code{tp_run()}.
+#' @param json_path The full path to the (MCMC) JSON file(s) produced by TreePPL.
+#' @param wide Logical. If \code{TRUE} (default), return the data frame in wide format,
+#' with one column per parameter. If \code{FALSE}, return the data frame in long format,
+#' with parameter names and values stored in \code{parameter}
+#' and \code{sample} columns.
 #'
 #' @return A tibble with one row per iteration, containing:
 #'   \describe{
-#'     \item{run}{Run index, corresponding to the position of the run in
-#'       `treeppl_out`.}
+#'     \item{run}{Run index.}
 #'     \item{parameter}{Parameter name, if present in the input JSON.}
-#'     \item{samples}{Sampled value.}
+#'     \item{sample}{Sampled value.}
 #'   }
 #'
 #' @examples
 #' \dontrun{
-#' # example using a CRBD model with two MCMC chains
-#' path_data <- tp_data(data_input = "crbd")
-#' sampler_mcmc <- tp_compile(model = "crbd", method = "mcmc", iterations = 10)
-#' mod_mcmc <- tp_run(
-#'   sampler = sampler_mcmc,
-#'   data = path_data,
-#'   n_runs = 2
+#'
+#' # Let's use a quick CRBD model as example
+#' run_mcmc <- tp_run(
+#' sampler = tp_compile(model = "crbd", method = "mcmc", iterations = 10),
+#' data = tp_data(data_input = "crbd"),
+#' n_runs = 2, # this will produce two JSON files as output
+#' n_processes = 2
 #' )
 #'
-#' tp_parse_mcmc(mod_mcmc)
+#' # get the path to the output JSON file; note that the number of JSON
+#' # files produced is equal to n_runs specified above
+#' out_file <- list.files(
+#'   path = tp_tempdir(),
+#'   pattern = "out",
+#'   full.names = TRUE
+#' )
+#'
+#' # parse JSON to a tidy data frame
+#' tp_parse_mcmc(json_path = out_file)
 #' }
 #'
 #' @export
-tp_parse_mcmc <- function(treeppl_out) {
-  parse_run <- function(run, run_id) {
-    samples <- run$samples
+tp_parse_mcmc <- function(json_path, wide = TRUE) {
+  parse_file <- function(file, run_id) {
+    lines <- readr::read_lines(file)
+    parsed <- lapply(lines, jsonlite::fromJSON, simplifyVector = FALSE)
+
+    # detect if JSON was created using --incremental-printing
+    is_incr_print <- identical(parsed[[1]][["__constructor__"]], "ReturnType")
+    if (is_incr_print) {
+      is_sample <- purrr::map_lgl(
+        parsed, ~ identical(.x[["__constructor__"]], "ReturnType")
+      )
+      n_dropped <- sum(!is_sample)
+      samples <- parsed[is_sample]
+    } else {
+      # regular JSON format, i.e., no --incremental-printing
+      samples <- parsed[[1]]$samples
+    }
+
+    if (length(samples) == 0) {
+      stop("No samples found in file: ", file)
+    }
+
+    # parameter names
     has_parameter_names <- is.list(samples[[1]]) && !is.null(samples[[1]][["__data__"]])
 
     if (has_parameter_names) {
+      # use parameter names, if they are present in the JSON
       purrr::imap_dfr(samples, function(s, iteration_id) {
         param_values <- s[["__data__"]]
         tibble::tibble(
           run = run_id,
           iteration = iteration_id,
           parameter = names(param_values),
-          samples = as.numeric(unlist(param_values))
+          sample = as.numeric(unlist(param_values))
         )
       })
     } else {
+      # build data frame with arbitrary parameter names (e.g., x1, x2,...xn)
       purrr::imap_dfr(samples, function(s, iteration_id) {
+        values <- as.numeric(unlist(s))
         tibble::tibble(
           run = run_id,
           iteration = iteration_id,
-          samples = as.numeric(unlist(s))
+          parameter = paste0("x", seq_along(values)),
+          sample = values
         )
       })
     }
   }
 
-  result_df <- purrr::imap_dfr(treeppl_out, parse_run)
-
+  result_df <- purrr::imap_dfr(json_path, parse_file)
   if (nrow(result_df) == 0) {
     stop("All runs failed")
   }
 
-  return(result_df)
+  if (!wide) {
+    return(result_df)
+  }
+
+  result_df |>
+    tidyr::pivot_wider(
+      id_cols = c("run", "iteration"),
+      names_from = "parameter",
+      values_from = "sample"
+    )
 }
 
 
@@ -407,11 +482,13 @@ tp_smc_convergence <- function(treeppl_out) {
 #' runs are available, the upper limit of the Gelman-Rubin potential scale
 #' reduction factor (R-hat), using the \pkg{coda} package.
 #'
-#' @param treeppl_out A tibble produced by \code{tp_parse_mcmc()}, with
-#'   columns `run`, `iteration`, `parameter`, and `samples`. The input must
-#'   have a `parameter` column; output produced from an unnamed TreePPL
-#'   return type is not supported and will raise an error, since there
-#'   is no reliable way to distinguish multiple parameters.
+#' @param treeppl_out A tibble produced by \code{tp_parse_mcmc()}, in either long
+#' or wide format.
+#'
+#' @details
+#' Output produced from an unnamed return type in TreePPL (`.tppl` file) is not
+#' supported and will raise an error, since there is no reliable way to
+#' distinguish multiple parameters.
 #'
 #' @return A tibble with one row per parameter, containing:
 #'   \describe{
@@ -424,15 +501,34 @@ tp_smc_convergence <- function(treeppl_out) {
 #'
 #' @examples
 #' \dontrun{
-#' d <- tp_parse_mcmc(mod_mcmc)
-#' tp_mcmc_convergence(d)
+#'
+#' # CRBD model using MCMC
+#' run_mcmc <- tp_run(
+#' sampler = tp_compile(model = "crbd", method = "mcmc", iterations = 10),
+#' data = tp_data(data_input = "crbd"),
+#' n_runs = 2,
+#' n_processes = 2
+#' )
+#'
+#' # tp_run() already returns the output of tp_parse_mcmc(), so we can call
+#' # tp_mcmc_convergence() directly:
+#' tp_mcmc_convergence(run_mcmc)
 #' }
 #'
 #' @export
 tp_mcmc_convergence <- function(treeppl_out) {
-  has_parameter <- "parameter" %in% names(treeppl_out)
+  # if the input is in wide format
+  if (!"sample" %in% colnames(treeppl_out)) {
+    treeppl_out <- treeppl_out |>
+      tidyr::pivot_longer(
+        cols = -c("run", "iteration"),
+        names_to = "parameter",
+        values_to = "sample"
+      )
+  }
 
-  # stop if the JSON has no parameter names
+  # sanity check
+  has_parameter <- "parameter" %in% names(treeppl_out)
   if (!has_parameter) {
     stop(
       "Output JSON has no parameter names.\n",
@@ -441,6 +537,7 @@ tp_mcmc_convergence <- function(treeppl_out) {
     )
   }
 
+  # coda::mcmc objects
   runs <- sort(unique(treeppl_out$run))
   parameters <- unique(treeppl_out$parameter)
 
@@ -449,17 +546,17 @@ tp_mcmc_convergence <- function(treeppl_out) {
       vals <- treeppl_out |>
         dplyr::filter(.data$run == r, .data$parameter == p) |>
         dplyr::arrange(.data$iteration) |>
-        dplyr::pull(.data$samples)
+        dplyr::pull(.data$sample)
       coda::mcmc(vals)
     })
     coda::mcmc.list(chains)
   })
   names(chains_by_parameter) <- parameters
-
+  # ESS
   ess <- purrr::map_dbl(chains_by_parameter, coda::effectiveSize)
-
   result <- tibble::tibble(parameter = names(ess), ess = ess)
 
+  # Gelman and Rubin's R-hat
   if (length(runs) > 1) {
     rhat_upper <- purrr::map_dbl(chains_by_parameter, function(chain_list) {
       coda::gelman.diag(chain_list)$psrf[, "Upper C.I."]
@@ -475,7 +572,6 @@ tp_mcmc_convergence <- function(treeppl_out) {
   if (!has_parameter) {
     result <- dplyr::select(result, -"parameter")
   }
-
   return(result)
 }
 
