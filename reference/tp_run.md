@@ -1,6 +1,9 @@
-# Run a TreePPL program
+# Run a TreePPL sampler
 
-Run TreePPL and return output.
+Executes a compiled TreePPL sampler on the given data, saves the raw
+JSON output to disk, prints a run summary, and, when a parser is
+available for the model/method combination, parses the output into tidy
+data frames.
 
 ## Usage
 
@@ -12,6 +15,7 @@ tp_run(
   out_file_name = "out",
   n_runs = 1,
   n_processes = 3,
+  verbose = TRUE,
   ...
 )
 ```
@@ -20,47 +24,61 @@ tp_run(
 
 - sampler:
 
-  a
-  [sampler_T](http://treeppl.org/treepplr/reference/sampler_T-class.md)
-  outputted by
-  [tp_compile](http://treeppl.org/treepplr/reference/tp_compile.md).
+  a sampler produced by
+  [`tp_compile()`](http://treeppl.org/treepplr/reference/tp_compile.md).
 
 - data:
 
-  a [base::character](https://rdrr.io/r/base/character.html) with the
-  full path to the data file in TreePPL JSON format (as outputted by
-  [tp_data](http://treeppl.org/treepplr/reference/tp_data.md)).
+  input data, produced by
+  [`tp_data()`](http://treeppl.org/treepplr/reference/tp_data.md).
 
 - dir:
 
-  a [base::character](https://rdrr.io/r/base/character.html) with the
-  full path to the directory where you want to save the output. Default
-  is [`base::tempdir()`](https://rdrr.io/r/base/tempfile.html).
+  the full path to the directory where you want to save the output.
+  Defaults to
+  [`tp_tempdir()`](http://treeppl.org/treepplr/reference/tp_tempdir.md).
 
 - out_file_name:
 
-  a [base::character](https://rdrr.io/r/base/character.html) with the
-  name of the output file in JSON format. Default is "out".
+  the name of the output file in JSON format. Defaults to `"out"`.
 
 - n_runs:
 
-  a [base::numeric](https://rdrr.io/r/base/numeric.html) giving the
-  numbers of sweeps(SMC)/runs(MCMC).
+  (`integer`) the number of sweeps (SMC) or runs (MCMC).
 
 - n_processes:
 
-  a [base::numeric](https://rdrr.io/r/base/numeric.html), number of
-  parallel processes to use. Can't be superior to n_runs.
+  (`integer`) the number of parallel processes to use. Cannot be greater
+  than `n_runs`.
+
+- verbose:
+
+  (`logical`) Whether to print a run summary on completion. Default is
+  `TRUE`.
 
 - ...:
 
   See
-  [tp_runtime_options](http://treeppl.org/treepplr/reference/tp_runtime_options.md)
+  [`tp_runtime_options()`](http://treeppl.org/treepplr/reference/tp_runtime_options.md)
   for all supported arguments.
 
 ## Value
 
-A list of TreePPL output in parsed JSON format.
+If a parser is available for the model/method combination, a parsed tidy
+data frame of TreePPL output via
+[`tp_parse_smc()`](http://treeppl.org/treepplr/reference/tp_parse_smc.md)
+or
+[`tp_parse_mcmc()`](http://treeppl.org/treepplr/reference/tp_parse_mcmc.md).
+Otherwise, the full path(s) to the raw JSON output file(s), along with a
+console message explaining that no parser is available.
+
+## Details
+
+If the model belongs to a category without an available parser (e.g.
+`"host-repertoire-evolution"`, `"tree-inference"`), or if the inference
+method is neither SMC nor MCMC, no parsing is attempted: a message is
+printed pointing to the output directory, and the raw output file
+path(s) are returned instead.
 
 ## Examples
 

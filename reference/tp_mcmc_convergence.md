@@ -16,10 +16,7 @@ tp_mcmc_convergence(treeppl_out)
 
   A tibble produced by
   [`tp_parse_mcmc()`](http://treeppl.org/treepplr/reference/tp_parse_mcmc.md),
-  with columns `run`, `iteration`, `parameter`, and `samples`. The input
-  must have a `parameter` column; output produced from an unnamed
-  TreePPL return type is not supported and will raise an error, since
-  there is no reliable way to distinguish multiple parameters.
+  in either long or wide format.
 
 ## Value
 
@@ -39,11 +36,27 @@ A tibble with one row per parameter, containing:
   `treeppl_out` contains more than one run; otherwise `NA`, with a
   message explaining why.
 
+## Details
+
+Output produced from an unnamed return type in TreePPL (`.tppl` file) is
+not supported and will raise an error, since there is no reliable way to
+distinguish multiple parameters.
+
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-d <- tp_parse_mcmc(mod_mcmc)
-tp_mcmc_convergence(d)
+
+# CRBD model using MCMC
+run_mcmc <- tp_run(
+sampler = tp_compile(model = "crbd", method = "mcmc", iterations = 10),
+data = tp_data(data_input = "crbd"),
+n_runs = 2,
+n_processes = 2
+)
+
+# tp_run() already returns the output of tp_parse_mcmc(), so we can call
+# tp_mcmc_convergence() directly:
+tp_mcmc_convergence(run_mcmc)
 } # }
 ```

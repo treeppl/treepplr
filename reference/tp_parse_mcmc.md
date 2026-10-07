@@ -1,22 +1,26 @@
 # Parse TreePPL MCMC output into a tidy data frame
 
-Converts a list of parsed MCMC runs (from
-[`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md)) into a
+Converts JSON file(s) produced by an MCMC analysis in TreePPL into a
 single tidy tibble of samples, one row per iteration.
 
 ## Usage
 
 ``` r
-tp_parse_mcmc(treeppl_out)
+tp_parse_mcmc(json_path, wide = TRUE)
 ```
 
 ## Arguments
 
-- treeppl_out:
+- json_path:
 
-  A list of MCMC runs parsed from MCMC JSON output files: i.e., the
-  output object of
-  [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md).
+  The full path to the (MCMC) JSON file(s) produced by TreePPL.
+
+- wide:
+
+  Logical. If `TRUE` (default), return the data frame in wide format,
+  with one column per parameter. If `FALSE`, return the data frame in
+  long format, with parameter names and values stored in `parameter` and
+  `sample` columns.
 
 ## Value
 
@@ -24,13 +28,13 @@ A tibble with one row per iteration, containing:
 
 - run:
 
-  Run index, corresponding to the position of the run in `treeppl_out`.
+  Run index.
 
 - parameter:
 
   Parameter name, if present in the input JSON.
 
-- samples:
+- sample:
 
   Sampled value.
 
@@ -38,15 +42,24 @@ A tibble with one row per iteration, containing:
 
 ``` r
 if (FALSE) { # \dontrun{
-# example using a CRBD model with two MCMC chains
-path_data <- tp_data(data_input = "crbd")
-sampler_mcmc <- tp_compile(model = "crbd", method = "mcmc", iterations = 10)
-mod_mcmc <- tp_run(
-  sampler = sampler_mcmc,
-  data = path_data,
-  n_runs = 2
+
+# Let's use a quick CRBD model as example
+run_mcmc <- tp_run(
+sampler = tp_compile(model = "crbd", method = "mcmc", iterations = 10),
+data = tp_data(data_input = "crbd"),
+n_runs = 2, # this will produce two JSON files as output
+n_processes = 2
 )
 
-tp_parse_mcmc(mod_mcmc)
+# get the path to the output JSON file; note that the number of JSON
+# files produced is equal to n_runs specified above
+out_file <- list.files(
+  path = tp_tempdir(),
+  pattern = "out",
+  full.names = TRUE
+)
+
+# parse JSON to a tidy data frame
+tp_parse_mcmc(json_path = out_file)
 } # }
 ```

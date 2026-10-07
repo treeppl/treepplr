@@ -216,10 +216,9 @@ in log units.
 
 ``` r
 
-output <- tp_parse_smc(output_list)
+output <- tp_parse_smc(output_list) # update this according to new parsers
 
 tp_smc_convergence(output)
-#> [1] 0.000693138
 ```
 
 It seems that our run provides a quite accurate estimate of the
@@ -229,11 +228,10 @@ It is also easy to plot the sampled values.
 
 ``` r
 
+# update this according to new parsers
 ggplot2::ggplot(output, ggplot2::aes(samples, weight = norm_weight)) +
   ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
                  col = "white", fill = "lightblue", binwidth=0.01) +
   ggplot2::geom_density() +
   ggplot2::theme_bw()
 ```
-
-![](coin-example_files/figure-html/unnamed-chunk-10-1.png)

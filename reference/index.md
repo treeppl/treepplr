@@ -65,7 +65,7 @@
   : Convert phylo to a tppl_tree
 
 - [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md) : Run a
-  TreePPL program
+  TreePPL sampler
 
 - [`tp_runtime_options()`](http://treeppl.org/treepplr/reference/tp_runtime_options.md)
   :

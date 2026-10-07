@@ -1,7 +1,6 @@
 # Parse TreePPL SMC output into a tidy data frame
 
-Converts a list of parsed SMC sweeps (from
-[`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md)) into a
+Converts a JSON file from an SMC analysis produced by TreePPL into a
 single tidy tibble of particles, their samples, and normalized weights.
 The function internally removes sweeps with an undefined normalizing
 constant.
@@ -9,16 +8,21 @@ constant.
 ## Usage
 
 ``` r
-tp_parse_smc(treeppl_out)
+tp_parse_smc(json_path, wide = TRUE)
 ```
 
 ## Arguments
 
-- treeppl_out:
+- json_path:
 
-  A list of sweeps parsed from a SMC JSON output: i.e., the output
-  object of
-  [`tp_run()`](http://treeppl.org/treepplr/reference/tp_run.md).
+  The full path to the (SMC) JSON file produced by TreePPL.
+
+- wide:
+
+  Logical. If `TRUE` (default), return the data frame in wide format,
+  with one column per parameter. If `FALSE`, return the data frame in
+  long format, with parameter names and values stored in `parameter` and
+  `sample` columns.
 
 ## Value
 
@@ -32,7 +36,7 @@ A tibble with one row per particle, containing:
 
   Parameter name, if present in the input JSON.
 
-- samples:
+- sample:
 
   Sampled value.
 
@@ -53,16 +57,25 @@ A tibble with one row per particle, containing:
 
 ``` r
 if (FALSE) { # \dontrun{
-# Fit a quick CRBD model:
-path_data <- tp_data(data_input = "crbd")
-sampler_smc <- tp_compile(
-  model = "crbd",
-  method = "smc-apf",
-  sweeps = 2,
-  particles = 10
+# fit a CRBD model
+run_smc <- tp_run(
+  data = tp_data(data_input = "crbd"),
+  sampler = tp_compile(
+    model = "crbd",
+    method = "smc-apf",
+    sweeps = 2,
+    particles = 10
+  )
 )
-mod_smc <- tp_run(sampler = sampler_smc, data = path_data)
 
-tp_parse_smc(mod_smc)
+# get the path to the output JSON file:
+out_file <- list.files(
+  path = tp_tempdir(),
+  pattern = "out",
+  full.names = TRUE
+)
+
+# parse JSON to a tidy data frame
+tp_parse_smc(json_path = out_file)
 } # }
 ```

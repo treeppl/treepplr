@@ -24,4 +24,4 @@ Authors:
 
 - Tim Virgoulay
 
-- Stenio I A Foerster
+- Stenio Foerster

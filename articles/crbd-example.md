@@ -18,5 +18,4 @@ output_list <- tp_run(exe_path, data_path, sweeps = 4)
 output <- tp_parse_smc(output_list)
 
 tp_smc_convergence(output)
-#> [1] 0.07591128
 ```
