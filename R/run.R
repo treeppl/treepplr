@@ -16,6 +16,9 @@
 #' Cannot be greater than `n_runs`.
 #' @param verbose (\code{logical}) Whether to print a run summary on completion.
 #' Default is `TRUE`.
+#' @param timeout (\code{integer}) control the maximum time (in second) of a command execution.
+#' Can be use for certain inference methods (e.g SMC-APF), will bias the result.
+#' Default is 0 (no timeout).
 #' @param ... See [treepplr::tp_runtime_options()] for all supported arguments.
 #'
 #' @details
@@ -64,6 +67,7 @@ tp_run <- function(
   n_runs = 1,
   n_processes = 3,
   verbose = TRUE,
+  timeout = 0,
   ...
 ) {
   # start time
@@ -104,7 +108,7 @@ tp_run <- function(
     sampler$exe_path,
     data,
     options_to_string(tpplc_options[["runtime"]]),
-    paste(">", output_path)
+    ">"
   )
 
   if (n_runs > 1) {
@@ -117,18 +121,11 @@ tp_run <- function(
       1:n_runs,
       FUN = function(i) {
         output_path_i <- file.path(dir_path, paste0(out_file_name, i, ".json"))
-        command_i <- paste(
-          "LD_LIBRARY_PATH= ",
-          sampler$exe_path,
-          data,
-          options_to_string(tpplc_options[["runtime"]]),
-          paste(">", output_path_i)
-        )
-        system(command_i)
+        system(paste(command, output_path_i), timeout = timeout)
       }
     )
   } else {
-    system(command)
+    system(paste(command, output_path), timeout = timeout)
   }
 
   # the output (JSON) files

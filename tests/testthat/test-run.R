@@ -59,3 +59,13 @@ test_that("Test-run_1e : tp_run no_parser", {
   )
   expect_true(is.character(run_smc))
 })
+
+test_that("Test-run_1f : tp_run with timeout", {
+  cat("\tTest-run_1f : tp_run with timeout \n")
+  expect_error(suppressWarnings(tp_run(
+    sampler = tp_compile(model = "crbd", method = "smc-apf", sweeps = 10, particles = 10000),
+    data = tp_data(data_input = "crbd"),
+    timeout = 1,
+    verbose = FALSE
+  )))
+})
