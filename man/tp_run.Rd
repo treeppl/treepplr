@@ -12,6 +12,7 @@ tp_run(
   n_runs = 1,
   n_processes = 3,
   verbose = TRUE,
+  timeout = 0,
   ...
 )
 }
@@ -33,6 +34,10 @@ Cannot be greater than \code{n_runs}.}
 
 \item{verbose}{(\code{logical}) Whether to print a run summary on completion.
 Default is \code{TRUE}.}
+
+\item{timeout}{(\code{integer}) control the maximum time (in second) of a command execution.
+Can be use for certain inference methods (e.g SMC-APF), will bias the result.
+Default is 0 (no timeout).}
 
 \item{...}{See \code{\link[=tp_runtime_options]{tp_runtime_options()}} for all supported arguments.}
 }
