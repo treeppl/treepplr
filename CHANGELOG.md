@@ -1,4 +1,4 @@
-# treepplr
+# treepplr : an R package for TreePPL
 
 ## [Unreleased]
 
